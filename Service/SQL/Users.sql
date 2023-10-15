@@ -7,3 +7,5 @@ CREATE TABLE Users (
     phone NVARCHAR(15),
     role NVARCHAR(20) NOT NULL
 );
+
+CREATE TABLE 

@@ -1,9 +1,13 @@
 const sql = require('mssql');
 const config = {
   user: 'hd',
-  password: 'hd@123',
-  server: 'HDC',
-  database: 'hdcsystem',
+  password: 'Hd@123456',
+  server: '103.90.227.186',
+  database: 'HDC_System',
+  options: {
+    encrypt: true,
+    trustServerCertificate: true // Cho phép chấp nhận chứng chỉ tự ký
+  }
 };
 
 const poolPromise = new sql.ConnectionPool(config)
