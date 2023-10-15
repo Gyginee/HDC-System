@@ -1,4 +1,4 @@
-const { sql, poolPromise } = require('../config/db');
+const { sql, poolPromise } = require('../config/database');
 
 const UserController = {
   getUserById: async function (req, res) {
