@@ -5,10 +5,10 @@ info:
   description: API for managing HDC
 
 paths:
-  /api/assets:
+  /api/v1/assets:
     get:
       summary: Get a list of assets
-      operationId: index
+      operationId: assets.index
       tags:
         - Assets
       responses:
@@ -20,10 +20,9 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Asset'
-
     post:
-      summary: Store a new asset
-      operationId: store
+      summary: Create a new asset
+      operationId: assets.create
       tags:
         - Assets
       requestBody:
@@ -40,15 +39,15 @@ paths:
               schema:
                 $ref: '#/components/schemas/Asset'
 
-  /api/assets/{id}:
+  /api/v1/assets/{id}:
     get:
       summary: Get a specific asset
-      operationId: show
+      operationId: assets.show
       tags:
         - Assets
       parameters:
-        - name: id
-          in: path
+        - in: path
+          name: id
           required: true
           description: ID of the asset
           schema:
@@ -62,15 +61,14 @@ paths:
                 $ref: '#/components/schemas/Asset'
         '404':
           description: Asset not found
-
     put:
       summary: Update a specific asset
-      operationId: update
+      operationId: assets.update
       tags:
         - Assets
       parameters:
-        - name: id
-          in: path
+        - in: path
+          name: id
           required: true
           description: ID of the asset
           schema:
@@ -90,15 +88,14 @@ paths:
                 $ref: '#/components/schemas/Asset'
         '404':
           description: Asset not found
-
     delete:
       summary: Delete a specific asset
-      operationId: destroy
+      operationId: assets.destroy
       tags:
         - Assets
       parameters:
-        - name: id
-          in: path
+        - in: path
+          name: id
           required: true
           description: ID of the asset
           schema:
@@ -108,10 +105,11 @@ paths:
           description: Asset deleted successfully
         '404':
           description: Asset not found
-  /api/clients:
+
+  /api/v1/clients:
     get:
       summary: Get a list of clients
-      operationId: indexClients
+      operationId: clients.index
       tags:
         - Clients
       responses:
@@ -123,10 +121,9 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Client'
-
     post:
-      summary: Store a new client
-      operationId: storeClient
+      summary: Create a new client
+      operationId: clients.create
       tags:
         - Clients
       requestBody:
@@ -143,15 +140,15 @@ paths:
               schema:
                 $ref: '#/components/schemas/Client'
 
-  /api/clients/{id}:
+  /api/v1/clients/{id}:
     get:
       summary: Get a specific client
-      operationId: showClient
+      operationId: clients.show
       tags:
         - Clients
       parameters:
-        - name: id
-          in: path
+        - in: path
+          name: id
           required: true
           description: ID of the client
           schema:
@@ -165,15 +162,14 @@ paths:
                 $ref: '#/components/schemas/Client'
         '404':
           description: Client not found
-
     put:
       summary: Update a specific client
-      operationId: updateClient
+      operationId: clients.update
       tags:
         - Clients
       parameters:
-        - name: id
-          in: path
+        - in: path
+          name: id
           required: true
           description: ID of the client
           schema:
@@ -193,15 +189,14 @@ paths:
                 $ref: '#/components/schemas/Client'
         '404':
           description: Client not found
-
     delete:
       summary: Delete a specific client
-      operationId: destroyClient
+      operationId: clients.destroy
       tags:
         - Clients
       parameters:
-        - name: id
-          in: path
+        - in: path
+          name: id
           required: true
           description: ID of the client
           schema:
@@ -211,10 +206,11 @@ paths:
           description: Client deleted successfully
         '404':
           description: Client not found
-  /api/permissions:
+
+  /api/v1/permissions:
     get:
       summary: Get a list of permissions
-      operationId: indexPermissions
+      operationId: permissions.index
       tags:
         - Permissions
       responses:
@@ -226,10 +222,9 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Permission'
-
     post:
-      summary: Store a new permission
-      operationId: storePermission
+      summary: Create a new permission
+      operationId: permissions.create
       tags:
         - Permissions
       requestBody:
@@ -246,15 +241,15 @@ paths:
               schema:
                 $ref: '#/components/schemas/Permission'
 
-  /api/permissions/{id}:
+  /api/v1/permissions/{id}:
     get:
       summary: Get a specific permission
-      operationId: showPermission
+      operationId: permissions.show
       tags:
         - Permissions
       parameters:
-        - name: id
-          in: path
+        - in: path
+          name: id
           required: true
           description: ID of the permission
           schema:
@@ -268,15 +263,14 @@ paths:
                 $ref: '#/components/schemas/Permission'
         '404':
           description: Permission not found
-
     put:
       summary: Update a specific permission
-      operationId: updatePermission
+      operationId: permissions.update
       tags:
         - Permissions
       parameters:
-        - name: id
-          in: path
+        - in: path
+          name: id
           required: true
           description: ID of the permission
           schema:
@@ -296,15 +290,14 @@ paths:
                 $ref: '#/components/schemas/Permission'
         '404':
           description: Permission not found
-
     delete:
       summary: Delete a specific permission
-      operationId: destroyPermission
+      operationId: permissions.destroy
       tags:
         - Permissions
       parameters:
-        - name: id
-          in: path
+        - in: path
+          name: id
           required: true
           description: ID of the permission
           schema:
@@ -314,13 +307,518 @@ paths:
           description: Permission deleted successfully
         '404':
           description: Permission not found
+  /api/v1/user-permissions:
+    get:
+      summary: Get a list of user permissions
+      operationId: userPermissions.index
+      tags:
+        - UserPermissions
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UserPermission'
+    post:
+      summary: Create a new user permission
+      operationId: userPermissions.create
+      tags:
+        - UserPermissions
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserPermission'
+      responses:
+        '201':
+          description: User permission created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserPermission'
 
-  /api/staffs:
+  /api/v1/user-permissions/{id}:
+    get:
+      summary: Get a specific user permission
+      operationId: userPermissions.show
+      tags:
+        - UserPermissions
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: ID of the user permission
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserPermission'
+        '404':
+          description: User permission not found
+    put:
+      summary: Update a specific user permission
+      operationId: userPermissions.update
+      tags:
+        - UserPermissions
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: ID of the user permission
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserPermission'
+      responses:
+        '200':
+          description: User permission updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserPermission'
+        '404':
+          description: User permission not found
+    delete:
+      summary: Delete a specific user permission
+      operationId: userPermissions.destroy
+      tags:
+        - UserPermissions
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: ID of the user permission
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: User permission deleted successfully
+        '404':
+          description: User permission not found
+
+  /api/v1/vendors:
+    get:
+      summary: Get a list of vendors
+      operationId: vendors.index
+      tags:
+        - Vendors
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Vendor'
+    post:
+      summary: Create a new vendor
+      operationId: vendors.create
+      tags:
+        - Vendors
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Vendor'
+      responses:
+        '201':
+          description: Vendor created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Vendor'
+
+  /api/v1/vendors/{id}:
+    get:
+      summary: Get a specific vendor
+      operationId: vendors.show
+      tags:
+        - Vendors
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: ID of the vendor
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Vendor'
+        '404':
+          description: Vendor not found
+    put:
+      summary: Update a specific vendor
+      operationId: vendors.update
+      tags:
+        - Vendors
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: ID of the vendor
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Vendor'
+      responses:
+        '200':
+          description: Vendor updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Vendor'
+        '404':
+          description: Vendor not found
+    delete:
+      summary: Delete a specific vendor
+      operationId: vendors.destroy
+      tags:
+        - Vendors
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: ID of the vendor
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Vendor deleted successfully
+        '404':
+          description: Vendor not found
+
+  /api/v1/types:
+    get:
+      summary: Get a list of types
+      operationId: types.index
+      tags:
+        - Types
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Type'
+    post:
+      summary: Create a new type
+      operationId: types.create
+      tags:
+        - Types
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Type'
+      responses:
+        '201':
+          description: Type created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Type'
+
+  /api/v1/types/{id}:
+    get:
+      summary: Get a specific type
+      operationId: types.show
+      tags:
+        - Types
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: ID of the type
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Type'
+        '404':
+          description: Type not found
+    put:
+      summary: Update a specific type
+      operationId: types.update
+      tags:
+        - Types
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: ID of the type
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Type'
+      responses:
+        '200':
+          description: Type updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Type'
+        '404':
+          description: Type not found
+    delete:
+      summary: Delete a specific type
+      operationId: types.destroy
+      tags:
+        - Types
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: ID of the type
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Type deleted successfully
+        '404':
+          description: Type not found
+
+  /api/v1/roles:
+    get:
+      summary: Get a list of roles
+      operationId: roles.index
+      tags:
+        - Roles
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Role'
+    post:
+      summary: Create a new role
+      operationId: roles.create
+      tags:
+        - Roles
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Role'
+      responses:
+        '201':
+          description: Role created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Role'
+
+  /api/v1/roles/{id}:
+    get:
+      summary: Get a specific role
+      operationId: roles.show
+      tags:
+        - Roles
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: ID of the role
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Role'
+        '404':
+          description: Role not found
+    put:
+      summary: Update a specific role
+      operationId: roles.update
+      tags:
+        - Roles
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: ID of the role
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Role'
+      responses:
+        '200':
+          description: Role updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Role'
+        '404':
+          description: Role not found
+    delete:
+      summary: Delete a specific role
+      operationId: roles.destroy
+      tags:
+        - Roles
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: ID of the role
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Role deleted successfully
+        '404':
+          description: Role not found
+
+  /api/v1/status:
+    get:
+      summary: Get a list of status
+      operationId: status.index
+      tags:
+        - Status
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Status'
+    post:
+      summary: Create a new status
+      operationId: status.create
+      tags:
+        - Status
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Status'
+      responses:
+        '201':
+          description: Status created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Status'
+
+  /api/v1/status/{id}:
+    get:
+      summary: Get a specific status
+      operationId: status.show
+      tags:
+        - Status
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: ID of the status
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Status'
+        '404':
+          description: Status not found
+    put:
+      summary: Update a specific status
+      operationId: status.update
+      tags:
+        - Status
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: ID of the status
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Status'
+      responses:
+        '200':
+          description: Status updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Status'
+        '404':
+          description: Status not found
+    delete:
+      summary: Delete a specific status
+      operationId: status.destroy
+      tags:
+        - Status
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: ID of the status
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Status deleted successfully
+        '404':
+          description: Status not found
+
+
+  /api/v1/staff/staffs:
     get:
       summary: Get a list of staff members
-      operationId: indexStaffs
+      operationId: staff.index
       tags:
-        - Staffs
+        - Staff
       responses:
         '200':
           description: Successful operation
@@ -330,12 +828,11 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Staff'
-
     post:
-      summary: Store a new staff member
-      operationId: storeStaff
+      summary: Create a new staff member
+      operationId: staff.create
       tags:
-        - Staffs
+        - Staff
       requestBody:
         required: true
         content:
@@ -350,15 +847,15 @@ paths:
               schema:
                 $ref: '#/components/schemas/Staff'
 
-  /api/staffs/{id}:
+  /api/v1/staff/staffs/{id}:
     get:
       summary: Get a specific staff member
-      operationId: showStaff
+      operationId: staff.show
       tags:
-        - Staffs
+        - Staff
       parameters:
-        - name: id
-          in: path
+        - in: path
+          name: id
           required: true
           description: ID of the staff member
           schema:
@@ -372,15 +869,14 @@ paths:
                 $ref: '#/components/schemas/Staff'
         '404':
           description: Staff member not found
-
     put:
       summary: Update a specific staff member
-      operationId: updateStaff
+      operationId: staff.update
       tags:
-        - Staffs
+        - Staff
       parameters:
-        - name: id
-          in: path
+        - in: path
+          name: id
           required: true
           description: ID of the staff member
           schema:
@@ -400,15 +896,14 @@ paths:
                 $ref: '#/components/schemas/Staff'
         '404':
           description: Staff member not found
-
     delete:
       summary: Delete a specific staff member
-      operationId: destroyStaff
+      operationId: staff.destroy
       tags:
-        - Staffs
+        - Staff
       parameters:
-        - name: id
-          in: path
+        - in: path
+          name: id
           required: true
           description: ID of the staff member
           schema:
@@ -419,10 +914,10 @@ paths:
         '404':
           description: Staff member not found
 
-  /api/staff_details:
+  /api/v1/staff/details:
     get:
       summary: Get a list of staff details
-      operationId: indexStaffDetails
+      operationId: staffDetails.index
       tags:
         - StaffDetails
       responses:
@@ -434,10 +929,9 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/StaffDetail'
-
     post:
-      summary: Store a new staff detail
-      operationId: storeStaffDetail
+      summary: Create a new staff detail
+      operationId: staffDetails.create
       tags:
         - StaffDetails
       requestBody:
@@ -454,15 +948,15 @@ paths:
               schema:
                 $ref: '#/components/schemas/StaffDetail'
 
-  /api/staff_details/{id}:
+  /api/v1/staff/details/{id}:
     get:
       summary: Get a specific staff detail
-      operationId: showStaffDetail
+      operationId: staffDetails.show
       tags:
         - StaffDetails
       parameters:
-        - name: id
-          in: path
+        - in: path
+          name: id
           required: true
           description: ID of the staff detail
           schema:
@@ -476,15 +970,14 @@ paths:
                 $ref: '#/components/schemas/StaffDetail'
         '404':
           description: Staff detail not found
-
     put:
       summary: Update a specific staff detail
-      operationId: updateStaffDetail
+      operationId: staffDetails.update
       tags:
         - StaffDetails
       parameters:
-        - name: id
-          in: path
+        - in: path
+          name: id
           required: true
           description: ID of the staff detail
           schema:
@@ -504,15 +997,14 @@ paths:
                 $ref: '#/components/schemas/StaffDetail'
         '404':
           description: Staff detail not found
-
     delete:
       summary: Delete a specific staff detail
-      operationId: destroyStaffDetail
+      operationId: staffDetails.destroy
       tags:
         - StaffDetails
       parameters:
-        - name: id
-          in: path
+        - in: path
+          name: id
           required: true
           description: ID of the staff detail
           schema:
@@ -522,6 +1014,408 @@ paths:
           description: Staff detail deleted successfully
         '404':
           description: Staff detail not found
+
+  /api/v1/staff/salaries:
+    get:
+      summary: Get a list of staff salaries
+      operationId: staffSalaries.index
+      tags:
+        - StaffSalaries
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/StaffSalary'
+    post:
+      summary: Create a new staff salary
+      operationId: staffSalaries.create
+      tags:
+        - StaffSalaries
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StaffSalary'
+      responses:
+        '201':
+          description: Staff salary created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StaffSalary'
+
+  /api/v1/staff/salaries/{id}:
+    get:
+      summary: Get a specific staff salary
+      operationId: staffSalaries.show
+      tags:
+        - StaffSalaries
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: ID of the staff salary
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StaffSalary'
+        '404':
+          description: Staff salary not found
+    put:
+      summary: Update a specific staff salary
+      operationId: staffSalaries.update
+      tags:
+        - StaffSalaries
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: ID of the staff salary
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StaffSalary'
+      responses:
+        '200':
+          description: Staff salary updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StaffSalary'
+        '404':
+          description: Staff salary not found
+    delete:
+      summary: Delete a specific staff salary
+      operationId: staffSalaries.destroy
+      tags:
+        - StaffSalaries
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: ID of the staff salary
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Staff salary deleted successfully
+        '404':
+          description: Staff salary not found
+
+  /api/v1/project/projects:
+    get:
+      summary: Get a list of projects
+      operationId: projects.index
+      tags:
+        - Projects
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Project'
+    post:
+      summary: Store a new project
+      operationId: projects.store
+      tags:
+        - Projects
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Project'
+      responses:
+        '201':
+          description: Project created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Project'
+
+  /api/v1/projects/{id}:
+    get:
+      summary: Get a specific project
+      operationId: projects.show
+      tags:
+        - Projects
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: ID of the project
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Project'
+        '404':
+          description: Project not found
+    put:
+      summary: Update a specific project
+      operationId: projects.update
+      tags:
+        - Projects
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: ID of the project
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Project'
+      responses:
+        '200':
+          description: Project updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Project'
+        '404':
+          description: Project not found
+    delete:
+      summary: Delete a specific project
+      operationId: projects.destroy
+      tags:
+        - Projects
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: ID of the project
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Project deleted successfully
+        '404':
+          description: Project not found
+  /api/v1/projects/details:
+    get:
+      summary: Get a list of project details
+      operationId: projectDetails.index
+      tags:
+        - ProjectDetails
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ProjectDetail'
+    post:
+      summary: Create a new project detail
+      operationId: projectDetails.create
+      tags:
+        - ProjectDetails
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProjectDetail'
+      responses:
+        '201':
+          description: Project detail created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProjectDetail'
+
+  /api/v1/projects/details/{id}:
+    get:
+      summary: Get a specific project detail
+      operationId: projectDetails.show
+      tags:
+        - ProjectDetails
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: ID of the project detail
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProjectDetail'
+        '404':
+          description: Project detail not found
+    put:
+      summary: Update a specific project detail
+      operationId: projectDetails.update
+      tags:
+        - ProjectDetails
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: ID of the project detail
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProjectDetail'
+      responses:
+        '200':
+          description: Project detail updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProjectDetail'
+        '404':
+          description: Project detail not found
+    delete:
+      summary: Delete a specific project detail
+      operationId: projectDetails.destroy
+      tags:
+        - ProjectDetails
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: ID of the project detail
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Project detail deleted successfully
+        '404':
+          description: Project detail not found
+  /api/v1/project/project-permissions:
+    get:
+      summary: Get a list of project permissions
+      operationId: projectPermissions.index
+      tags:
+        - ProjectPermissions
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ProjectPermission'
+    post:
+      summary: Create a new project permission
+      operationId: projectPermissions.create
+      tags:
+        - ProjectPermissions
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProjectPermission'
+      responses:
+        '201':
+          description: Project permission created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProjectPermission'
+
+  /api/v1/project/project-permissions/{id}:
+    get:
+      summary: Get a specific project permission
+      operationId: projectPermissions.show
+      tags:
+        - ProjectPermissions
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: ID of the project permission
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProjectPermission'
+        '404':
+          description: Project permission not found
+    put:
+      summary: Update a specific project permission
+      operationId: projectPermissions.update
+      tags:
+        - ProjectPermissions
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: ID of the project permission
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProjectPermission'
+      responses:
+        '200':
+          description: Project permission updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProjectPermission'
+        '404':
+          description: Project permission not found
+    delete:
+      summary: Delete a specific project permission
+      operationId: projectPermissions.destroy
+      tags:
+        - ProjectPermissions
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: ID of the project permission
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Project permission deleted successfully
+        '404':
+          description: Project permission not found
 
 components:
   schemas:
@@ -548,6 +1442,12 @@ components:
           format: date
         status:
           type: string
+      required:
+        - type
+        - name
+        - price
+        - condition
+        - status
 
     Client:
       type: object
@@ -562,6 +1462,8 @@ components:
         phone:
           type: string
           format: phone
+      required:
+        - name
 
     Permission:
       type: object
@@ -572,6 +1474,100 @@ components:
           type: string
         description:
           type: string
+      required:
+        - name
+
+    UserPermission:
+      type: object
+      properties:
+        id:
+          type: integer
+        staff_id:
+          type: string
+        permission_id:
+          type: integer
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+      required:
+        - staff_id
+        - permission_id
+
+    Vendor:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        phone:
+          type: integer
+        address:
+          type: string
+        type_id:
+          type: integer
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+      required:
+        - name
+        - phone
+        - address
+        - type_id
+
+    Type:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+      required:
+        - name
+
+    Status:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+      required:
+        - name
+
+    Role:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+      required:
+        - name
 
     Staff:
       type: object
@@ -609,4 +1605,97 @@ components:
         join_date:
           type: string
           format: date
+      required:
+        - staff_id
 
+    StaffSalary:
+      type: object
+      properties:
+        id:
+          type: integer
+        staff_id:
+          type: integer
+        amount:
+          type: number
+        date:
+          type: string
+          format: date
+      required:
+        - staff_id
+        - amount
+        - date
+
+
+    Project:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        cost:
+          type: integer
+        status:
+          type: string
+        client_id:
+          type: integer
+      required:
+        - name
+        - cost
+        - status
+        - client_id
+
+    ProjectDetail:
+      type: object
+      properties:
+        id:
+          type: integer
+        project_id:
+          type: integer
+        vendor_id:
+          type: integer
+        name:
+          type: string
+        type:
+          type: string
+        cost:
+          type: number
+        internal_cost:
+          type: number
+        real_cost:
+          type: number
+        status:
+          type: boolean
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+      required:
+        - project_id
+        - vendor_id
+        - name
+        - type
+        - cost
+        - internal_cost
+        - real_cost
+        - status
+    ProjectPermission:
+      type: object
+      properties:
+        id:
+          type: integer
+        staff_id:
+          type: string
+        project_id:
+          type: integer
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+      required:
+        - staff_id
+        - project_id
