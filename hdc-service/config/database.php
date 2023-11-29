@@ -89,6 +89,13 @@ return [
             'charset' => 'utf8',
             'prefix' => '',
             'prefix_indexes' => true,
+            'odbc' => [
+                'ODBC_DRIVER_VERSION' => '13',
+            ],
+
+            'options' => [
+                'isolation_level' => 'READ_COMMITTED',
+            ],
             // 'encrypt' => env('DB_ENCRYPT', 'yes'),
             // 'trust_server_certificate' => env('DB_TRUST_SERVER_CERTIFICATE', 'false'),
         ],

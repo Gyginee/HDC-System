@@ -12,59 +12,46 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('staff_detail', function (Blueprint $table) {
-            $table->foreign('staff_id')->references('staff_id')->on('staffs');
+            $table->foreign('staff_id')->references('staff_id')->on('staffs')->name('fk_staff_detail_staffs');
         });
 
         Schema::table('salary', function (Blueprint $table) {
-            $table->foreign('staff_id')->references('staff_id')->on('staffs');
+            $table->foreign('staff_id')->references('staff_id')->on('staffs')->name('fk_salary_staffs');
         });
 
         Schema::table('user_permissions', function (Blueprint $table) {
-            $table->foreign('staff_id')->references('staff_id')->on('staffs');
-            $table->foreign('permission_id')->references('id')->on('permissions');
+            $table->foreign('staff_id')->references('staff_id')->on('staffs')->name('fk_user_permissions_staffs');
+            $table->foreign('permission_id')->references('id')->on('permissions')->name('fk_user_permissions_permissions');
         });
 
         Schema::table('projects', function (Blueprint $table) {
-            $table->foreign('client_id')->references('id')->on('clients');
+            $table->foreign('client_id')->references('id')->on('clients')->name('fk_projects_clients');
         });
 
         Schema::table('project_detail', function (Blueprint $table) {
-            $table->foreign('project_id')->references('id')->on('projects');
-            $table->foreign('vendor_id')->references('id')->on('vendors');
+            $table->foreign('project_id')->references('id')->on('projects')->name('fk_project_detail_projects');
+            $table->foreign('vendor_id')->references('id')->on('vendors')->name('fk_project_detail_vendors');
         });
 
         Schema::table('project_permission', function (Blueprint $table) {
-            $table->foreign('project_id')->references('id')->on('projects');
-            $table->foreign('staff_id')->references('staff_id')->on('staffs');
+            $table->foreign('project_id')->references('id')->on('projects')->name('fk_project_permission_projects');
+            $table->foreign('staff_id')->references('staff_id')->on('staffs')->name('fk_project_permission_staffs');
         });
+
         Schema::table('clients', function (Blueprint $table) {
-            $table->foreign('type_id')->references('id')->on('types');
+            $table->foreign('type_id')->references('id')->on('types')->name('fk_clients_types');
         });
 
         Schema::table('vendors', function (Blueprint $table) {
-            $table->foreign('type_id')->references('id')->on('types');
+            $table->foreign('type_id')->references('id')->on('types')->name('fk_vendors_types');
         });
 
         Schema::table('staffs', function (Blueprint $table) {
-            $table->foreign('role_id')->references('id')->on('roles');
-        });
-
-        Schema::table('projects', function (Blueprint $table) {
-            $table->foreign('client_id')->references('id')->on('clients');
+            $table->foreign('role_id')->references('id')->on('roles')->name('fk_staffs_roles');
         });
 
         Schema::table('assets', function (Blueprint $table) {
-            $table->foreign('grant_staff')->references('staff_id')->on('staffs');
-        });
-
-        Schema::table('project_detail', function (Blueprint $table) {
-            $table->foreign('project_id')->references('id')->on('projects');
-            $table->foreign('vendor_id')->references('id')->on('vendors');
-        });
-
-        Schema::table('project_permission', function (Blueprint $table) {
-            $table->foreign('project_id')->references('id')->on('projects');
-            $table->foreign('staff_id')->references('staff_id')->on('staffs');
+            $table->foreign('grant_staff')->references('staff_id')->on('staffs')->name('fk_assets_staffs');
         });
     }
 
@@ -74,46 +61,46 @@ return new class extends Migration
     public function down()
     {
         Schema::table('staff_detail', function (Blueprint $table) {
-            $table->dropForeign('staff_detail_staff_id_foreign');
+            $table->dropForeign('fk_staff_detail_staffs');
         });
 
         Schema::table('salary', function (Blueprint $table) {
-            $table->dropForeign('salary_staff_id_foreign');
+            $table->dropForeign('fk_salary_staffs');
         });
 
         Schema::table('user_permissions', function (Blueprint $table) {
-            $table->dropForeign('user_permissions_staff_id_foreign');
-            $table->dropForeign('user_permissions_permission_id_foreign');
-        });
-
-        Schema::table('clients', function (Blueprint $table) {
-            $table->dropForeign('clients_type_id_foreign');
-        });
-
-        Schema::table('vendors', function (Blueprint $table) {
-            $table->dropForeign('vendors_type_id_foreign');
-        });
-
-        Schema::table('staffs', function (Blueprint $table) {
-            $table->dropForeign('staffs_role_id_foreign');
+            $table->dropForeign('fk_user_permissions_staffs');
+            $table->dropForeign('fk_user_permissions_permissions');
         });
 
         Schema::table('projects', function (Blueprint $table) {
-            $table->dropForeign('projects_client_id_foreign');
-        });
-
-        Schema::table('assets', function (Blueprint $table) {
-            $table->dropForeign('assets_grant_staff_foreign');
+            $table->dropForeign('fk_projects_clients');
         });
 
         Schema::table('project_detail', function (Blueprint $table) {
-            $table->dropForeign('project_detail_project_id_foreign');
-            $table->dropForeign('project_detail_vendor_id_foreign');
+            $table->dropForeign('fk_project_detail_projects');
+            $table->dropForeign('fk_project_detail_vendors');
         });
 
         Schema::table('project_permission', function (Blueprint $table) {
-            $table->dropForeign('project_permission_project_id_foreign');
-            $table->dropForeign('project_permission_staff_id_foreign');
+            $table->dropForeign('fk_project_permission_projects');
+            $table->dropForeign('fk_project_permission_staffs');
+        });
+
+        Schema::table('clients', function (Blueprint $table) {
+            $table->dropForeign('fk_clients_types');
+        });
+
+        Schema::table('vendors', function (Blueprint $table) {
+            $table->dropForeign('fk_vendors_types');
+        });
+
+        Schema::table('staffs', function (Blueprint $table) {
+            $table->dropForeign('fk_staffs_roles');
+        });
+
+        Schema::table('assets', function (Blueprint $table) {
+            $table->dropForeign('fk_assets_staffs');
         });
     }
 };
