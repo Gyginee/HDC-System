@@ -22,6 +22,9 @@ return new class extends Migration
             $table->date('grant_date');
             $table->string('status');
             $table->timestamps();
+
+            // Foreign key constraint
+            
         });
     }
 

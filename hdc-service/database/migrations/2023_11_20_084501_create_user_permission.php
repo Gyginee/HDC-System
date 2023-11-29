@@ -13,9 +13,10 @@ return new class extends Migration
     {
         Schema::create('user_permissions', function (Blueprint $table) {
             $table->id();
-            $table->string('user_id');
-            $table->string('permission_id');
+            $table->string('staff_id');
+            $table->unsignedBigInteger('permission_id');
             $table->timestamps();
+
         });
     }
 
@@ -27,3 +28,4 @@ return new class extends Migration
         Schema::dropIfExists('user_permissions');
     }
 };
+

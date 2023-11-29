@@ -12,11 +12,11 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('vendors', function (Blueprint $table) {
-            $table->id();
+            $table->id(); // This creates an auto-incrementing primary key column 'id'
             $table->string('name');
-            $table->integer('phone',10);
+            $table->integer('phone');
             $table->string('address');
-            $table->string('type_id');
+            $table->unsignedBigInteger('type_id');
             $table->timestamps();
         });
     }

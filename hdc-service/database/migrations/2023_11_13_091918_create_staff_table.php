@@ -9,19 +9,21 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function up(): void
+    public function up()
     {
         Schema::create('staffs', function (Blueprint $table) {
             $table->id();
             $table->string('staff_id');
             $table->string('fullname');
-            $table->int('phone',10);
-            $table->string('email');
-            $table->string('role_id');
+            $table->string('phone'); // Change to string if non-numeric characters are allowed
+            $table->string('email')->unique();
+            $table->unsignedBigInteger('role_id'); // Adjust according to your Role model
             $table->string('password');
             $table->timestamps();
+
         });
     }
+
 
     /**
      * Reverse the migrations.

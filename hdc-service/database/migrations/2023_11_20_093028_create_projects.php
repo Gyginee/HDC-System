@@ -16,6 +16,8 @@ return new class extends Migration
             $table->string('name');
             $table->integer('cost');
             $table->string('status');
+            $table->unsignedBigInteger('client_id');
+
             $table->timestamps();
         });
     }

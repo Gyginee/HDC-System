@@ -1,0 +1,612 @@
+openapi: 3.1.0
+info:
+  title: HDC API Services
+  version: 1.0.0
+  description: API for managing HDC
+
+paths:
+  /api/assets:
+    get:
+      summary: Get a list of assets
+      operationId: index
+      tags:
+        - Assets
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Asset'
+
+    post:
+      summary: Store a new asset
+      operationId: store
+      tags:
+        - Assets
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Asset'
+      responses:
+        '201':
+          description: Asset created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Asset'
+
+  /api/assets/{id}:
+    get:
+      summary: Get a specific asset
+      operationId: show
+      tags:
+        - Assets
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID of the asset
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Asset'
+        '404':
+          description: Asset not found
+
+    put:
+      summary: Update a specific asset
+      operationId: update
+      tags:
+        - Assets
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID of the asset
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Asset'
+      responses:
+        '200':
+          description: Asset updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Asset'
+        '404':
+          description: Asset not found
+
+    delete:
+      summary: Delete a specific asset
+      operationId: destroy
+      tags:
+        - Assets
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID of the asset
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Asset deleted successfully
+        '404':
+          description: Asset not found
+  /api/clients:
+    get:
+      summary: Get a list of clients
+      operationId: indexClients
+      tags:
+        - Clients
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Client'
+
+    post:
+      summary: Store a new client
+      operationId: storeClient
+      tags:
+        - Clients
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Client'
+      responses:
+        '201':
+          description: Client created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Client'
+
+  /api/clients/{id}:
+    get:
+      summary: Get a specific client
+      operationId: showClient
+      tags:
+        - Clients
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID of the client
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Client'
+        '404':
+          description: Client not found
+
+    put:
+      summary: Update a specific client
+      operationId: updateClient
+      tags:
+        - Clients
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID of the client
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Client'
+      responses:
+        '200':
+          description: Client updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Client'
+        '404':
+          description: Client not found
+
+    delete:
+      summary: Delete a specific client
+      operationId: destroyClient
+      tags:
+        - Clients
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID of the client
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Client deleted successfully
+        '404':
+          description: Client not found
+  /api/permissions:
+    get:
+      summary: Get a list of permissions
+      operationId: indexPermissions
+      tags:
+        - Permissions
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Permission'
+
+    post:
+      summary: Store a new permission
+      operationId: storePermission
+      tags:
+        - Permissions
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Permission'
+      responses:
+        '201':
+          description: Permission created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Permission'
+
+  /api/permissions/{id}:
+    get:
+      summary: Get a specific permission
+      operationId: showPermission
+      tags:
+        - Permissions
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID of the permission
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Permission'
+        '404':
+          description: Permission not found
+
+    put:
+      summary: Update a specific permission
+      operationId: updatePermission
+      tags:
+        - Permissions
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID of the permission
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Permission'
+      responses:
+        '200':
+          description: Permission updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Permission'
+        '404':
+          description: Permission not found
+
+    delete:
+      summary: Delete a specific permission
+      operationId: destroyPermission
+      tags:
+        - Permissions
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID of the permission
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Permission deleted successfully
+        '404':
+          description: Permission not found
+
+  /api/staffs:
+    get:
+      summary: Get a list of staff members
+      operationId: indexStaffs
+      tags:
+        - Staffs
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Staff'
+
+    post:
+      summary: Store a new staff member
+      operationId: storeStaff
+      tags:
+        - Staffs
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Staff'
+      responses:
+        '201':
+          description: Staff member created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Staff'
+
+  /api/staffs/{id}:
+    get:
+      summary: Get a specific staff member
+      operationId: showStaff
+      tags:
+        - Staffs
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID of the staff member
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Staff'
+        '404':
+          description: Staff member not found
+
+    put:
+      summary: Update a specific staff member
+      operationId: updateStaff
+      tags:
+        - Staffs
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID of the staff member
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Staff'
+      responses:
+        '200':
+          description: Staff member updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Staff'
+        '404':
+          description: Staff member not found
+
+    delete:
+      summary: Delete a specific staff member
+      operationId: destroyStaff
+      tags:
+        - Staffs
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID of the staff member
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Staff member deleted successfully
+        '404':
+          description: Staff member not found
+
+  /api/staff_details:
+    get:
+      summary: Get a list of staff details
+      operationId: indexStaffDetails
+      tags:
+        - StaffDetails
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/StaffDetail'
+
+    post:
+      summary: Store a new staff detail
+      operationId: storeStaffDetail
+      tags:
+        - StaffDetails
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StaffDetail'
+      responses:
+        '201':
+          description: Staff detail created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StaffDetail'
+
+  /api/staff_details/{id}:
+    get:
+      summary: Get a specific staff detail
+      operationId: showStaffDetail
+      tags:
+        - StaffDetails
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID of the staff detail
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StaffDetail'
+        '404':
+          description: Staff detail not found
+
+    put:
+      summary: Update a specific staff detail
+      operationId: updateStaffDetail
+      tags:
+        - StaffDetails
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID of the staff detail
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StaffDetail'
+      responses:
+        '200':
+          description: Staff detail updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StaffDetail'
+        '404':
+          description: Staff detail not found
+
+    delete:
+      summary: Delete a specific staff detail
+      operationId: destroyStaffDetail
+      tags:
+        - StaffDetails
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID of the staff detail
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Staff detail deleted successfully
+        '404':
+          description: Staff detail not found
+
+components:
+  schemas:
+    Asset:
+      type: object
+      properties:
+        id:
+          type: integer
+        type:
+          type: string
+        name:
+          type: string
+        price:
+          type: number
+        buy_date:
+          type: string
+          format: date
+        condition:
+          type: string
+        grant_staff:
+          type: string
+        grant_date:
+          type: string
+          format: date
+        status:
+          type: string
+
+    Client:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        email:
+          type: string
+          format: email
+        phone:
+          type: string
+          format: phone
+
+    Permission:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        description:
+          type: string
+
+    Staff:
+      type: object
+      properties:
+        id:
+          type: integer
+        staff_id:
+          type: integer
+        fullname:
+          type: string
+        phone:
+          type: integer
+          format: phone
+        email:
+          type: string
+          format: email
+        role_id:
+          type: integer
+        password:
+          type: string
+
+    StaffDetail:
+      type: object
+      properties:
+        id:
+          type: integer
+        staff_id:
+          type: integer
+        bank_number:
+          type: integer
+        bank_name:
+          type: string
+        social_insurance:
+          type: string
+        join_date:
+          type: string
+          format: date
+
