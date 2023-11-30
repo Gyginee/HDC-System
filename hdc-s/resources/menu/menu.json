@@ -1,0 +1,72 @@
+{
+  "menu": [
+    {
+      "name": "Dashboards",
+      "icon": "menu-icon tf-icons ti ti-smart-home",
+      "slug": "dashboard",
+      "badge": [
+        "primary",
+        "1"
+      ],
+      "submenu": [
+        {
+          "url": "/",
+          "name": "Analytics",
+          "slug": "dashboard-analytics"
+        }
+      ]
+    },
+
+    {
+      "name": "Clients",
+      "icon": "menu-icon tf-icons ti ti-layout-sidebar",
+      "slug": "layouts",
+      "submenu": [
+        {
+          "url": "hdc/layouts/collapsed-menu",
+          "name": "Clients List",
+          "slug": "layouts-collapsed-menu"
+        },
+        {
+          "url": "hdc/layouts/collapsed-menu",
+          "name": "Clients Detail",
+          "slug": "layouts-collapsed-menu"
+        }
+      ]
+    },
+    {
+      "name": "Vendors",
+      "icon": "menu-icon tf-icons ti ti-layout-sidebar",
+      "slug": "layouts",
+      "submenu": [
+        {
+          "url": "hdc/layouts/collapsed-menu",
+          "name": "Vendors List",
+          "slug": "layouts-collapsed-menu"
+        },
+        {
+          "url": "hdc/layouts/collapsed-menu",
+          "name": "Vendors Detail",
+          "slug": "layouts-collapsed-menu"
+        }
+      ]
+    },
+    {
+      "name": "Staffs",
+      "icon": "menu-icon tf-icons ti ti-layout-sidebar",
+      "slug": "layouts",
+      "submenu": [
+        {
+          "url": "hdc/layouts/collapsed-menu",
+          "name": "Staffs List",
+          "slug": "layouts-collapsed-menu"
+        },
+        {
+          "url": "hdc/layouts/collapsed-menu",
+          "name": "Staffs Detail",
+          "slug": "layouts-collapsed-menu"
+        }
+      ]
+    }
+  ]
+}

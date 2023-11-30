@@ -17,6 +17,7 @@ class MenuServiceProvider extends ServiceProvider
   /**
    * Bootstrap services.
    */
+  /*
   public function boot(): void
   {
     $verticalMenuJson = file_get_contents(base_path('resources/menu/verticalMenu.json'));
@@ -24,7 +25,18 @@ class MenuServiceProvider extends ServiceProvider
     $horizontalMenuJson = file_get_contents(base_path('resources/menu/horizontalMenu.json'));
     $horizontalMenuData = json_decode($horizontalMenuJson);
 
+
     // Share all menuData to all the views
     \View::share('menuData', [$verticalMenuData, $horizontalMenuData]);
+  }
+ */
+  public function boot(): void
+  {
+    $MenuJson = file_get_contents(base_path('resources/menu/menu.json'));
+    $MenuData = json_decode($MenuJson);
+
+
+    // Share all menuData to all the views
+    \View::share('menuData', [$MenuData]);
   }
 }
