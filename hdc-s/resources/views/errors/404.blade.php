@@ -5,7 +5,7 @@ $configData = Helper::appClasses();
 
 @extends('hdc/layouts/layoutMaster')
 
-@section('title', 'Error - Pages')
+@section('title', '404')
 
 @section('page-style')
 <!-- Page -->
