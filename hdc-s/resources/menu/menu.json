@@ -20,17 +20,17 @@
     {
       "name": "Clients",
       "icon": "menu-icon tf-icons ti ti-layout-sidebar",
-      "slug": "layouts",
+      "slug": "clients",
       "submenu": [
         {
-          "url": "hdc/layouts/collapsed-menu",
+          "url": "clients",
           "name": "Clients List",
-          "slug": "layouts-collapsed-menu"
+          "slug": "clients-all"
         },
         {
           "url": "hdc/layouts/collapsed-menu",
           "name": "Clients Detail",
-          "slug": "layouts-collapsed-menu"
+          "slug": "clients-detail"
         }
       ]
     },

@@ -3,6 +3,9 @@ use Illuminate\Support\Facades\Route;
 
 //HDC - WEB
 use App\Http\Controllers\hdc\frontend\Analytics;
+use App\Http\Controllers\hdc\frontend\Clients_all;
+use App\Http\Controllers\hdc\frontend\Auth\Login;
+
 
 
 /*
@@ -169,7 +172,8 @@ use App\Http\Controllers\maps\Leaflet;
 
 
 //HDC ROUTE
-Route::get('/', [Analytics::class, 'index'])->name('dashboard-analytics');
+Route::get('/', [Login::class, 'index'])->name('auth');
+Route::get('clients', [Clients_all::class, 'index'])->name('clients');
 
 
 
@@ -374,3 +378,13 @@ Route::get('/maps/leaflet', [Leaflet::class, 'index'])->name('maps-leaflet');
 Route::get('/laravel/user-management', [UserManagement::class, 'UserManagement'])->name('laravel-example-user-management');
 Route::resource('/user-list', UserManagement::class);
  */
+
+Route::middleware([
+    'auth:sanctum',
+    config('jetstream.auth_session'),
+    'verified',
+])->group(function () {
+    Route::get('/dashboard', function () {
+        return view('dashboard');
+    })->name('dashboard');
+});
