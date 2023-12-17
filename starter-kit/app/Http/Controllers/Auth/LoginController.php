@@ -24,9 +24,9 @@ class LoginController extends Controller
 
         if (Auth::guard('staff')->attempt($credentials)) {
             $request->session()->regenerate();
-            return redirect()->intended('/dashboard');
+            return redirect("/");
         } else {
-      
+
             return back()
                 ->withInput()
                 ->withErrors(['email' => 'Invalid credentials']);
