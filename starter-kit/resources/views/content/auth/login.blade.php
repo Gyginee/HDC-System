@@ -54,9 +54,10 @@ $configData = Helper::appClasses();
         <p class="mb-4">Hãy đăng nhập với tài khoản được cấp để làm việc</p>
 
         <form id="formAuthentication" class="mb-3" action="{{ route('login') }}" method="POST">
+           @csrf <!-- Add CSRF token for security -->
           <div class="mb-3">
-            <label for="email" class="form-label">Email hoặc Tài khoản</label>
-            <input type="text" class="form-control" id="email" name="email-username" placeholder="Nhập email hoặc tài khoản" autofocus>
+            <label for="email" class="form-label">Email</label>
+            <input type="text" class="form-control" id="email" name="email" placeholder="Nhập email " autofocus>
           </div>
           <div class="mb-3 form-password-toggle">
             <div class="d-flex justify-content-between">

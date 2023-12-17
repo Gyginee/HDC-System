@@ -2,10 +2,13 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
-class Staff extends Model
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
+
+class Staff extends Authenticatable
 {
+    use Notifiable;
+
     protected $fillable = [
         'staff_id',
         'fullname',
@@ -15,8 +18,8 @@ class Staff extends Model
         'password',
     ];
 
-    // You may need to customize the table name if it's different from the model name in plural form
     protected $table = 'staffs';
+
     public function role()
     {
         return $this->belongsTo(Role::class, 'role_id');

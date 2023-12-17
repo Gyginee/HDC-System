@@ -9,37 +9,39 @@ use App\Models\Staff;
 
 class LoginController extends Controller
 {
-    public function showLoginForm()
-    {
-      $pageConfigs = ['myLayout' => 'blank'];
-      return view('content.auth.login', ['pageConfigs' => $pageConfigs]);
+  public function showLoginForm()
+  {
+    $pageConfigs = ['myLayout' => 'blank'];
+    return view('content.auth.login', ['pageConfigs' => $pageConfigs]);
+  }
+
+  public function login(Request $request)
+  {
+    $credentials = $request->validate([
+      'email' => 'required|email',
+      'password' => 'required',
+    ]);
+    if (Auth::guard('staff')->attempt($credentials)) {
+
+      $request->session()->regenerate();
+      return redirect()->intended('/dashboard');
+    } else {
+      dd('Authentication failed: ');
+      dd($credentials);
+
+      return back()->withErrors([
+        'email' => 'Không tìm thấy tài khoản trong cơ sở dữ liệu.',
+      ]);
     }
+  }
 
-    public function login(Request $request)
-    {
-        $credentials = $request->validate([
-            'email' => 'required|email',
-            'password' => 'required',
-        ]);
+  public function logout(Request $request)
+  {
+    Auth::guard('staff')->logout();
 
-        if (Auth::guard('staff')->attempt($credentials)) {
-            $request->session()->regenerate();
+    $request->session()->invalidate();
+    $request->session()->regenerateToken();
 
-            return redirect()->intended('home');
-        }
-
-        return back()->withErrors([
-            'email' => 'The provided credentials do not match our records.',
-        ]);
-    }
-
-    public function logout(Request $request)
-    {
-        Auth::guard('staff')->logout();
-
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
-
-        return redirect('/');
-    }
+    return redirect('/');
+  }
 }
