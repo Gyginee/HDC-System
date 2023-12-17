@@ -2,7 +2,7 @@
 
 return [
 
-    /*
+  /*
     |--------------------------------------------------------------------------
     | Authentication Defaults
     |--------------------------------------------------------------------------
@@ -13,12 +13,12 @@ return [
     |
     */
 
-    'defaults' => [
-        'guard' => 'staff',
-        'passwords' => 'staffs',
-    ],
+  'defaults' => [
+    'guard' => 'web',
+    'passwords' => 'users',
+  ],
 
-    /*
+  /*
     |--------------------------------------------------------------------------
     | Authentication Guards
     |--------------------------------------------------------------------------
@@ -35,18 +35,18 @@ return [
     |
     */
 
-    'guards' => [
-        'web' => [
-            'driver' => 'session',
-            'provider' => 'users',
-        ],
-        'staff' => [
-          'driver' => 'session',
-          'provider' => 'staffs',
-      ],
+  'guards' => [
+    'web' => [
+      'driver' => 'session',
+      'provider' => 'users',
     ],
+    'staff' => [
+      'driver' => 'session',
+      'provider' => 'staffs',
+    ],
+  ],
 
-    /*
+  /*
     |--------------------------------------------------------------------------
     | User Providers
     |--------------------------------------------------------------------------
@@ -63,22 +63,22 @@ return [
     |
     */
 
-    'providers' => [
-        'users' => [
-            'driver' => 'eloquent',
-            'model' => App\Models\User::class,
-        ],
-        'staffs' => [
-          'driver' => 'eloquent',
-          'model' => App\Models\Staff::class,
-      ],
-        // 'users' => [
-        //     'driver' => 'database',
-        //     'table' => 'users',
-        // ],
+  'providers' => [
+    'users' => [
+      'driver' => 'eloquent',
+      'model' => App\Models\User::class,
     ],
+    'staffs' => [
+      'driver' => 'eloquent',
+      'model' => App\Models\Staff::class,
+    ],
+    // 'users' => [
+    //     'driver' => 'database',
+    //     'table' => 'users',
+    // ],
+  ],
 
-    /*
+  /*
     |--------------------------------------------------------------------------
     | Resetting Passwords
     |--------------------------------------------------------------------------
@@ -97,22 +97,22 @@ return [
     |
     */
 
-    'passwords' => [
-        'users' => [
-            'provider' => 'users',
-            'table' => 'password_reset_tokens',
-            'expire' => 60,
-            'throttle' => 60,
-        ],
-        'staffs' => [
-          'provider' => 'staff',
-          'table' => 'password_reset_tokens',
-          'expire' => 60,
-          'throttle' => 60,
-      ],
+  'passwords' => [
+    'users' => [
+      'provider' => 'users',
+      'table' => 'password_reset_tokens',
+      'expire' => 60,
+      'throttle' => 60,
     ],
+    'staffs' => [
+      'provider' => 'staffs',
+      'table' => 'password_reset_tokens',
+      'expire' => 60,
+      'throttle' => 60,
+    ],
+  ],
 
-    /*
+  /*
     |--------------------------------------------------------------------------
     | Password Confirmation Timeout
     |--------------------------------------------------------------------------
@@ -123,6 +123,6 @@ return [
     |
     */
 
-    'password_timeout' => 10800,
+  'password_timeout' => 10800,
 
 ];
