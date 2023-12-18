@@ -2,7 +2,7 @@
 // Variables
 return [
   "creatorName" => "Gyn",
-  "creatorUrl" => "https://pixinvent.com",
+  "creatorUrl" => "https://Gyginee.com",
   "templateName" => "HDC",
   "templateSuffix" => "System",
   "templateVersion" => "1.0.0",
