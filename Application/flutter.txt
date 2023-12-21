@@ -1,0 +1,1 @@
+maybe use flutter for dev 2 perform ios / android

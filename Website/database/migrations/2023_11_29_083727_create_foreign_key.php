@@ -38,10 +38,6 @@ return new class extends Migration
             $table->foreign('staff_id')->references('staff_id')->on('staffs')->name('fk_project_permission_staffs');
         });
 
-        Schema::table('clients', function (Blueprint $table) {
-            $table->foreign('type_id')->references('id')->on('types')->name('fk_clients_types');
-        });
-
         Schema::table('vendors', function (Blueprint $table) {
             $table->foreign('type_id')->references('id')->on('types')->name('fk_vendors_types');
         });
@@ -85,10 +81,6 @@ return new class extends Migration
         Schema::table('project_permission', function (Blueprint $table) {
             $table->dropForeign('fk_project_permission_projects');
             $table->dropForeign('fk_project_permission_staffs');
-        });
-
-        Schema::table('clients', function (Blueprint $table) {
-            $table->dropForeign('fk_clients_types');
         });
 
         Schema::table('vendors', function (Blueprint $table) {

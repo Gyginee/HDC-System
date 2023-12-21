@@ -39,7 +39,7 @@ Route::get('projects', [ProjectControler::class, 'index'])->middleware('guest');
 Route::get('project/detail', [ProjectDetailControler::class, 'index'])->middleware('guest');
 
 
-Route::get('clients', [ProjectControler::class, 'index'])->middleware('guest');
+Route::get('clients', [ClientControler::class, 'index'])->middleware('guest');
 
 // Accessible only to authenticated users
 Route::get('page-2', [Page2::class, 'index'])->name('pages-page-2')->middleware('auth');
