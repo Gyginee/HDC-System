@@ -29,21 +29,20 @@
 
 @section('content')
 
-    <!-- Users List Table -->
+    <!-- Clients List Table -->
     <div class="card">
         <div class="card-header border-bottom">
             <h5 class="card-title mb-3">Search Filter</h5>
             <div class="d-flex justify-content-between align-items-center row pb-2 gap-3 gap-md-0">
-                <div class="col-md-4 user_role"></div>
-                <div class="col-md-4 user_plan"></div>
-                <div class="col-md-4 user_status"></div>
+                <div class="col-md-4 client_id"></div>
+                <div class="col-md-4 client_plan"></div>
+                <div class="col-md-4 client_status"></div>
             </div>
         </div>
         <div class="card-datatable table-responsive">
-            <table class="datatables-users table">
+            <table class="datatables-clients table">
                 <thead class="border-top">
                     <tr>
-                        <th></th>
                         <th>ID</th>
                         <th>Khách hàng</th>
                         <th>Địa chỉ</th>
@@ -54,55 +53,43 @@
                 </thead>
             </table>
         </div>
-        <!-- Offcanvas to add new user -->
-        <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasAddUser" aria-labelledby="offcanvasAddUserLabel">
+        <!-- Offcanvas to add new client -->
+        <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasAddClient"
+            aria-labelledby="offcanvasAddClientLabel">
             <div class="offcanvas-header">
-                <h5 id="offcanvasAddUserLabel" class="offcanvas-title">Add User</h5>
+                <h5 id="offcanvasAddClientLabel" class="offcanvas-title">Thêm khách hàng</h5>
                 <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
             </div>
             <div class="offcanvas-body mx-0 flex-grow-0 pt-0 h-100">
-                <form class="add-new-user pt-0" id="addNewUserForm" onsubmit="return false">
+                <form class="add-new-client pt-0" id="addNewClientForm" onsubmit="return false">
                     <div class="mb-3">
-                        <label class="form-label" for="add-user-fullname">Full Name</label>
-                        <input type="text" class="form-control" id="add-user-fullname" placeholder="John Doe"
-                            name="userFullname" aria-label="John Doe" />
+                        <label class="form-label" for="add-client-fullname">Tên khách hàng</label>
+                        <input type="text" class="form-control" id="add-client-fullname" placeholder="HDCreative Ltd"
+                            name="clientFullname" aria-label="HDCreative Ltd" />
                     </div>
+
                     <div class="mb-3">
-                        <label class="form-label" for="add-user-email">Email</label>
-                        <input type="text" id="add-user-email" class="form-control" placeholder="john.doe@example.com"
-                            aria-label="john.doe@example.com" name="userEmail" />
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label" for="add-user-contact">Contact</label>
-                        <input type="text" id="add-user-contact" class="form-control phone-mask"
-                            placeholder="+1 (609) 988-44-11" aria-label="john.doe@example.com" name="userContact" />
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label" for="add-user-company">Company</label>
-                        <input type="text" id="add-user-company" class="form-control" placeholder="Web Developer"
-                            aria-label="jdoe1" name="companyName" />
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label" for="user-role">User Role</label>
-                        <select id="user-role" class="form-select">
-                            <option value="subscriber">Subscriber</option>
-                            <option value="editor">Editor</option>
-                            <option value="maintainer">Maintainer</option>
-                            <option value="author">Author</option>
-                            <option value="admin">Admin</option>
+                        <label class="form-label" for="client-province">Tỉnh thành</label>
+                        <select id="client-province" class="form-select">
+                            <option value="">Chọn Tỉnh thành</option>
                         </select>
                     </div>
-                    <div class="mb-4">
-                        <label class="form-label" for="user-plan">Select Plan</label>
-                        <select id="user-plan" class="form-select">
-                            <option value="basic">Basic</option>
-                            <option value="enterprise">Enterprise</option>
-                            <option value="company">Company</option>
-                            <option value="team">Team</option>
+
+                    <div class="mb-3">
+                        <label class="form-label" for="client-district">Quận/Huyện</label>
+                        <select id="client-district" class="form-select">
+                            <option value="">Chọn Quận/Huyện</option>
                         </select>
                     </div>
-                    <button type="submit" class="btn btn-primary me-sm-3 me-1 data-submit">Submit</button>
-                    <button type="reset" class="btn btn-label-secondary" data-bs-dismiss="offcanvas">Cancel</button>
+
+                    <div class="mb-3">
+                        <label class="form-label" for="add-client-address">Địa chỉ cụ thể</label>
+                        <input type="text" class="form-control" id="add-client-address" placeholder="19F, Pearl Plaza"
+                            name="clientAddress" aria-label="Client Address" />
+                    </div>
+
+                    <button type="submit" class="btn btn-primary me-sm-3 me-1 data-submit">Tạo</button>
+                    <button type="reset" class="btn btn-label-secondary" data-bs-dismiss="offcanvas">Huỷ</button>
                 </form>
             </div>
         </div>

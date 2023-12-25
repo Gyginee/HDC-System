@@ -4,6 +4,39 @@
 
 'use strict';
 
+document.addEventListener('DOMContentLoaded', function () {
+  fetch('https://provinces.open-api.vn/api/p/')
+    .then(response => response.json())
+    .then(provinces => {
+      const provinceSelect = document.getElementById('client-province');
+      provinces.forEach(province => {
+        const option = document.createElement('option');
+        option.value = province.code;
+        option.textContent = province.name;
+        provinceSelect.appendChild(option);
+      });
+    });
+
+  document.getElementById('client-province').addEventListener('change', function () {
+    const provinceCode = this.value;
+    const districtSelect = document.getElementById('client-district');
+    districtSelect.innerHTML = '<option value="">Chọn Quận/Huyện</option>'; // Reset district select
+
+    if (provinceCode) {
+      fetch(`https://provinces.open-api.vn/api/p/${provinceCode}?depth=2`)
+        .then(response => response.json())
+        .then(data => {
+          data.districts.forEach(district => {
+            const option = document.createElement('option');
+            option.value = district.code;
+            option.textContent = district.name;
+            districtSelect.appendChild(option);
+          });
+        });
+    }
+  });
+});
+
 // Datatable (jquery)
 $(function () {
   let borderColor, bodyBg, headingColor;
@@ -18,158 +51,80 @@ $(function () {
     headingColor = config.colors.headingColor;
   }
 
-  // Define your API endpoints
-  const clientListApiUrl = '/api/v1/clients';
-  const projectCountApiUrl = '/api/v1/project/count';
-  const projectTotalApiUrl = '/api/v1/project/total';
-
   // Variable declaration for table
-  var dt_client_table = $('.datatables-clients'),
-    select2 = $('.select2'),
-    userView = baseUrl + 'app/user/view/account'
+  var dt_client_table = $('.datatables-clients');
 
+  let clientData = 'http://127.0.0.1:8000/api/v1/clients';
+  let ProjectCountData = 'http://127.0.0.1:8000/api/v1/project/count';
+  let ProjectCostData = 'http://127.0.0.1:8000/api/v1/project/total';
 
-  // Users datatable
+  // Function to handle AJAX requests
+  function makeAjaxRequest(url, method, requestData, successCallback) {
+    $.ajax({
+      url: url,
+      method: method,
+      data: requestData,
+      success: successCallback,
+      error: function (error) {
+        console.error(error);
+      }
+    });
+  }
+
+  // Clients datatable
   if (dt_client_table.length) {
-    var dt_user = dt_client_table.DataTable({
-      ajax: {
-        url: clientListApiUrl, // Replace with your API endpoint URL
-        dataSrc: '' // This depends on your API response structure; it might be an empty string or a property containing the data array
-      },
-      columns: [
-        // columns according to JSON
-        { data: '' },
-        { data: 'id' },
-        { data: 'name' },
-        { data: 'address' },
-        { data: 'count' },
-        { data: 'total_cost' }
-      ],
+    var dt_client = dt_client_table.DataTable({
       columnDefs: [
         {
-          // For Responsive
-          className: 'control',
-          searchable: false,
-          orderable: false,
-          responsivePriority: 2,
-          targets: 0,
+          targets: [0],
+          title: 'ID',
           render: function (data, type, full, meta) {
-            return '';
-          }
-        },
-
-
-        {
-          // Client ID
-          targets: 1,
-          responsivePriority: 4,
-          render: function (data, type, full, meta) {
-            if (full['id'] != null) {
-              $output = '<span class="text-truncate d-flex align-items-center>' + full['id'] + '</span>';
-            } else {
-              $output = '<span class="text-truncate d-flex align-items-center>' + -1 + '</span>';
-            }
-            return $output;
+            return '<span class="fw-medium">' + full['id'] + '</span>';
           }
         },
         {
-          // Client name
-          targets: 2,
-          responsivePriority: 4,
+          targets: [1],
+          title: 'Name',
           render: function (data, type, full, meta) {
-            if (full['name'] != null) {
-              $output = '<span class="text-truncate d-flex align-items-center>' + full['name'] + '</span>';
-            } else {
-              $output = '<span class="text-truncate d-flex align-items-center>' + null + '</span>';
-            }
-            return $output;
+            return '<span class="fw-medium">' + full['name'] + '</span>';
           }
         },
         {
-          // Client Address
-          targets: 3,
-          responsivePriority: 4,
+          targets: [2],
+          title: 'Address',
           render: function (data, type, full, meta) {
-            if (full['address'] != null) {
-              $output = '<span class="text-truncate d-flex align-items-center>' + full['address'] + '</span>';
-            } else {
-              $output = '<span class="text-truncate d-flex align-items-center>' + null + '</span>';
-            }
-            return $output;
+            return '<span class="fw-medium">' + full['address'] + '</span>';
           }
         },
         {
-          // Project Count
-          targets: 4,
+          targets: [3],
+          title: 'Count',
           render: function (data, type, full, meta) {
-            // User name
-            // Fetch data for project count
-            fetch(projectCountApiUrl, {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json'
-              },
-              body: JSON.stringify({ id: full['id'] }) // Client ID
-            })
-              .then(response => response.json())
-              .then(data => {
-                // Handle the response and update your UI as needed
-                $output = '<span class="text-truncate d-flex align-items-center>' + data.count + '</span>';
-              })
-              .catch(error => {
-                $output = '<span class="text-truncate d-flex align-items-center>' + -1 + '</span>';
-              });
-            return $output;
+            return '<span class="fw-medium">' + full['count'] + '</span>';
           }
         },
         {
-          // Plans
-          targets: 5,
+          targets: [4],
+          title: 'Cost',
           render: function (data, type, full, meta) {
-            // User name
-            // Fetch data for project count
-            fetch(projectTotalApiUrl, {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json'
-              },
-              body: JSON.stringify({ id: full['id'] }) // Client ID
-            })
-              .then(response => response.json())
-              .then(data => {
-                // Handle the response and update your UI as needed
-                $output = '<span class="text-truncate d-flex align-items-center>' + data.total_cost + '</span>';
-              })
-              .catch(error => {
-                $output = '<span class="text-truncate d-flex align-items-center>' + -1 + '</span>';
-              });
-            return $output;
+            return '<span class="fw-medium">' + full['total_cost'] + '</span>';
           }
         },
         {
-          // Actions
-          targets: -1,
+          targets: [-1],
           title: 'Actions',
-          searchable: false,
           orderable: false,
+          searchable: false,
           render: function (data, type, full, meta) {
             return (
               '<div class="d-flex align-items-center">' +
               '<a href="javascript:;" class="text-body"><i class="ti ti-edit ti-sm me-2"></i></a>' +
               '<a href="javascript:;" class="text-body delete-record"><i class="ti ti-trash ti-sm mx-2"></i></a>' +
-              '<a href="javascript:;" class="text-body dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="ti ti-dots-vertical ti-sm mx-1"></i></a>' +
-              '<div class="dropdown-menu dropdown-menu-end m-0">' +
-              '<a href="' +
-              userView +
-              '" class="dropdown-item">View</a>' +
-              '<a href="javascript:;" class="dropdown-item">Suspend</a>' +
-              '</div>' +
               '</div>'
             );
           }
         }
       ],
-
       order: [[1, 'desc']],
       dom:
         '<"row me-2"' +
@@ -183,72 +138,39 @@ $(function () {
       language: {
         sLengthMenu: '_MENU_',
         search: '',
-        searchPlaceholder: 'Search..'
+        searchPlaceholder: 'Tìm kiếm..'
       },
-      // Buttons with Dropdown
       buttons: [
         {
           extend: 'collection',
-          className: 'btn btn-label-secondary dropdown-toggle mx-3',
           text: '<i class="ti ti-screen-share me-1 ti-xs"></i>Export',
+          className: 'btn btn-label-secondary dropdown-toggle mx-3',
           buttons: [
             {
               extend: 'print',
-              text: '<i class="ti ti-printer me-2" ></i>Print',
+              text: '<i class="ti ti-printer me-2"></i>Print',
               className: 'dropdown-item',
               exportOptions: {
-                columns: [1, 2, 3, 4, 5],
-                // prevent avatar to be print
+                columns: [0, 1, 2, 3, 4],
                 format: {
                   body: function (inner, coldex, rowdex) {
-                    if (inner.length <= 0) return inner;
-                    var el = $.parseHTML(inner);
-                    var result = '';
-                    $.each(el, function (index, item) {
-                      if (item.classList !== undefined && item.classList.contains('name')) {
-                        result = result + item.lastChild.firstChild.textContent;
-                      } else if (item.innerText === undefined) {
-                        result = result + item.textContent;
-                      } else result = result + item.innerText;
-                    });
-                    return result;
+                    return extractTextFromHTML(inner);
                   }
                 }
               },
               customize: function (win) {
-                //customize print view for dark
-                $(win.document.body)
-                  .css('color', headingColor)
-                  .css('border-color', borderColor)
-                  .css('background-color', bodyBg);
-                $(win.document.body)
-                  .find('table')
-                  .addClass('compact')
-                  .css('color', 'inherit')
-                  .css('border-color', 'inherit')
-                  .css('background-color', 'inherit');
+                customizePrintView(win);
               }
             },
             {
               extend: 'csv',
-              text: '<i class="ti ti-file-text me-2" ></i>Csv',
+              text: '<i class="ti ti-file-text me-2"></i>Csv',
               className: 'dropdown-item',
               exportOptions: {
-                columns: [1, 2, 3, 4, 5],
-                // prevent avatar to be display
+                columns: [0, 1, 2, 3, 4],
                 format: {
                   body: function (inner, coldex, rowdex) {
-                    if (inner.length <= 0) return inner;
-                    var el = $.parseHTML(inner);
-                    var result = '';
-                    $.each(el, function (index, item) {
-                      if (item.classList !== undefined && item.classList.contains('name')) {
-                        result = result + item.lastChild.firstChild.textContent;
-                      } else if (item.innerText === undefined) {
-                        result = result + item.textContent;
-                      } else result = result + item.innerText;
-                    });
-                    return result;
+                    return extractTextFromHTML(inner);
                   }
                 }
               }
@@ -258,21 +180,10 @@ $(function () {
               text: '<i class="ti ti-file-spreadsheet me-2"></i>Excel',
               className: 'dropdown-item',
               exportOptions: {
-                columns: [1, 2, 3, 4, 5],
-                // prevent avatar to be display
+                columns: [0, 1, 2, 3, 4],
                 format: {
                   body: function (inner, coldex, rowdex) {
-                    if (inner.length <= 0) return inner;
-                    var el = $.parseHTML(inner);
-                    var result = '';
-                    $.each(el, function (index, item) {
-                      if (item.classList !== undefined && item.classList.contains('name')) {
-                        result = result + item.lastChild.firstChild.textContent;
-                      } else if (item.innerText === undefined) {
-                        result = result + item.textContent;
-                      } else result = result + item.innerText;
-                    });
-                    return result;
+                    return extractTextFromHTML(inner);
                   }
                 }
               }
@@ -282,45 +193,23 @@ $(function () {
               text: '<i class="ti ti-file-code-2 me-2"></i>Pdf',
               className: 'dropdown-item',
               exportOptions: {
-                columns: [1, 2, 3, 4, 5],
-                // prevent avatar to be display
+                columns: [0, 1, 2, 3, 4],
                 format: {
                   body: function (inner, coldex, rowdex) {
-                    if (inner.length <= 0) return inner;
-                    var el = $.parseHTML(inner);
-                    var result = '';
-                    $.each(el, function (index, item) {
-                      if (item.classList !== undefined && item.classList.contains('name')) {
-                        result = result + item.lastChild.firstChild.textContent;
-                      } else if (item.innerText === undefined) {
-                        result = result + item.textContent;
-                      } else result = result + item.innerText;
-                    });
-                    return result;
+                    return extractTextFromHTML(inner);
                   }
                 }
               }
             },
             {
               extend: 'copy',
-              text: '<i class="ti ti-copy me-2" ></i>Copy',
+              text: '<i class="ti ti-copy me-2"></i>Copy',
               className: 'dropdown-item',
               exportOptions: {
-                columns: [1, 2, 3, 4, 5],
-                // prevent avatar to be display
+                columns: [0, 1, 2, 3, 4],
                 format: {
                   body: function (inner, coldex, rowdex) {
-                    if (inner.length <= 0) return inner;
-                    var el = $.parseHTML(inner);
-                    var result = '';
-                    $.each(el, function (index, item) {
-                      if (item.classList !== undefined && item.classList.contains('name')) {
-                        result = result + item.lastChild.firstChild.textContent;
-                      } else if (item.innerText === undefined) {
-                        result = result + item.textContent;
-                      } else result = result + item.innerText;
-                    });
-                    return result;
+                    return extractTextFromHTML(inner);
                   }
                 }
               }
@@ -328,55 +217,118 @@ $(function () {
           ]
         },
         {
-          text: '<i class="ti ti-plus me-0 me-sm-1 ti-xs"></i><span class="d-none d-sm-inline-block">Add New User</span>',
+          text: '<i class="ti ti-plus me-0 me-sm-1 ti-xs"></i><span class="d-none d-sm-inline-block">Thêm khách hàng</span>',
           className: 'add-new btn btn-primary',
           attr: {
             'data-bs-toggle': 'offcanvas',
-            'data-bs-target': '#offcanvasAddUser'
+            'data-bs-target': '#offcanvasAddClient'
           }
         }
-      ],
-      // For responsive popup
-      responsive: {
-        details: {
-          display: $.fn.dataTable.Responsive.display.modal({
-            header: function (row) {
-              var data = row.data();
-              return 'Details of ' + data['name'];
-            }
-          }),
-          type: 'column',
-          renderer: function (api, rowIdx, columns) {
-            var data = $.map(columns, function (col, i) {
-              return col.title !== '' // ? Do not show row in modal popup if title is blank (for check box)
-                ? '<tr data-dt-row="' +
-                    col.rowIndex +
-                    '" data-dt-column="' +
-                    col.columnIndex +
-                    '">' +
-                    '<td>' +
-                    col.title +
-                    ':' +
-                    '</td> ' +
-                    '<td>' +
-                    col.data +
-                    '</td>' +
-                    '</tr>'
-                : '';
-            }).join('');
+      ]
+    });
 
-            return data ? $('<table class="table"/><tbody />').append(data) : false;
-          }
-        }
-      },
-      initComplete: function () {
+    /*
+    var staticData = [
+      { id: '1', name: 'Client A', address: 'Address 1', count: '10', total_cost: '1000' }
+    ];
+    dt_client.clear().rows.add(staticData).draw();
+ */
+
+    function extractTextFromHTML(inner) {
+      if (inner.length <= 0) return inner;
+      var el = $.parseHTML(inner);
+      var result = '';
+      $.each(el, function (index, item) {
+        if (item.classList !== undefined && item.classList.contains('name')) {
+          result = result + item.lastChild.firstChild.textContent;
+        } else if (item.innerText === undefined) {
+          result = result + item.textContent;
+        } else result = result + item.innerText;
+      });
+      return result;
+    }
+
+    function customizePrintView(win) {
+      $(win.document.body).css('color', headingColor).css('border-color', borderColor).css('background-color', bodyBg);
+      $(win.document.body)
+        .find('table')
+        .addClass('compact')
+        .css('color', 'inherit')
+        .css('border-color', 'inherit')
+        .css('background-color', 'inherit');
+    }
+
+    // Function to handle AJAX requests and return a Promise
+    function makeAjaxRequestPromise(url, method, requestData) {
+      return new Promise((resolve, reject) => {
+        $.ajax({
+          url: url,
+          method: method,
+          data: requestData,
+          success: resolve,
+          error: reject
+        });
+      });
+    }
+
+    // GET Request to retrieve client data
+    makeAjaxRequest(clientData, 'GET', {}, function (response) {
+      var cdata = response.data;
+      if (Array.isArray(cdata) && cdata.length > 0) {
+        cdata.forEach(function (client) {
+          // Create promises for both count and total_cost requests
+          var countPromise = makeAjaxRequestPromise(ProjectCountData, 'POST', { client_id: client.id });
+          var costPromise = makeAjaxRequestPromise(ProjectCostData, 'POST', { client_id: client.id });
+
+          // Wait for both promises to resolve
+          Promise.all([countPromise, costPromise])
+            .then(function (results) {
+              client.count = results[0].count;
+              client.total_cost = results[1].total_cost;
+
+              // Now that client is fully populated, add it to the DataTable
+              var Data = [
+                {
+                  id: client.id,
+                  name: client.name,
+                  address: client.address,
+                  count: client.count,
+                  total_cost: client.total_cost
+                }
+              ];
+              dt_client.rows.add(Data).draw();
+            })
+            .catch(function (error) {
+              console.error('Error in AJAX requests', error);
+            });
+        });
       }
+    });
+
+    // Handle Delete Record
+    $('.datatables-clients tbody').on('click', '.delete-record', function () {
+      var row = $(this).closest('tr');
+      var data = dt_client.row(row).data();
+      var id = data.id;
+
+      // Send a delete request to the server
+      $.ajax({
+        url: clientData + '/' + id,
+        method: 'DELETE',
+        success: function (response) {
+          // Remove the row from the DataTable
+          dt_client.row(row).remove().draw();
+        },
+        error: function (error) {
+          console.error(error);
+        }
+      });
     });
   }
 
   // Delete Record
   $('.datatables-clients tbody').on('click', '.delete-record', function () {
-    dt_user.row($(this).parents('tr')).remove().draw();
+    dt_client.row($(this).parents('tr')).remove().draw();
   });
 
   // Filter form control to default size
@@ -390,7 +342,7 @@ $(function () {
 // Validation & Phone mask
 (function () {
   const phoneMaskList = document.querySelectorAll('.phone-mask'),
-    addNewUserForm = document.getElementById('addNewUserForm');
+    addNewClientForm = document.getElementById('addNewClientForm');
 
   // Phone Number
   if (phoneMaskList) {
@@ -401,23 +353,21 @@ $(function () {
       });
     });
   }
-  // Add New User Form Validation
-  const fv = FormValidation.formValidation(addNewUserForm, {
+
+  // Add New Client Form Validation
+  const fv = FormValidation.formValidation(addNewClientForm, {
     fields: {
-      userFullname: {
+      clientFullname: {
         validators: {
           notEmpty: {
-            message: 'Please enter fullname '
+            message: 'Thiếu tên khách hàng'
           }
         }
       },
-      userEmail: {
+      clientAddress: {
         validators: {
           notEmpty: {
-            message: 'Please enter your email'
-          },
-          emailAddress: {
-            message: 'The value is not a valid email address'
+            message: 'Thiếu địa chỉ khách hàng'
           }
         }
       }
@@ -437,5 +387,48 @@ $(function () {
       // defaultSubmit: new FormValidation.plugins.DefaultSubmit(),
       autoFocus: new FormValidation.plugins.AutoFocus()
     }
+  });
+
+  // Form submission
+  addNewClientForm.addEventListener('submit', function (event) {
+    event.preventDefault();
+    fv.validate().then(function (status) {
+      if (status === 'Valid') {
+        // Fetch form data
+        const name = document.getElementById('add-client-fullname').value;
+        const addressDetail = document.getElementById('add-client-address').value;
+        const provinceSelect = document.getElementById('client-province');
+        const districtSelect = document.getElementById('client-district');
+
+        const provinceName = provinceSelect.options[provinceSelect.selectedIndex].text;
+        const districtName = districtSelect.options[districtSelect.selectedIndex].text;
+        const address = `${addressDetail}, ${districtName}, ${provinceName}`;
+
+        // Create JSON payload
+        const data = {
+          id: "",
+          name: name,
+          address: address
+        };
+
+        // Send POST request
+        fetch('http://127.0.0.1:8000/api/v1/clients', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(data)
+        })
+          .then(response => response.json())
+          .then(data => {
+            console.log('Success:', data);
+            // Handle success (e.g., display a success message or redirect)
+          })
+          .catch(error => {
+            console.error('Error:', error);
+            // Handle errors (e.g., display an error message)
+          });
+      }
+    });
   });
 })();
