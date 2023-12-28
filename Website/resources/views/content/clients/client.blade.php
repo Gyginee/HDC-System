@@ -31,9 +31,9 @@
 @endsection
 
 @section('content')
-    <h4 class="py-3 mb-2">
-        <span class="text-muted fw-light">Khách hàng</span>
-    </h4>
+<h4 class="py-3 mb-4">
+  <span class="text-muted fw-light">Quản lý /</span> Khách hàng
+</h4>
 
 
     <!-- Clients List Table -->

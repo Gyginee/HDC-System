@@ -27,27 +27,37 @@ use Illuminate\Routing\RouteGroup;
 
 // Main Page Route
 
-// Middleware to redirect authenticated users from login page to home
-Route::post('login', [LoginController::class, 'login'])->middleware('guest');
-Route::get('login', [LoginController::class, 'showLoginForm'])->name('login')->middleware('guest');
-Route::get('logout', [LoginController::class, 'logout'])->name('logout')->middleware('auth');
+
+Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
+Route::post('/login', [LoginController::class, 'login'])->name('login.submit');
+Route::get('logout', [LoginController::class, 'logout'])->name('logout');
+
+  // Routes for admin and manager
+Route::middleware(['auth.staff', 'role:admin,manager'])->group(function () {
 
 
-// Home page accessible only to authenticated users
-Route::get('/', [DashboardController::class, 'index'])->middleware('guest');
-
-Route::get('projects', [ProjectController::class, 'index'])->middleware('guest');
-Route::get('project/detail', [ProjectDetailController::class, 'index'])->middleware('guest');
+  Route::get('projects', [ProjectController::class, 'index'])->name('projects');
+  Route::get('project/detail', [ProjectDetailController::class, 'index'])->name('projects-detail');
 
 
-Route::get('clients', [ClientController::class, 'index'])->middleware('guest');
-Route::get('vendors', [VendorController::class, 'index'])->middleware('guest');
+  Route::get('clients', [ClientController::class, 'index'])->name('clients');
+  Route::get('vendors', [VendorController::class, 'index'])->name('vendors');
 
-// Accessible only to authenticated users
-Route::get('page-2', [Page2::class, 'index'])->name('pages-page-2')->middleware('auth');
 
-// Locale - accessible only to authenticated users
-Route::get('lang/{locale}', [LanguageController::class, 'swap'])->middleware('auth');
+  // Locale - accessible only to authenticated users
+  Route::get('lang/{locale}', [LanguageController::class, 'swap']);
+});
 
-// Pages - accessible only to authenticated users
-Route::get('pages/misc-error', [MiscError::class, 'index'])->name('pages-misc-error')->middleware('auth');
+// Routes for employees
+Route::middleware(['auth.staff', 'role:employee'])->group(function () {
+
+});
+
+  // Home page accessible only to authenticated users
+Route::middleware(['auth.staff', 'role:admin,manager,employee'])->group(function () {
+  Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
+  Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
+});
+
+

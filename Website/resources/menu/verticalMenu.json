@@ -60,13 +60,13 @@
       "url": "/clients",
       "name": "Khách hàng",
       "icon": "menu-icon tf-icons ti ti-user",
-      "slug": "staffs"
+      "slug": "clients"
     },
     {
       "url": "/vendors",
       "name": "Vendors",
       "icon": "menu-icon tf-icons ti ti-package",
-      "slug": "vendor"
+      "slug": "vendors"
     },
     {
       "menuHeader": "Quản trị"

@@ -17,21 +17,17 @@ class LoginController extends Controller
 
     public function login(Request $request)
     {
-        $credentials = $request->validate([
-            'email' => 'required|email',
-            'password' => 'required',
-        ]);
+          $this->validate($request, [
+              'email' => 'required|email',
+              'password' => 'required',
+          ]);
 
-        if (Auth::guard('staff')->attempt($credentials)) {
-            $request->session()->regenerate();
-            return redirect("/");
-        } else {
+          if (Auth::guard('staff')->attempt(['email' => $request->email, 'password' => $request->password], $request->remember)) {
+              // Redirect based on role_id
+              return redirect()->intended(route('dashboard'));
+          }
 
-            return back()
-                ->withInput()
-                ->withErrors(['email' => 'Invalid credentials']);
-
-        }
+          return redirect()->back()->withInput($request->only('email', 'remember'));
     }
 
     public function logout(Request $request)
