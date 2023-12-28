@@ -5,8 +5,7 @@
 'use strict';
 
 // Variable declaration for table
-var dt_client_table = $('.datatables-clients'),
-  customerView = baseUrl + 'app/ecommerce/customer/details/overview';
+var dt_client_table = $('.datatables-clients');
 var dt_client;
 
 let clientData = 'http://127.0.0.1:8000/api/v1/clients';
@@ -127,7 +126,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
     fetch(clientData, {
       method: 'POST',
-
       headers: {
         'Content-Type': 'application/json'
       },
@@ -139,7 +137,7 @@ document.addEventListener('DOMContentLoaded', function () {
           .add([{ id: e.data.id, name: e.data.name, address: e.data.address, count: 0, total_cost: 0 }])
           .draw();
         Swal.fire({
-          title: 'Thành công!',
+          title: 'Good job!',
           text: 'Thêm khách hàng thành công!',
           icon: 'success',
           customClass: {
@@ -149,7 +147,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
       })
       .catch(error => {
-        //console.error('Error:', error);
+        console.error('Error:', error);
         Swal.fire({
           title: 'Error!',
           text: 'Xảy ra sự cố khi thêm khách hàng!',
@@ -249,71 +247,41 @@ $(function () {
         },
         {
           targets: [1],
-          title: 'Khách hàng',
+          title: 'Name',
           render: function (data, type, full, meta) {
-            var $image = full['imagePath'],
-              $name = full['name'];
-            if ($image) {
-              // For Avatar image
-              var $output =
-                '<img src="' + assetsPath + 'img/clients/' + $image + '" alt="Clients" class="rounded-circle">';
-            } else {
-              // For Avatar badge
-              var stateNum = Math.floor(Math.random() * 6);
-              var states = ['success', 'danger', 'warning', 'info', 'dark', 'primary', 'secondary'];
-              var $state = states[stateNum],
-                $initials = $name.match(/\b\w/g) || [];
-              $initials = (($initials.shift() || '') + ($initials.pop() || '')).toUpperCase();
-              $output = '<span class="avatar-initial rounded-circle bg-label-' + $state + '">' + $initials + '</span>';
-            }
-
-            var $row_output =
-              '<div class="d-flex justify-content-start align-items-center client-name">' +
-              '<div class="avatar-wrapper">' +
-              '<div class="avatar me-2">' +
-              $output +
-              '</div>' +
-              '</div>' +
-              '<div class="d-flex flex-column">' +
-              '<a href="' +
-              customerView +
-              '" ><span class="fw-medium">' +
-              $name +
-              '</span></a>' +
-              '</div>' +
-              '</div>';
-            return $row_output;
+            return '<span class="fw-medium">' + full['name'] + '</span>';
           }
         },
         {
           targets: [2],
-          title: 'Địa chỉ',
+          title: 'Address',
           render: function (data, type, full, meta) {
             return '<span class="fw-medium">' + full['address'] + '</span>';
           }
         },
         {
           targets: [3],
-          title: 'Dự án',
+          title: 'Count',
           render: function (data, type, full, meta) {
             return '<span class="fw-medium">' + full['count'] + '</span>';
           }
         },
         {
           targets: [4],
-          title: 'Tổng dự án',
+          title: 'Cost',
           render: function (data, type, full, meta) {
             return '<span class="fw-medium">' + full['total_cost'] + '</span>';
           }
         },
         {
           targets: [-1],
-          title: 'Chức năng',
+          title: 'Actions',
           orderable: false,
           searchable: false,
           render: function (data, type, full, meta) {
             return (
               '<div class="d-flex align-items-center">' +
+              '<a href="javascript:;" class="text-body"><i class="ti ti-edit ti-sm me-2"></i></a>' +
               '<a href="javascript:;" id="del-btn" class="text-body delete-record"><i class="ti ti-trash ti-sm mx-2"></i></a>' +
               '</div>'
             );
@@ -442,7 +410,6 @@ $(function () {
                 {
                   id: client.id,
                   name: client.name,
-                  imagePath: client.imagePath,
                   address: client.address,
                   count: client.count,
                   total_cost: client.total_cost

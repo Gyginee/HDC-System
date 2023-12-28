@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 
 use Illuminate\Http\Request;
 
-class ProjectDetailControler extends Controller
+class ProjectDetailController extends Controller
 {
     //
     public function index()

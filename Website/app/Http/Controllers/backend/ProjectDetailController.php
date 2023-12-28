@@ -68,4 +68,30 @@ class ProjectDetailController extends Controller
         $projectDetail->delete();
         return response()->json(null, 204);
     }
+    public function project_detailCount(Request $request)
+    {
+      $vendor_id = $request->input('vendor_id');
+
+        if (!$vendor_id) {
+            return response()->json(['error' => 'Client ID parameter is missing'], 400);
+        }
+
+        $count = Project_detail::where('vendor_id', $vendor_id)->count();
+
+        return response()->json(['count' => $count], 200);
+    }
+
+    public function project_detailTotal(Request $request)
+    {
+      $vendor_id = $request->input('vendor_id');
+
+        if (!$vendor_id) {
+            return response()->json(['error' => 'Client ID parameter is missing'], 400);
+        }
+
+        $totalCost = Project_detail::where('vendor_id', $vendor_id)->sum('cost');
+
+        return response()->json(['total_cost' => $totalCost], 200);
+    }
+
 }

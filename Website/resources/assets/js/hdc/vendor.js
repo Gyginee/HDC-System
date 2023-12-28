@@ -1,23 +1,23 @@
 /**
- * Page Client List
+ * Page Vendor List
  */
 
 'use strict';
 
 // Variable declaration for table
-var dt_client_table = $('.datatables-clients'),
+var dt_vendor_table = $('.datatables-vendors'),
   customerView = baseUrl + 'app/ecommerce/customer/details/overview';
-var dt_client;
+var dt_vendor;
 
-let clientData = 'http://127.0.0.1:8000/api/v1/clients';
-let ProjectCountData = 'http://127.0.0.1:8000/api/v1/project/count';
-let ProjectCostData = 'http://127.0.0.1:8000/api/v1/project/total';
+let vendorData = 'http://127.0.0.1:8000/api/v1/vendors';
+let ProjectDCountData = 'http://127.0.0.1:8000/api/v1/project/detailcount';
+let ProjectDCostData = 'http://127.0.0.1:8000/api/v1/project/detailtotal';
 
 document.addEventListener('DOMContentLoaded', function () {
   fetch('https://provinces.open-api.vn/api/p/')
     .then(response => response.json())
     .then(provinces => {
-      const provinceSelect = document.getElementById('client-province');
+      const provinceSelect = document.getElementById('vendor-province');
       provinces.forEach(province => {
         const option = document.createElement('option');
         option.value = province.code;
@@ -26,9 +26,9 @@ document.addEventListener('DOMContentLoaded', function () {
       });
     });
 
-  document.getElementById('client-province').addEventListener('change', function () {
+  document.getElementById('vendor-province').addEventListener('change', function () {
     const provinceCode = this.value;
-    const districtSelect = document.getElementById('client-district');
+    const districtSelect = document.getElementById('vendor-district');
     districtSelect.innerHTML = '<option value="">Chọn Quận/Huyện</option>'; // Reset district select
 
     if (provinceCode) {
@@ -45,21 +45,21 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   });
 
-  const addNewClientForm = document.getElementById('addNewClientForm');
+  const addNewVendorForm = document.getElementById('addNewVendorForm');
   const submitButton = document.getElementById('submitFormButton');
 
   // Initialize Form Validation
-  const fv = FormValidation.formValidation(addNewClientForm, {
+  const fv = FormValidation.formValidation(addNewVendorForm, {
     fields: {
-      clientFullname: {
+      vendorFullname: {
         validators: {
           notEmpty: {
-            message: 'Thiếu tên khách hàng' // Missing client's name
+            message: 'Thiếu tên khách hàng' // Missing vendor's name
           }
         }
       },
 
-      clientProvince: {
+      vendorProvince: {
         validators: {
           notEmpty: {
             message: 'Vui lòng chọn tỉnh thành' // Please select a province
@@ -73,7 +73,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
       },
 
-      clientDistrict: {
+      vendorDistrict: {
         validators: {
           notEmpty: {
             message: 'Vui lòng chọn quận/huyện' // Please select a province
@@ -87,10 +87,10 @@ document.addEventListener('DOMContentLoaded', function () {
         }
       },
 
-      clientAddress: {
+      vendorAddress: {
         validators: {
           notEmpty: {
-            message: 'Thiếu địa chỉ khách hàng' // Missing client's address
+            message: 'Thiếu địa chỉ khách hàng' // Missing vendor's address
           }
         }
       }
@@ -110,10 +110,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
   // Function to handle form submission
   function handleFormSubmission() {
-    const name = document.getElementById('add-client-fullname').value;
-    const addressDetail = document.getElementById('add-client-address').value;
-    const provinceSelect = document.getElementById('client-province');
-    const districtSelect = document.getElementById('client-district');
+    const name = document.getElementById('add-vendor-fullname').value;
+    const addressDetail = document.getElementById('add-vendor-address').value;
+    const provinceSelect = document.getElementById('vendor-province');
+    const districtSelect = document.getElementById('vendor-district');
 
     const provinceName = provinceSelect.options[provinceSelect.selectedIndex].text;
     const districtName = districtSelect.options[districtSelect.selectedIndex].text;
@@ -125,7 +125,7 @@ document.addEventListener('DOMContentLoaded', function () {
       address: address
     };
 
-    fetch(clientData, {
+    fetch(vendorData, {
       method: 'POST',
 
       headers: {
@@ -135,12 +135,12 @@ document.addEventListener('DOMContentLoaded', function () {
     })
       .then(response => response.json())
       .then(e => {
-        dt_client.rows
-          .add([{ id: e.data.id, name: e.data.name, address: e.data.address, count: 0, total_cost: 0 }])
+        dt_vendor.rows
+          .add([{ id: e.data.id, name: e.data.name, address: e.data.address, phone: e.data.phone, type: e.data.type, count: 0, total_cost: 0 }])
           .draw();
         Swal.fire({
           title: 'Thành công!',
-          text: 'Thêm khách hàng thành công!',
+          text: 'Thêm vendor thành công!',
           icon: 'success',
           customClass: {
             confirmButton: 'btn btn-primary'
@@ -149,10 +149,10 @@ document.addEventListener('DOMContentLoaded', function () {
         });
       })
       .catch(error => {
-        //console.error('Error:', error);
+       // console.error('Error:', error);
         Swal.fire({
-          title: 'Error!',
-          text: 'Xảy ra sự cố khi thêm khách hàng!',
+          title: 'Lỗi!',
+          text: 'Xảy ra sự cố khi thêm vendor!',
           icon: 'error',
           customClass: {
             confirmButton: 'btn btn-primary'
@@ -236,9 +236,9 @@ $(function () {
     headingColor = config.colors.headingColor;
   }
 
-  // Clients datatable
-  if (dt_client_table.length) {
-    dt_client = dt_client_table.DataTable({
+  // Vendors datatable
+  if (dt_vendor_table.length) {
+    dt_vendor = dt_vendor_table.DataTable({
       columnDefs: [
         {
           targets: [0],
@@ -249,14 +249,14 @@ $(function () {
         },
         {
           targets: [1],
-          title: 'Khách hàng',
+          title: 'Vendor',
           render: function (data, type, full, meta) {
             var $image = full['imagePath'],
               $name = full['name'];
             if ($image) {
               // For Avatar image
               var $output =
-                '<img src="' + assetsPath + 'img/clients/' + $image + '" alt="Clients" class="rounded-circle">';
+                '<img src="' + assetsPath + 'img/vendors/' + $image + '" alt="Vendors" class="rounded-circle">';
             } else {
               // For Avatar badge
               var stateNum = Math.floor(Math.random() * 6);
@@ -268,7 +268,7 @@ $(function () {
             }
 
             var $row_output =
-              '<div class="d-flex justify-content-start align-items-center client-name">' +
+              '<div class="d-flex justify-content-start align-items-center vendor-name">' +
               '<div class="avatar-wrapper">' +
               '<div class="avatar me-2">' +
               $output +
@@ -294,14 +294,28 @@ $(function () {
         },
         {
           targets: [3],
+          title: 'Số điện thoại',
+          render: function (data, type, full, meta) {
+            return '<span class="fw-medium">' + full['phone'] + '</span>';
+          }
+        },
+        {
+          targets: [4],
+          title: 'Loại',
+          render: function (data, type, full, meta) {
+            return '<span class="fw-medium">' + full['type'] + '</span>';
+          }
+        },
+        {
+          targets: [5],
           title: 'Dự án',
           render: function (data, type, full, meta) {
             return '<span class="fw-medium">' + full['count'] + '</span>';
           }
         },
         {
-          targets: [4],
-          title: 'Tổng dự án',
+          targets: [6],
+          title: 'Tổng chi phí',
           render: function (data, type, full, meta) {
             return '<span class="fw-medium">' + full['total_cost'] + '</span>';
           }
@@ -416,39 +430,41 @@ $(function () {
           className: 'add-new btn btn-primary',
           attr: {
             'data-bs-toggle': 'offcanvas',
-            'data-bs-target': '#offcanvasAddClient'
+            'data-bs-target': '#offcanvasAddVendor'
           }
         }
       ]
     });
 
-    // GET Request to retrieve client data
-    makeAjaxRequest(clientData, 'GET', {}, function (response) {
+    // GET Request to retrieve vendor data
+    makeAjaxRequest(vendorData, 'GET', {}, function (response) {
       var cdata = response.data;
       if (Array.isArray(cdata) && cdata.length > 0) {
-        cdata.forEach(function (client) {
+        cdata.forEach(function (vendor) {
           // Create promises for both count and total_cost requests
-          var countPromise = makeAjaxRequestPromise(ProjectCountData, 'POST', { client_id: client.id });
-          var costPromise = makeAjaxRequestPromise(ProjectCostData, 'POST', { client_id: client.id });
+          var countPromise = makeAjaxRequestPromise(ProjectDCountData, 'POST', { vendor_id: vendor.id });
+          var costPromise = makeAjaxRequestPromise(ProjectDCostData, 'POST', { vendor_id: vendor.id });
 
           // Wait for both promises to resolve
           Promise.all([countPromise, costPromise])
             .then(function (results) {
-              client.count = results[0].count;
-              client.total_cost = results[1].total_cost;
+              vendor.count = results[0].count;
+              vendor.total_cost = results[1].total_cost;
 
-              // Now that client is fully populated, add it to the DataTable
+              // Now that vendor is fully populated, add it to the DataTable
               var Data = [
                 {
-                  id: client.id,
-                  name: client.name,
-                  imagePath: client.imagePath,
-                  address: client.address,
-                  count: client.count,
-                  total_cost: client.total_cost
+                  id: vendor.id,
+                  name: vendor.name,
+                  imagePath: vendor.imagePath,
+                  address: vendor.address,
+                  phone: vendor.phone,
+                  type: vendor.type_id,
+                  count: vendor.count,
+                  total_cost: vendor.total_cost
                 }
               ];
-              dt_client.rows.add(Data).draw();
+              dt_vendor.rows.add(Data).draw();
             })
             .catch(function (error) {
               console.error('Error in AJAX requests', error);
@@ -458,13 +474,13 @@ $(function () {
     });
 
     // Handle Delete Record
-    $('.datatables-clients tbody').on('click', '.delete-record', function () {
+    $('.datatables-vendors tbody').on('click', '.delete-record', function () {
       var row = $(this).closest('tr');
-      var data = dt_client.row(row).data();
+      var data = dt_vendor.row(row).data();
       var id = data.id;
 
       Swal.fire({
-        title: 'Xác nhận xoá khách hàng?',
+        title: 'Xác nhận xoá vendor?',
         text: 'Không thể hoàn tác nếu như xác nhận!',
         icon: 'warning',
         showCancelButton: true,
@@ -478,11 +494,11 @@ $(function () {
         if (result.value) {
           // Send a delete request to the server
           $.ajax({
-            url: clientData + '/' + id,
+            url: vendorData + '/' + id,
             method: 'DELETE',
             success: function (response) {
               // Remove the row from the DataTable
-              dt_client.row(row).remove().draw();
+              dt_vendor.row(row).remove().draw();
             },
             error: function (error) {
               console.error(error);
@@ -491,12 +507,12 @@ $(function () {
           Swal.fire({
             icon: 'success',
             title: 'Deleted!',
-            text: 'Đã xoá khách hàng.',
+            text: 'Đã xoá vendor.',
             customClass: {
               confirmButton: 'btn btn-success'
             }
           });
-          dt_client.row($(this).parents('tr')).remove().draw();
+          dt_vendor.row($(this).parents('tr')).remove().draw();
         }
       });
     });

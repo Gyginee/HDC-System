@@ -45,6 +45,9 @@ Route::prefix('v1')->group(function () {
     Route::resource('projects', ProjectController::class)->names('projects');
 
     Route::resource('details', ProjectDetailController::class)->names('project-details');
+    //function with req body
+    Route::post('detailcount', [ProjectDetailController::class, 'project_detailCount']);
+    Route::post('detailtotal', [ProjectDetailController::class, 'project_detailTotal']);
 
     Route::resource('project-permissions', ProjectPermissionController::class)
       ->names('project-permissions');
@@ -52,7 +55,6 @@ Route::prefix('v1')->group(function () {
     //function with req body
     Route::post('count', [ProjectController::class, 'projectCount']);
     Route::post('total', [ProjectController::class, 'projectTotal']);
-
   });
 
   // Group staff related resources

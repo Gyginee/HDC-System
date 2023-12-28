@@ -44,6 +44,8 @@ class Handler extends ExceptionHandler
           return response()->view('errors.403', [], $statusCode);
         case 404:
           return response()->view('errors.404', [], $statusCode);
+        case 405:
+          return response()->view('errors.405', [], $statusCode);
         case 419:
           return response()->view('errors.419', [], $statusCode);
         case 429:

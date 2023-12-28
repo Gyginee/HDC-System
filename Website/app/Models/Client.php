@@ -10,6 +10,7 @@ class Client extends Model
     protected $fillable = [
         'name',
         'address',
+        'imagePath'
     ];
 
     protected $table = 'clients';

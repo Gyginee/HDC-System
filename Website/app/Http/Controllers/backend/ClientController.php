@@ -7,7 +7,6 @@ use App\Http\Controllers\Controller;
 use App\Models\Client;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
-
 class ClientController extends Controller
 {
     /**
@@ -18,7 +17,7 @@ class ClientController extends Controller
     public function index()
     {
         $clients = Client::all();
-        return response()->json(['data' => $clients], 200);
+        return response()->json(['data' => $clients], 200)->header('Content-Type', 'application/json; charset=utf-8');
     }
 
     /**
@@ -29,8 +28,17 @@ class ClientController extends Controller
      */
     public function store(Request $request)
     {
-        $client = Client::create($request->all());
-        return response()->json(['data' => $client], 201);
+        // Validate the request data
+        $validatedData = $request->validate([
+            'name' => 'required|string',
+            'address' => 'required|string',
+            'imagePath' => 'nullable|string',
+        ]);
+
+        // Create a new client record
+        $client = Client::create($validatedData);
+
+        return response()->json(['data' => $client], 201)->header('Content-Type', 'application/json; charset=utf-8');
     }
 
     /**
@@ -41,7 +49,8 @@ class ClientController extends Controller
      */
     public function show(Client $client)
     {
-        return response()->json(['data' => $client], 200);
+      return response()->json(['data' => $client], 200)->header('Content-Type', 'application/json; charset=utf-8');
+
     }
 
     /**
@@ -53,8 +62,17 @@ class ClientController extends Controller
      */
     public function update(Request $request, Client $client)
     {
-        $client->update($request->all());
-        return response()->json(['data' => $client], 200);
+        // Validate the request data
+        $validatedData = $request->validate([
+            'name' => 'string',
+            'address' => 'string',
+            'imagePath' => 'nullable|string',
+        ]);
+
+        // Update the client record
+        $client->update($validatedData);
+
+        return response()->json(['data' => $client], 200)->header('Content-Type', 'application/json; charset=utf-8');
     }
 
     /**
@@ -65,7 +83,9 @@ class ClientController extends Controller
      */
     public function destroy(Client $client)
     {
+        // Delete the client record
         $client->delete();
+
         return response()->json(null, 204);
     }
 }

@@ -13,6 +13,7 @@ class Vendor extends Model
         'name',
         'phone',
         'address',
+        'imagePath',
         'type_id',
     ];
 

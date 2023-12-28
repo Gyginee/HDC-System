@@ -8,9 +8,10 @@ use App\Http\Controllers\pages\Page2;
 use App\Http\Controllers\pages\MiscError;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\pages\DashboardController;
-use App\Http\Controllers\pages\ProjectControler;
-use App\Http\Controllers\pages\ProjectDetailControler;
-use App\Http\Controllers\pages\ClientControler;
+use App\Http\Controllers\pages\ProjectController;
+use App\Http\Controllers\pages\ProjectDetailController;
+use App\Http\Controllers\pages\ClientController;
+use App\Http\Controllers\pages\VendorController;
 use Illuminate\Routing\RouteGroup;
 
 /*
@@ -35,11 +36,12 @@ Route::get('logout', [LoginController::class, 'logout'])->name('logout')->middle
 // Home page accessible only to authenticated users
 Route::get('/', [DashboardController::class, 'index'])->middleware('guest');
 
-Route::get('projects', [ProjectControler::class, 'index'])->middleware('guest');
-Route::get('project/detail', [ProjectDetailControler::class, 'index'])->middleware('guest');
+Route::get('projects', [ProjectController::class, 'index'])->middleware('guest');
+Route::get('project/detail', [ProjectDetailController::class, 'index'])->middleware('guest');
 
 
-Route::get('clients', [ClientControler::class, 'index'])->middleware('guest');
+Route::get('clients', [ClientController::class, 'index'])->middleware('guest');
+Route::get('vendors', [VendorController::class, 'index'])->middleware('guest');
 
 // Accessible only to authenticated users
 Route::get('page-2', [Page2::class, 'index'])->name('pages-page-2')->middleware('auth');
