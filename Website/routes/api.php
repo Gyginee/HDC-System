@@ -39,12 +39,12 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::prefix('v1')->group(function () {
 
   // Group project related resources
-  Route::prefix('project')->group(function () {
+  Route::prefix('projects')->group(function () {
 
     // Explicit names
-    Route::resource('projects', ProjectController::class)->names('projects');
+    Route::resource('project', ProjectController::class)->names('projects');
 
-    Route::resource('details', ProjectDetailController::class)->names('project-details');
+    Route::resource('detail', ProjectDetailController::class)->names('project-details');
     //function with req body
     Route::post('detailcount', [ProjectDetailController::class, 'project_detailCount']);
     Route::post('detailtotal', [ProjectDetailController::class, 'project_detailTotal']);
@@ -58,13 +58,13 @@ Route::prefix('v1')->group(function () {
   });
 
   // Group staff related resources
-  Route::prefix('staff')->group(function () {
+  Route::prefix('staffs')->group(function () {
 
-    Route::resource('staffs', StaffController::class)->names('staffs');
+    Route::resource('staff', StaffController::class)->names('staff');
 
-    Route::resource('details', StaffDetailController::class)->names('staff-details');
+    Route::resource('detail', StaffDetailController::class)->names('staff-detail');
 
-    Route::resource('salaries', SalaryController::class)->names('salaries');
+    Route::resource('salary', SalaryController::class)->names('salary');
   });
 
   // Remaining resources

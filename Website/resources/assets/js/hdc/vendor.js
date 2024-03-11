@@ -14,36 +14,40 @@ let ProjectDCountData = 'http://127.0.0.1:8000/api/v1/project/detailcount';
 let ProjectDCostData = 'http://127.0.0.1:8000/api/v1/project/detailtotal';
 
 document.addEventListener('DOMContentLoaded', function () {
-  fetch('https://provinces.open-api.vn/api/p/')
+
+  // Fetch JSON data from your Laravel application
+  fetch('/assets/json/vietnam-provinces.json')
     .then(response => response.json())
-    .then(provinces => {
+    .then(jsonData => {
+      // Populate province select
       const provinceSelect = document.getElementById('vendor-province');
-      provinces.forEach(province => {
+      jsonData.provinces.forEach(province => {
         const option = document.createElement('option');
-        option.value = province.code;
+        option.value = province.name;
         option.textContent = province.name;
         provinceSelect.appendChild(option);
       });
-    });
 
-  document.getElementById('vendor-province').addEventListener('change', function () {
-    const provinceCode = this.value;
-    const districtSelect = document.getElementById('vendor-district');
-    districtSelect.innerHTML = '<option value="">Chọn Quận/Huyện</option>'; // Reset district select
+      // Populate district select based on province selection
+      document.getElementById('vendor-province').addEventListener('change', function () {
+        const selectedProvince = this.value;
+        const districtSelect = document.getElementById('vendor-district');
+        districtSelect.innerHTML = '<option value="">Chọn Quận/Huyện</option>'; // Reset district select
 
-    if (provinceCode) {
-      fetch(`https://provinces.open-api.vn/api/p/${provinceCode}?depth=2`)
-        .then(response => response.json())
-        .then(data => {
-          data.districts.forEach(district => {
+        const selectedProvinceData = jsonData.provinces.find(province => province.name === selectedProvince);
+        if (selectedProvinceData) {
+          selectedProvinceData.districts.forEach(district => {
             const option = document.createElement('option');
-            option.value = district.code;
             option.textContent = district.name;
             districtSelect.appendChild(option);
           });
-        });
-    }
-  });
+        }
+      });
+    })
+    .catch(error => {
+      console.error('Lỗi đồng bộ data:', error);
+    });
+
 
   const addNewVendorForm = document.getElementById('addNewVendorForm');
   const submitButton = document.getElementById('submitFormButton');
@@ -54,7 +58,7 @@ document.addEventListener('DOMContentLoaded', function () {
       vendorFullname: {
         validators: {
           notEmpty: {
-            message: 'Thiếu tên khách hàng' // Missing vendor's name
+            message: 'Thiếu tên đối tác' // Missing vendor's name
           }
         }
       },
@@ -90,7 +94,7 @@ document.addEventListener('DOMContentLoaded', function () {
       vendorAddress: {
         validators: {
           notEmpty: {
-            message: 'Thiếu địa chỉ khách hàng' // Missing vendor's address
+            message: 'Thiếu địa chỉ đối tác' // Missing vendor's address
           }
         }
       }
@@ -149,7 +153,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
       })
       .catch(error => {
-       // console.error('Error:', error);
+        // console.error('Error:', error);
         Swal.fire({
           title: 'Lỗi!',
           text: 'Xảy ra sự cố khi thêm vendor!',
@@ -426,7 +430,7 @@ $(function () {
           ]
         },
         {
-          text: '<i class="ti ti-plus me-0 me-sm-1 ti-xs"></i><span class="d-none d-sm-inline-block">Thêm khách hàng</span>',
+          text: '<i class="ti ti-plus me-0 me-sm-1 ti-xs"></i><span class="d-none d-sm-inline-block">Thêm đối tác</span>',
           className: 'add-new btn btn-primary',
           attr: {
             'data-bs-toggle': 'offcanvas',

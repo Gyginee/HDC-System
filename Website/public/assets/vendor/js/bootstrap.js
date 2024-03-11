@@ -2967,13 +2967,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _popperjs_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @popperjs/core */ "./node_modules/@popperjs/core/lib/popper.js");
 function _get() { if (typeof Reflect !== "undefined" && Reflect.get) { _get = Reflect.get.bind(); } else { _get = function _get(target, property, receiver) { var base = _superPropBase(target, property); if (!base) return; var desc = Object.getOwnPropertyDescriptor(base, property); if (desc.get) { return desc.get.call(arguments.length < 3 ? target : receiver); } return desc.value; }; } return _get.apply(this, arguments); }
 function _superPropBase(object, property) { while (!Object.prototype.hasOwnProperty.call(object, property)) { object = _getPrototypeOf(object); if (object === null) break; } return object; }
+function _callSuper(t, o, e) { return o = _getPrototypeOf(o), _possibleConstructorReturn(t, _isNativeReflectConstruct() ? Reflect.construct(o, e || [], _getPrototypeOf(t).constructor) : o.apply(t, e)); }
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } else if (call !== void 0) { throw new TypeError("Derived constructors may only return object or undefined"); } return _assertThisInitialized(self); }
+function _isNativeReflectConstruct() { try { var t = !Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); } catch (t) {} return (_isNativeReflectConstruct = function _isNativeReflectConstruct() { return !!t; })(); }
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf.bind() : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); Object.defineProperty(subClass, "prototype", { writable: false }); if (superClass) _setPrototypeOf(subClass, superClass); }
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } else if (call !== void 0) { throw new TypeError("Derived constructors may only return object or undefined"); } return _assertThisInitialized(self); }
-function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
-function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); return true; } catch (e) { return false; } }
-function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf.bind() : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 function ownKeys(e, r) { var t = Object.keys(e); if (Object.getOwnPropertySymbols) { var o = Object.getOwnPropertySymbols(e); r && (o = o.filter(function (r) { return Object.getOwnPropertyDescriptor(e, r).enumerable; })), t.push.apply(t, o); } return t; }
 function _objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? ownKeys(Object(t), !0).forEach(function (r) { _defineProperty(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
 function _defineProperty(obj, key, value) { key = _toPropertyKey(key); if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
@@ -3714,11 +3714,10 @@ var VERSION = '5.3.2';
  */
 var BaseComponent = /*#__PURE__*/function (_Config) {
   _inherits(BaseComponent, _Config);
-  var _super = _createSuper(BaseComponent);
   function BaseComponent(element, config) {
     var _this;
     _classCallCheck(this, BaseComponent);
-    _this = _super.call(this);
+    _this = _callSuper(this, BaseComponent);
     element = getElement(element);
     if (!element) {
       return _possibleConstructorReturn(_this);
@@ -3946,10 +3945,9 @@ var CLASS_NAME_SHOW$8 = 'show';
  */
 var Alert = /*#__PURE__*/function (_BaseComponent) {
   _inherits(Alert, _BaseComponent);
-  var _super2 = _createSuper(Alert);
   function Alert() {
     _classCallCheck(this, Alert);
-    return _super2.apply(this, arguments);
+    return _callSuper(this, Alert, arguments);
   }
   _createClass(Alert, [{
     key: "close",
@@ -4037,10 +4035,9 @@ var EVENT_CLICK_DATA_API$6 = "click".concat(EVENT_KEY$a).concat(DATA_API_KEY$6);
  */
 var Button = /*#__PURE__*/function (_BaseComponent2) {
   _inherits(Button, _BaseComponent2);
-  var _super3 = _createSuper(Button);
   function Button() {
     _classCallCheck(this, Button);
-    return _super3.apply(this, arguments);
+    return _callSuper(this, Button, arguments);
   }
   _createClass(Button, [{
     key: "toggle",
@@ -4126,11 +4123,10 @@ var DefaultType$c = {
  */
 var Swipe = /*#__PURE__*/function (_Config2) {
   _inherits(Swipe, _Config2);
-  var _super4 = _createSuper(Swipe);
   function Swipe(element, config) {
     var _this3;
     _classCallCheck(this, Swipe);
-    _this3 = _super4.call(this);
+    _this3 = _callSuper(this, Swipe);
     _this3._element = element;
     if (!element || !Swipe.isSupported()) {
       return _possibleConstructorReturn(_this3);
@@ -4312,11 +4308,10 @@ var DefaultType$b = {
  */
 var Carousel = /*#__PURE__*/function (_BaseComponent3) {
   _inherits(Carousel, _BaseComponent3);
-  var _super5 = _createSuper(Carousel);
   function Carousel(element, config) {
     var _this5;
     _classCallCheck(this, Carousel);
-    _this5 = _super5.call(this, element, config);
+    _this5 = _callSuper(this, Carousel, [element, config]);
     _this5._interval = null;
     _this5._activeElement = null;
     _this5._isSliding = false;
@@ -4757,11 +4752,10 @@ var DefaultType$a = {
  */
 var Collapse = /*#__PURE__*/function (_BaseComponent4) {
   _inherits(Collapse, _BaseComponent4);
-  var _super6 = _createSuper(Collapse);
   function Collapse(element, config) {
     var _this12;
     _classCallCheck(this, Collapse);
-    _this12 = _super6.call(this, element, config);
+    _this12 = _callSuper(this, Collapse, [element, config]);
     _this12._isTransitioning = false;
     _this12._triggerArray = [];
     var toggleList = SelectorEngine.find(SELECTOR_DATA_TOGGLE$4);
@@ -5111,11 +5105,10 @@ var DefaultType$9 = {
  */
 var Dropdown = /*#__PURE__*/function (_BaseComponent5) {
   _inherits(Dropdown, _BaseComponent5);
-  var _super7 = _createSuper(Dropdown);
   function Dropdown(element, config) {
     var _this15;
     _classCallCheck(this, Dropdown);
-    _this15 = _super7.call(this, element, config);
+    _this15 = _callSuper(this, Dropdown, [element, config]);
     _this15._popper = null;
     _this15._parent = _this15._element.parentNode; // dropdown wrapper
     // TODO: v6 revert #37011 & change markup https://getbootstrap.com/docs/5.3/forms/input-group/
@@ -5518,11 +5511,10 @@ var DefaultType$8 = {
  */
 var Backdrop = /*#__PURE__*/function (_Config3) {
   _inherits(Backdrop, _Config3);
-  var _super8 = _createSuper(Backdrop);
   function Backdrop(config) {
     var _this17;
     _classCallCheck(this, Backdrop);
-    _this17 = _super8.call(this);
+    _this17 = _callSuper(this, Backdrop);
     _this17._config = _this17._getConfig(config);
     _this17._isAppended = false;
     _this17._element = null;
@@ -5663,11 +5655,10 @@ var DefaultType$7 = {
  */
 var FocusTrap = /*#__PURE__*/function (_Config4) {
   _inherits(FocusTrap, _Config4);
-  var _super9 = _createSuper(FocusTrap);
   function FocusTrap(config) {
     var _this20;
     _classCallCheck(this, FocusTrap);
-    _this20 = _super9.call(this);
+    _this20 = _callSuper(this, FocusTrap);
     _this20._config = _this20._getConfig(config);
     _this20._isActive = false;
     _this20._lastTabNavDirection = null;
@@ -5927,11 +5918,10 @@ var DefaultType$6 = {
  */
 var Modal = /*#__PURE__*/function (_BaseComponent6) {
   _inherits(Modal, _BaseComponent6);
-  var _super10 = _createSuper(Modal);
   function Modal(element, config) {
     var _this23;
     _classCallCheck(this, Modal);
-    _this23 = _super10.call(this, element, config);
+    _this23 = _callSuper(this, Modal, [element, config]);
     _this23._dialog = SelectorEngine.findOne(SELECTOR_DIALOG, _this23._element);
     _this23._backdrop = _this23._initializeBackDrop();
     _this23._focustrap = _this23._initializeFocusTrap();
@@ -6278,11 +6268,10 @@ var DefaultType$5 = {
  */
 var Offcanvas = /*#__PURE__*/function (_BaseComponent7) {
   _inherits(Offcanvas, _BaseComponent7);
-  var _super11 = _createSuper(Offcanvas);
   function Offcanvas(element, config) {
     var _this31;
     _classCallCheck(this, Offcanvas);
-    _this31 = _super11.call(this, element, config);
+    _this31 = _callSuper(this, Offcanvas, [element, config]);
     _this31._isShown = false;
     _this31._backdrop = _this31._initializeBackDrop();
     _this31._focustrap = _this31._initializeFocusTrap();
@@ -6668,11 +6657,10 @@ var DefaultContentType = {
  */
 var TemplateFactory = /*#__PURE__*/function (_Config5) {
   _inherits(TemplateFactory, _Config5);
-  var _super12 = _createSuper(TemplateFactory);
   function TemplateFactory(config) {
     var _this37;
     _classCallCheck(this, TemplateFactory);
-    _this37 = _super12.call(this);
+    _this37 = _callSuper(this, TemplateFactory);
     _this37._config = _this37._getConfig(config);
     return _this37;
   }
@@ -6884,14 +6872,13 @@ var DefaultType$3 = {
  */
 var Tooltip = /*#__PURE__*/function (_BaseComponent8) {
   _inherits(Tooltip, _BaseComponent8);
-  var _super13 = _createSuper(Tooltip);
   function Tooltip(element, config) {
     var _this39;
     _classCallCheck(this, Tooltip);
     if (typeof _popperjs_core__WEBPACK_IMPORTED_MODULE_0__ === 'undefined') {
       throw new TypeError('Bootstrap\'s tooltips require Popper (https://popper.js.org)');
     }
-    _this39 = _super13.call(this, element, config);
+    _this39 = _callSuper(this, Tooltip, [element, config]);
 
     // Private
     _this39._isEnabled = true;
@@ -7449,10 +7436,9 @@ var DefaultType$2 = _objectSpread(_objectSpread({}, Tooltip.DefaultType), {}, {
  */
 var Popover = /*#__PURE__*/function (_Tooltip) {
   _inherits(Popover, _Tooltip);
-  var _super14 = _createSuper(Popover);
   function Popover() {
     _classCallCheck(this, Popover);
-    return _super14.apply(this, arguments);
+    return _callSuper(this, Popover, arguments);
   }
   _createClass(Popover, [{
     key: "_isWithContent",
@@ -7565,11 +7551,10 @@ var DefaultType$1 = {
  */
 var ScrollSpy = /*#__PURE__*/function (_BaseComponent9) {
   _inherits(ScrollSpy, _BaseComponent9);
-  var _super15 = _createSuper(ScrollSpy);
   function ScrollSpy(element, config) {
     var _this47;
     _classCallCheck(this, ScrollSpy);
-    _this47 = _super15.call(this, element, config);
+    _this47 = _callSuper(this, ScrollSpy, [element, config]);
 
     // this._element is the observablesContainer and config.target the menu links wrapper
     _this47._targetLinks = new Map();
@@ -7923,11 +7908,10 @@ var SELECTOR_DATA_TOGGLE_ACTIVE = ".".concat(CLASS_NAME_ACTIVE, "[data-bs-toggle
  */
 var Tab = /*#__PURE__*/function (_BaseComponent10) {
   _inherits(Tab, _BaseComponent10);
-  var _super16 = _createSuper(Tab);
   function Tab(element) {
     var _this51;
     _classCallCheck(this, Tab);
-    _this51 = _super16.call(this, element);
+    _this51 = _callSuper(this, Tab, [element]);
     _this51._parent = _this51._element.closest(SELECTOR_TAB_PANEL);
     if (!_this51._parent) {
       return _possibleConstructorReturn(_this51);
@@ -8251,11 +8235,10 @@ var Default = {
  */
 var Toast = /*#__PURE__*/function (_BaseComponent11) {
   _inherits(Toast, _BaseComponent11);
-  var _super17 = _createSuper(Toast);
   function Toast(element, config) {
     var _this55;
     _classCallCheck(this, Toast);
-    _this55 = _super17.call(this, element, config);
+    _this55 = _callSuper(this, Toast, [element, config]);
     _this55._timeout = null;
     _this55._hasMouseInteraction = false;
     _this55._hasKeyboardInteraction = false;

@@ -813,7 +813,7 @@ paths:
           description: Status not found
 
 
-  /api/v1/staff/staffs:
+  /api/v1/staffs/staff:
     get:
       summary: Get a list of staff members
       operationId: staff.index
@@ -847,7 +847,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Staff'
 
-  /api/v1/staff/staffs/{id}:
+  /api/v1/staffs/staff/{id}:
     get:
       summary: Get a specific staff member
       operationId: staff.show
@@ -914,7 +914,7 @@ paths:
         '404':
           description: Staff member not found
 
-  /api/v1/staff/details:
+  /api/v1/staffs/detail:
     get:
       summary: Get a list of staff details
       operationId: staffDetails.index
@@ -948,7 +948,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/StaffDetail'
 
-  /api/v1/staff/details/{id}:
+  /api/v1/staffs/detail/{id}:
     get:
       summary: Get a specific staff detail
       operationId: staffDetails.show
@@ -1015,7 +1015,7 @@ paths:
         '404':
           description: Staff detail not found
 
-  /api/v1/staff/salaries:
+  /api/v1/staffs/salary:
     get:
       summary: Get a list of staff salaries
       operationId: staffSalaries.index
@@ -1049,7 +1049,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/StaffSalary'
 
-  /api/v1/staff/salaries/{id}:
+  /api/v1/staffs/salary/{id}:
     get:
       summary: Get a specific staff salary
       operationId: staffSalaries.show
@@ -1116,7 +1116,7 @@ paths:
         '404':
           description: Staff salary not found
 
-  /api/v1/project/projects:
+  /api/v1/projects/project:
     get:
       summary: Get a list of projects
       operationId: projects.index
@@ -1216,7 +1216,7 @@ paths:
           description: Project deleted successfully
         '404':
           description: Project not found
-  /api/v1/projects/details:
+  /api/v1/projects/detail:
     get:
       summary: Get a list of project details
       operationId: projectDetails.index
@@ -1250,7 +1250,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/ProjectDetail'
 
-  /api/v1/projects/details/{id}:
+  /api/v1/projects/detail/{id}:
     get:
       summary: Get a specific project detail
       operationId: projectDetails.show
@@ -1316,7 +1316,7 @@ paths:
           description: Project detail deleted successfully
         '404':
           description: Project detail not found
-  /api/v1/project/project-permissions:
+  /api/v1/projects/project-permissions:
     get:
       summary: Get a list of project permissions
       operationId: projectPermissions.index
