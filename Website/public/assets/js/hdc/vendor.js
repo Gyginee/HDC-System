@@ -58,7 +58,7 @@ document.addEventListener('DOMContentLoaded', function () {
       vendorFullname: {
         validators: {
           notEmpty: {
-            message: 'Thiếu tên khách hàng' // Missing vendor's name
+            message: 'Thiếu tên đối tác' // Missing vendor's name
           }
         }
       },
@@ -94,7 +94,7 @@ document.addEventListener('DOMContentLoaded', function () {
       vendorAddress: {
         validators: {
           notEmpty: {
-            message: 'Thiếu địa chỉ khách hàng' // Missing vendor's address
+            message: 'Thiếu địa chỉ đối tác' // Missing vendor's address
           }
         }
       }
@@ -430,7 +430,7 @@ $(function () {
           ]
         },
         {
-          text: '<i class="ti ti-plus me-0 me-sm-1 ti-xs"></i><span class="d-none d-sm-inline-block">Thêm khách hàng</span>',
+          text: '<i class="ti ti-plus me-0 me-sm-1 ti-xs"></i><span class="d-none d-sm-inline-block">Thêm đối tác</span>',
           className: 'add-new btn btn-primary',
           attr: {
             'data-bs-toggle': 'offcanvas',
