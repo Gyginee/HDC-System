@@ -25,9 +25,10 @@ class LoginController extends Controller
           if (Auth::guard('staff')->attempt(['email' => $request->email, 'password' => $request->password], $request->remember)) {
               // Redirect based on role_id
               return redirect()->intended(route('dashboard'));
+          } else {
+            //Redirect to login again
+            return redirect()->back()->withInput($request->only('email', 'remember'));
           }
-
-          return redirect()->back()->withInput($request->only('email', 'remember'));
     }
 
     public function logout(Request $request)

@@ -24,7 +24,7 @@ $configData = Helper::appClasses();
 @endsection
 
 @section('page-script')
-<script src="{{asset('assets/js/pages-auth.js')}}"></script>
+<script src="{{asset('assets/js/hdc/auth.js')}}"></script>
 @endsection
 
 @section('content')
