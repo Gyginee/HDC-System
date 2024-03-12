@@ -300,7 +300,7 @@ $(function () {
       buttons: [
         {
           extend: 'collection',
-          className: 'btn btn-label-secondary dropdown-toggle float-sm-end mb-3 mb-sm-0',
+          className: 'btn btn-label-secondary dropdown-toggle float-sm-end mb-3 mb-sm-0 waves-effect waves-light',
           text: '<i class="ti ti-screen-share ti-xs me-2"></i>Export',
           buttons: [
             {

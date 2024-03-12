@@ -191,7 +191,7 @@ $(function () {
       buttons: [
         {
           extend: 'collection',
-          className: 'btn btn-label-secondary dropdown-toggle me-3',
+          className: 'btn btn-label-secondary dropdown-toggle me-3 waves-effect waves-light',
           text: '<i class="ti ti-download me-1"></i>Export',
           buttons: [
             {
@@ -331,7 +331,7 @@ $(function () {
         },
         {
           text: '<i class="ti ti-plus me-0 me-sm-1 mb-1 ti-xs"></i><span class="d-none d-sm-inline-block">Add Customer</span>',
-          className: 'add-new btn btn-primary py-2',
+          className: 'add-new btn btn-primary py-2 waves-effect waves-light',
           attr: {
             'data-bs-toggle': 'offcanvas',
             'data-bs-target': '#offcanvasEcommerceCustomerAdd'

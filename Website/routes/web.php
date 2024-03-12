@@ -25,8 +25,8 @@ use Illuminate\Routing\RouteGroup;
 |
 */
 
-// Main Page Route
 
+// Main Page Route
 
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [LoginController::class, 'login'])->name('login.submit');

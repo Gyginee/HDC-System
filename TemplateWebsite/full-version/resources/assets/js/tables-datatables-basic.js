@@ -97,15 +97,19 @@ document.addEventListener('DOMContentLoaded', function (e) {
     });
 
     // FlatPickr Initialization & Validation
-    flatpickr(formAddNewRecord.querySelector('[name="basicDate"]'), {
-      enableTime: false,
-      // See https://flatpickr.js.org/formatting/
-      dateFormat: 'm/d/Y',
-      // After selecting a date, we need to revalidate the field
-      onChange: function () {
-        fv.revalidateField('basicDate');
-      }
-    });
+    const flatpickrDate = document.querySelector('[name="basicDate"]');
+
+    if (flatpickrDate) {
+      flatpickrDate.flatpickr({
+        enableTime: false,
+        // See https://flatpickr.js.org/formatting/
+        dateFormat: 'm/d/Y',
+        // After selecting a date, we need to revalidate the field
+        onChange: function () {
+          fv.revalidateField('basicDate');
+        }
+      });
+    }
   })();
 });
 
@@ -260,7 +264,7 @@ $(function () {
       buttons: [
         {
           extend: 'collection',
-          className: 'btn btn-label-primary dropdown-toggle me-2',
+          className: 'btn btn-label-primary dropdown-toggle me-2 waves-effect waves-light',
           text: '<i class="ti ti-file-export me-sm-1"></i> <span class="d-none d-sm-inline-block">Export</span>',
           buttons: [
             {
@@ -400,7 +404,7 @@ $(function () {
         },
         {
           text: '<i class="ti ti-plus me-sm-1"></i> <span class="d-none d-sm-inline-block">Add New Record</span>',
-          className: 'create-new btn btn-primary'
+          className: 'create-new btn btn-primary waves-effect waves-light'
         }
       ],
       responsive: {

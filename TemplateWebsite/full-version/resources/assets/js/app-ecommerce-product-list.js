@@ -283,7 +283,7 @@ $(function () {
       buttons: [
         {
           extend: 'collection',
-          className: 'btn btn-label-secondary dropdown-toggle me-3',
+          className: 'btn btn-label-secondary dropdown-toggle me-3 waves-effect waves-light',
           text: '<i class="ti ti-download me-1 ti-xs"></i>Export',
           buttons: [
             {
@@ -418,7 +418,7 @@ $(function () {
         },
         {
           text: '<i class="ti ti-plus me-0 me-sm-1 ti-xs"></i><span class="d-none d-sm-inline-block">Add Product</span>',
-          className: 'add-new btn btn-primary ms-2 ms-sm-0',
+          className: 'add-new btn btn-primary ms-2 ms-sm-0 waves-effect waves-light',
           action: function () {
             window.location.href = productAdd;
           }

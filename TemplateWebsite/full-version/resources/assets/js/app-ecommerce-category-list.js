@@ -192,7 +192,7 @@ $(function () {
       buttons: [
         {
           text: '<i class="ti ti-plus ti-xs me-0 me-sm-2"></i><span class="d-none d-sm-inline-block">Add Category</span>',
-          className: 'add-new btn btn-primary ms-2',
+          className: 'add-new btn btn-primary ms-2 waves-effect waves-light',
           attr: {
             'data-bs-toggle': 'offcanvas',
             'data-bs-target': '#offcanvasEcommerceCategoryList'

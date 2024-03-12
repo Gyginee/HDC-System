@@ -230,8 +230,8 @@
         '<textarea class="form-control add-new-item" rows="2" placeholder="Add Content" autofocus required></textarea>' +
         '</div>' +
         '<div class="mb-3">' +
-        '<button type="submit" class="btn btn-primary btn-sm me-2">Add</button>' +
-        '<button type="button" class="btn btn-label-secondary btn-sm cancel-add-item">Cancel</button>' +
+        '<button type="submit" class="btn btn-primary btn-sm me-2 waves-effect waves-light">Add</button>' +
+        '<button type="button" class="btn btn-label-secondary btn-sm cancel-add-item waves-effect waves-light">Cancel</button>' +
         '</div>';
       kanban.addForm(boardId, addNew);
 

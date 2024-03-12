@@ -2,25 +2,32 @@
 
 @section('title', 'Account settings - Account')
 
+<!-- Vendor Styles -->
 @section('vendor-style')
-<link rel="stylesheet" href="{{asset('assets/vendor/libs/select2/select2.css')}}" />
-<link rel="stylesheet" href="{{asset('assets/vendor/libs/@form-validation/umd/styles/index.min.css')}}" />
-<link rel="stylesheet" href="{{asset('assets/vendor/libs/animate-css/animate.css')}}" />
-<link rel="stylesheet" href="{{asset('assets/vendor/libs/sweetalert2/sweetalert2.css')}}" />
+@vite([
+  'resources/assets/vendor/libs/select2/select2.scss',
+  'resources/assets/vendor/libs/@form-validation/form-validation.scss',
+  'resources/assets/vendor/libs/animate-css/animate.scss',
+  'resources/assets/vendor/libs/sweetalert2/sweetalert2.scss'
+])
 @endsection
 
+<!-- Vendor Scripts -->
 @section('vendor-script')
-<script src="{{asset('assets/vendor/libs/select2/select2.js')}}"></script>
-<script src="{{asset('assets/vendor/libs/@form-validation/umd/bundle/popular.min.js')}}"></script>
-<script src="{{asset('assets/vendor/libs/@form-validation/umd/plugin-bootstrap5/index.min.js')}}"></script>
-<script src="{{asset('assets/vendor/libs/@form-validation/umd/plugin-auto-focus/index.min.js')}}"></script>
-<script src="{{asset('assets/vendor/libs/cleavejs/cleave.js')}}"></script>
-<script src="{{asset('assets/vendor/libs/cleavejs/cleave-phone.js')}}"></script>
-<script src="{{asset('assets/vendor/libs/sweetalert2/sweetalert2.js')}}"></script>
+@vite([
+  'resources/assets/vendor/libs/select2/select2.js',
+  'resources/assets/vendor/libs/@form-validation/popular.js',
+  'resources/assets/vendor/libs/@form-validation/bootstrap5.js',
+  'resources/assets/vendor/libs/@form-validation/auto-focus.js',
+  'resources/assets/vendor/libs/cleavejs/cleave.js',
+  'resources/assets/vendor/libs/cleavejs/cleave-phone.js',
+  'resources/assets/vendor/libs/sweetalert2/sweetalert2.js'
+])
 @endsection
 
+<!-- Page Scripts -->
 @section('page-script')
-<script src="{{asset('assets/js/pages-account-settings-account.js')}}"></script>
+@vite(['resources/assets/js/pages-account-settings-account.js'])
 @endsection
 
 @section('content')

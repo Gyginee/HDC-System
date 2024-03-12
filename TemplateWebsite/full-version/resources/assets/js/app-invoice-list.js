@@ -213,7 +213,7 @@ $(function () {
       buttons: [
         {
           text: '<i class="ti ti-plus me-md-1"></i><span class="d-md-inline-block d-none">Create Invoice</span>',
-          className: 'btn btn-primary',
+          className: 'btn btn-primary waves-effect waves-light',
           action: function (e, dt, button, config) {
             window.location = baseUrl + 'app/invoice/add';
           }

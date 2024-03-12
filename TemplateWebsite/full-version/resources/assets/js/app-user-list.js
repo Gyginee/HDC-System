@@ -192,7 +192,7 @@ $(function () {
       buttons: [
         {
           extend: 'collection',
-          className: 'btn btn-label-secondary dropdown-toggle mx-3',
+          className: 'btn btn-label-secondary dropdown-toggle mx-3 waves-effect waves-light',
           text: '<i class="ti ti-screen-share me-1 ti-xs"></i>Export',
           buttons: [
             {
@@ -332,7 +332,7 @@ $(function () {
         },
         {
           text: '<i class="ti ti-plus me-0 me-sm-1 ti-xs"></i><span class="d-none d-sm-inline-block">Add New User</span>',
-          className: 'add-new btn btn-primary',
+          className: 'add-new btn btn-primary waves-effect waves-light',
           attr: {
             'data-bs-toggle': 'offcanvas',
             'data-bs-target': '#offcanvasAddUser'

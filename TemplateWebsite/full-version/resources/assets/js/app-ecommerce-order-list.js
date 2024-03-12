@@ -247,7 +247,7 @@ $(function () {
       buttons: [
         {
           extend: 'collection',
-          className: 'btn btn-label-secondary dropdown-toggle',
+          className: 'btn btn-label-secondary dropdown-toggle waves-effect waves-light',
           text: '<i class="ti ti-download me-1"></i>Export',
           buttons: [
             {
