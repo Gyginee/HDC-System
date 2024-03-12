@@ -92,6 +92,7 @@ div.dataTables_wrapper .dt-button-collection > div[role='menu'] {
 }
 .navbar-detached {
   border: 1px solid $border-color;
+  box-shadow: none;
 }
 .layout-navbar-fixed .layout-page:before {
   backdrop-filter: saturate(200%) blur(10px);
@@ -200,7 +201,14 @@ div.dataTables_wrapper .dt-button-collection > div[role='menu'] {
   box-shadow: none;
   border: $border-width solid $card-border-color;
 }
-
+// card border-shadow variant
+.card {
+  &[class*='card-border-shadow-'] {
+    &:hover {
+      box-shadow: none !important;
+    }
+  }
+}
 // accordion
 .accordion:not(.accordion-bordered) {
   .accordion-item {

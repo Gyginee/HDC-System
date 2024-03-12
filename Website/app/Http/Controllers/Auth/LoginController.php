@@ -9,44 +9,45 @@ use App\Models\Staff;
 
 class LoginController extends Controller
 {
-    public function showLoginForm()
-    {
-        $pageConfigs = ['myLayout' => 'blank'];
-        return view('content.auth.login', ['pageConfigs' => $pageConfigs]);
-    }
+  public function showLoginForm()
+  {
+    $pageConfigs = ['myLayout' => 'blank'];
+    return view('content.auth.login', ['pageConfigs' => $pageConfigs]);
+  }
 
-    public function login(Request $request)
-    {
-          $this->validate($request, [
-              'email' => 'required|email',
-              'password' => 'required',
-          ]);
+  public function login(Request $request)
+  {
+    $this->validate($request, [
+      'email' => 'required|email',
+      'password' => 'required',
+    ]);
 
-          if (Auth::guard('staff')->attempt(['email' => $request->email, 'password' => $request->password], $request->remember)) {
-              // Redirect based on role_id
-              return redirect()->intended(route('dashboard'));
-          } else {
-            //Redirect to login again
-            return redirect()->back()->withInput($request->only('email', 'remember'));
-          }
-    }
+    if (Auth::guard('staff')->attempt(['email' => $request->email, 'password' => $request->password])) {
+      // Redirect based on role_id
+      return redirect()->intended(route('dashboard'));
+    } else {
 
-    public function logout(Request $request)
-    {
-        Auth::guard('staff')->logout();
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
-        return redirect('/');
+      //Redirect to login again
+      return redirect()->back()->withInput($request->only('email'));
     }
+  }
 
-    // Use the Staff model for authentication
-    public function username()
-    {
-        return 'email'; // Change this if you want to use a different field for authentication
-    }
+  public function logout(Request $request)
+  {
+    Auth::guard('staff')->logout();
+    $request->session()->invalidate();
+    $request->session()->regenerateToken();
+    return redirect('/');
+  }
 
-    protected function guard()
-    {
-        return Auth::guard('staff');
-    }
+  // Use the Staff model for authentication
+  public function username()
+  {
+    return 'email'; // Change this if you want to use a different field for authentication
+  }
+
+  protected function guard()
+  {
+    return Auth::guard('staff');
+  }
 }

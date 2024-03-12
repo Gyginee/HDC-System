@@ -3,26 +3,32 @@
 @section('title', 'Analytics')
 
 @section('vendor-style')
-<link rel="stylesheet" href="{{asset('assets/vendor/libs/apex-charts/apex-charts.css')}}" />
-<link rel="stylesheet" href="{{asset('assets/vendor/libs/swiper/swiper.css')}}" />
-<link rel="stylesheet" href="{{asset('assets/vendor/libs/datatables-bs5/datatables.bootstrap5.css')}}" />
-<link rel="stylesheet" href="{{asset('assets/vendor/libs/datatables-responsive-bs5/responsive.bootstrap5.css')}}" />
-<link rel="stylesheet" href="{{asset('assets/vendor/libs/datatables-checkboxes-jquery/datatables.checkboxes.css')}}" />
+@vite([
+  'resources/assets/vendor/libs/apex-charts/apex-charts.scss',
+  'resources/assets/vendor/libs/swiper/swiper.scss',
+  'resources/assets/vendor/libs/datatables-bs5/datatables.bootstrap5.scss',
+  'resources/assets/vendor/libs/datatables-responsive-bs5/responsive.bootstrap5.scss',
+  'resources/assets/vendor/libs/datatables-checkboxes-jquery/datatables.checkboxes.scss'
+])
 @endsection
 
 @section('page-style')
 <!-- Page -->
-<link rel="stylesheet" href="{{asset('assets/vendor/css/pages/cards-advance.css')}}">
+@vite(['resources/assets/vendor/scss/pages/cards-advance.scss'])
 @endsection
 
 @section('vendor-script')
-<script src="{{asset('assets/vendor/libs/apex-charts/apexcharts.js')}}"></script>
-<script src="{{asset('assets/vendor/libs/swiper/swiper.js')}}"></script>
-<script src="{{asset('assets/vendor/libs/datatables-bs5/datatables-bootstrap5.js')}}"></script>
+@vite([
+  'resources/assets/vendor/libs/apex-charts/apexcharts.js',
+  'resources/assets/vendor/libs/swiper/swiper.js',
+  'resources/assets/vendor/libs/datatables-bs5/datatables-bootstrap5.js',
+  ])
 @endsection
 
 @section('page-script')
-<script src="{{asset('assets/js/dashboards-analytics.js')}}"></script>
+@vite([
+  'resources/assets/js/hdc/dashboard.js'
+])
 @endsection
 
 @section('content')
@@ -375,7 +381,9 @@
       <div class="card-body">
         <ul class="p-0 m-0">
           <li class="d-flex align-items-center mb-4">
-            <img src="{{asset('assets/svg/flags/us.svg')}}" alt="User" class="rounded-circle me-3" width="34">
+            <div class="avatar flex-shrink-0 me-3">
+              <i class="fis fi fi-us rounded-circle fs-1"></i>
+            </div>
             <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
               <div class="me-2">
                 <div class="d-flex align-items-center">
@@ -393,7 +401,9 @@
             </div>
           </li>
           <li class="d-flex align-items-center mb-4">
-            <img src="{{asset('assets/svg/flags/br.svg')}}" alt="User" class="rounded-circle me-3" width="34">
+            <div class="avatar flex-shrink-0 me-3">
+              <i class="fis fi fi-br rounded-circle fs-1"></i>
+            </div>
             <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
               <div class="me-2">
                 <div class="d-flex align-items-center">
@@ -410,7 +420,9 @@
             </div>
           </li>
           <li class="d-flex align-items-center mb-4">
-            <img src="{{asset('assets/svg/flags/in.svg')}}" alt="User" class="rounded-circle me-3" width="34">
+            <div class="avatar flex-shrink-0 me-3">
+              <i class="fis fi fi-in rounded-circle fs-1"></i>
+            </div>
             <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
               <div class="me-2">
                 <div class="d-flex align-items-center">
@@ -427,7 +439,9 @@
             </div>
           </li>
           <li class="d-flex align-items-center mb-4">
-            <img src="{{asset('assets/svg/flags/au.svg')}}" alt="User" class="rounded-circle me-3" width="34">
+            <div class="avatar flex-shrink-0 me-3">
+              <i class="fis fi fi-au rounded-circle fs-1"></i>
+            </div>
             <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
               <div class="me-2">
                 <div class="d-flex align-items-center">
@@ -444,7 +458,9 @@
             </div>
           </li>
           <li class="d-flex align-items-center mb-4">
-            <img src="{{asset('assets/svg/flags/fr.svg')}}" alt="User" class="rounded-circle me-3" width="34">
+            <div class="avatar flex-shrink-0 me-3">
+              <i class="fis fi fi-us rounded-circle fs-1"></i>
+            </div>
             <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
               <div class="me-2">
                 <div class="d-flex align-items-center">
@@ -461,7 +477,9 @@
             </div>
           </li>
           <li class="d-flex align-items-center">
-            <img src="{{asset('assets/svg/flags/cn.svg')}}" alt="User" class="rounded-circle me-3" width="34">
+            <div class="avatar flex-shrink-0 me-3">
+              <i class="fis fi fi-cn rounded-circle fs-1"></i>
+            </div>
             <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
               <div class="me-2">
                 <div class="d-flex align-items-center">

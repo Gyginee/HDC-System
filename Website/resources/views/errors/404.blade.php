@@ -9,7 +9,7 @@
 
 @section('page-style')
     <!-- Page -->
-    <link rel="stylesheet" href="{{ asset('assets/vendor/css/pages/page-misc.css') }}">
+    @vite(['resources/assets/vendor/scss/pages/page-misc.scss'])
 @endsection
 
 
@@ -28,8 +28,8 @@
         </div>
     </div>
     <div class="container-fluid misc-bg-wrapper">
-        <img src="{{ asset('assets/img/illustrations/bg-shape-image-' . $configData['style'] . '.png') }}" alt="page-misc-error"
-            data-app-light-img="illustrations/bg-shape-image-light.png"
+        <img src="{{ asset('assets/img/illustrations/bg-shape-image-' . $configData['style'] . '.png') }}"
+            alt="page-misc-error" data-app-light-img="illustrations/bg-shape-image-light.png"
             data-app-dark-img="illustrations/bg-shape-image-dark.png">
     </div>
     <!-- /Error -->

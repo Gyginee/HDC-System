@@ -31,6 +31,7 @@ $flatpickr-width: ($flatpickr-cell-size * 7)+ ($flatpickr-content-padding-x * 2)
   overflow: hidden;
   box-sizing: border-box;
   padding: 0;
+  padding-bottom: 2px;
   max-height: 0;
   border: 0;
   text-align: center;
@@ -91,12 +92,17 @@ $flatpickr-width: ($flatpickr-cell-size * 7)+ ($flatpickr-content-padding-x * 2)
     }
   }
 
-  &.hasTime .flatpickr-time {
-    height: $flatpickr-time-picker-height;
+  &.hasTime {
+    padding-bottom: 0;
+    .flatpickr-time {
+      height: $flatpickr-time-picker-height;
+    }
   }
 
-  &.noCalendar.hasTime .flatpickr-time {
-    height: auto;
+  &.noCalendar.hasTime {
+    .flatpickr-time {
+      height: auto;
+    }
   }
 
   input[type='number'] {

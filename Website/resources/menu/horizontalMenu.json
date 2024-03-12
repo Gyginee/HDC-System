@@ -2,36 +2,109 @@
   "menu": [
     {
       "url": "/",
-      "name": "Home",
+      "name": "Dashboard",
       "icon": "menu-icon tf-icons ti ti-smart-home",
-      "slug": "pages-home"
+      "slug": "dashboard"
     },
     {
-      "url": "page-2",
-      "icon": "menu-icon tf-icons ti ti-file",
-      "name": "Page 2",
-      "slug": "pages-page-2"
+      "menuHeader": "Quản lý"
     },
     {
-      "url": "pages/misc-error",
-      "name": "Error",
-      "icon": "menu-icon tf-icons ti ti-alert-triangle",
-      "slug": "pages-misc-error",
-      "target": "_blank"
+      "url": "/projects",
+      "name": "Dự án",
+      "icon": "menu-icon tf-icons ti ti-briefcase",
+      "slug": "projects"
     },
     {
-      "url": "auth/login",
-      "name": "Login",
-      "icon": "menu-icon tf-icons ti ti-login",
-      "slug": "auth-login-basic",
-      "target": "_blank"
+      "name": "Nội bộ",
+      "icon": "menu-icon tf-icons ti ti-id-badge",
+      "slug": "internal",
+      "badge": [
+        "primary",
+        "5"
+      ],
+      "submenu": [
+        {
+          "url": "/staffs",
+          "name": "Nhân viên",
+          "icon": "menu-icon tf-icons ti ti-user",
+          "slug": "staffs"
+        },
+        {
+          "url": "/salaries",
+          "name": "Lương",
+          "icon": "menu-icon tf-icons ti ti-money",
+          "slug": "salaries"
+        },
+        {
+          "url": "/assets",
+          "name": "Tài sản",
+          "icon": "menu-icon tf-icons ti ti-server",
+          "slug": "assets"
+        },
+        {
+          "url": "/assets",
+          "name": "Chi phí cố định",
+          "icon": "menu-icon tf-icons ti ti-server",
+          "slug": "assets"
+        }
+      ]
     },
     {
-      "url": "auth/register-basic",
-      "name": "Register",
+      "url": "/costs",
+      "name": "Thống kê chi phí",
+      "icon": "menu-icon tf-icons ti ti-book",
+      "slug": "costs"
+    },
+    {
+      "url": "/clients",
+      "name": "Khách hàng",
       "icon": "menu-icon tf-icons ti ti-user",
-      "slug": "auth-register-basic",
-      "target": "_blank"
+      "slug": "clients"
+    },
+    {
+      "url": "/vendors",
+      "name": "Vendors",
+      "icon": "menu-icon tf-icons ti ti-package",
+      "slug": "vendors"
+    },
+    {
+      "menuHeader": "Quản trị"
+    },
+    {
+      "name": "Quản trị",
+      "icon": "menu-icon tf-icons ti ti-smart-home",
+      "slug": "internal",
+      "badge": [
+        "primary",
+        "5"
+      ],
+      "submenu": [
+        {
+          "url": "/staffs",
+          "name": "Nhân viên",
+          "icon": "menu-icon tf-icons ti ti-user",
+          "slug": "staffs"
+        },
+        {
+          "url": "/salaries",
+          "name": "Lương",
+          "icon": "menu-icon tf-icons ti ti-money",
+          "slug": "salaries"
+        },
+        {
+          "url": "/assets",
+          "name": "Tài sản",
+          "icon": "menu-icon tf-icons ti ti-server",
+          "slug": "assets"
+        },
+        {
+          "url": "/assets",
+          "name": "Tài sản",
+          "icon": "menu-icon tf-icons ti ti-server",
+          "slug": "assets"
+        }
+      ]
     }
   ]
 }

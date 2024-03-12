@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
+
 use App\Http\Controllers\backend\AssetsController;
 use App\Http\Controllers\backend\ClientController;
 use App\Http\Controllers\backend\PermissionController;
@@ -17,8 +18,6 @@ use App\Http\Controllers\backend\StatusController;
 use App\Http\Controllers\backend\TypeController;
 use App\Http\Controllers\backend\VendorController;
 use App\Http\Controllers\backend\UserPermissionController;
-
-
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -31,8 +30,9 @@ use App\Http\Controllers\backend\UserPermissionController;
 */
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-  return $request->user();
+    return $request->user();
 });
+
 
 
 // Add API versioning
