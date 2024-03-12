@@ -9,19 +9,19 @@ var dt_vendor_table = $('.datatables-vendors'),
   customerView = baseUrl + 'app/ecommerce/customer/details/overview';
 var dt_vendor;
 
-let vendorData = 'http://127.0.0.1:8000/api/v1/vendors';
-let ProjectDCountData = 'http://127.0.0.1:8000/api/v1/project/detailcount';
-let ProjectDCostData = 'http://127.0.0.1:8000/api/v1/project/detailtotal';
+let vendorData = baseUrl + 'api/v1/vendors';
+let ProjectDCountData = baseUrl + 'api/v1/projects/detailcount';
+let ProjectDCostData = baseUrl + 'api/v1/projects/detailtotal';
+let typeData = baseUrl + 'api/v1/types';
 
 document.addEventListener('DOMContentLoaded', function () {
-
   // Fetch JSON data from your Laravel application
-  fetch('public/assets/json/vietnam-provinces.json')
+  fetch(assetsPath + 'json/vietnam-provinces.json')
     .then(response => response.json())
     .then(jsonData => {
       // Populate province select
       const provinceSelect = document.getElementById('vendor-province');
-      jsonData.provinces.forEach(province => {
+      jsonData.forEach(province => {
         const option = document.createElement('option');
         option.value = province.name;
         option.textContent = province.name;
@@ -34,7 +34,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const districtSelect = document.getElementById('vendor-district');
         districtSelect.innerHTML = '<option value="">Chọn Quận/Huyện</option>'; // Reset district select
 
-        const selectedProvinceData = jsonData.provinces.find(province => province.name === selectedProvince);
+        const selectedProvinceData = jsonData.find(province => province.name === selectedProvince);
         if (selectedProvinceData) {
           selectedProvinceData.districts.forEach(district => {
             const option = document.createElement('option');
@@ -48,6 +48,17 @@ document.addEventListener('DOMContentLoaded', function () {
       console.error('Lỗi đồng bộ data:', error);
     });
 
+  fetch(typeData)
+    .then(response => response.json())
+    .then(jsonData => {
+      const typeSelect = document.getElementById('vendor-type');
+      jsonData.data.forEach(type => {
+        const option = document.createElement('option');
+        option.value = type.id; // Assigning id to value
+        option.textContent = type.name; // Assigning name to text content
+        typeSelect.appendChild(option);
+      });
+    });
 
   const addNewVendorForm = document.getElementById('addNewVendorForm');
   const submitButton = document.getElementById('submitFormButton');
@@ -116,19 +127,22 @@ document.addEventListener('DOMContentLoaded', function () {
   function handleFormSubmission() {
     const name = document.getElementById('add-vendor-fullname').value;
     const addressDetail = document.getElementById('add-vendor-address').value;
+    const phoneNumber = document.getElementById('add-vendor-phone').value;
     const provinceSelect = document.getElementById('vendor-province');
     const districtSelect = document.getElementById('vendor-district');
+    const typeSelect = parseInt(document.getElementById('vendor-type').value);
 
     const provinceName = provinceSelect.options[provinceSelect.selectedIndex].text;
     const districtName = districtSelect.options[districtSelect.selectedIndex].text;
     const address = `${addressDetail}, ${districtName}, ${provinceName}`;
 
     const data = {
-      id: '',
       name: name,
-      address: address
+      address: address,
+      phone: phoneNumber,
+      type_id: typeSelect
     };
-
+    console.log(data);
     fetch(vendorData, {
       method: 'POST',
 
@@ -140,7 +154,17 @@ document.addEventListener('DOMContentLoaded', function () {
       .then(response => response.json())
       .then(e => {
         dt_vendor.rows
-          .add([{ id: e.data.id, name: e.data.name, address: e.data.address, phone: e.data.phone, type: e.data.type, count: 0, total_cost: 0 }])
+          .add([
+            {
+              id: e.data.id,
+              name: e.data.name,
+              address: e.data.address,
+              phone: e.data.phone,
+              type: e.data.type,
+              count: 0,
+              total_cost: 0
+            }
+          ])
           .draw();
         Swal.fire({
           title: 'Thành công!',

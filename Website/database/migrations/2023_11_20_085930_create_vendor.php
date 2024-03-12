@@ -6,26 +6,26 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
-    public function up(): void
-    {
-        Schema::create('vendors', function (Blueprint $table) {
-            $table->id(); // This creates an auto-incrementing primary key column 'id'
-            $table->string('name');
-            $table->integer('phone');
-            $table->string('address');
-            $table->unsignedBigInteger('type_id');
-            $table->timestamps();
-        });
-    }
+  /**
+   * Run the migrations.
+   */
+  public function up(): void
+  {
+    Schema::create('vendors', function (Blueprint $table) {
+      $table->id(); // This creates an auto-incrementing primary key column 'id'
+      $table->string('name');
+      $table->integer('phone');
+      $table->string('address');
+      $table->unsignedBigInteger('type_id');
+      $table->timestamps();
+    });
+  }
 
-    /**
-     * Reverse the migrations.
-     */
-    public function down(): void
-    {
-        Schema::dropIfExists('vendors');
-    }
+  /**
+   * Reverse the migrations.
+   */
+  public function down(): void
+  {
+    Schema::dropIfExists('vendors');
+  }
 };

@@ -13,14 +13,13 @@ let ProjectCountData = 'http://127.0.0.1:8000/api/v1/project/count';
 let ProjectCostData = 'http://127.0.0.1:8000/api/v1/project/total';
 
 document.addEventListener('DOMContentLoaded', function () {
-
   // Fetch JSON data from your Laravel application
-  fetch('/assets/json/vietnam-provinces.json')
+  fetch(assetsPath + 'json/vietnam-provinces.json')
     .then(response => response.json())
     .then(jsonData => {
       // Populate province select
-      const provinceSelect = document.getElementById('vendor-province');
-      jsonData.provinces.forEach(province => {
+      const provinceSelect = document.getElementById('project-province');
+      jsonData.forEach(province => {
         const option = document.createElement('option');
         option.value = province.name;
         option.textContent = province.name;
@@ -28,12 +27,12 @@ document.addEventListener('DOMContentLoaded', function () {
       });
 
       // Populate district select based on province selection
-      document.getElementById('vendor-province').addEventListener('change', function () {
+      document.getElementById('project-province').addEventListener('change', function () {
         const selectedProvince = this.value;
-        const districtSelect = document.getElementById('vendor-district');
+        const districtSelect = document.getElementById('project-district');
         districtSelect.innerHTML = '<option value="">Chọn Quận/Huyện</option>'; // Reset district select
 
-        const selectedProvinceData = jsonData.provinces.find(province => province.name === selectedProvince);
+        const selectedProvinceData = jsonData.find(province => province.name === selectedProvince);
         if (selectedProvinceData) {
           selectedProvinceData.districts.forEach(district => {
             const option = document.createElement('option');

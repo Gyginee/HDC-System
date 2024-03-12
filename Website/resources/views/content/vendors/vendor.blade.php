@@ -77,8 +77,15 @@
                     <div class="mb-3">
                       <label class="form-label" for="add-vendor-phone">Số điện thoại</label>
                       <input type="text" class="form-control" id="add-vendor-phone" placeholder="0123 456 789"
-                          name="vendorFullname" aria-label="0123 456 789" />
+                          name="vendorPhone" aria-label="0123 456 789" />
                   </div>
+                  <div class="mb-3">
+                    <label class="form-label" for="vendor-type">Phân loại</label>
+                    <select id="vendor-type" class="form-select" name="vendorType">
+                        <option value="">Chọn phân loại</option>
+                    </select>
+                </div>
+
 
                     <button type="submit" id="submitFormButton"
                         class="btn btn-primary me-sm-3 me-1 data-submit">Tạo</button>

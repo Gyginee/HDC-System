@@ -9,41 +9,43 @@ var dt_client_table = $('.datatables-clients'),
   customerView = baseUrl + 'app/ecommerce/customer/details/overview';
 var dt_client;
 
-let clientData = 'http://127.0.0.1:8000/api/v1/clients';
-let ProjectCountData = 'http://127.0.0.1:8000/api/v1/project/count';
-let ProjectCostData = 'http://127.0.0.1:8000/api/v1/project/total';
+let clientData = baseUrl + 'api/v1/clients';
+let ProjectCountData = baseUrl + 'api/v1/projects/count';
+let ProjectCostData = baseUrl + 'api/v1/projects/total';
 
 document.addEventListener('DOMContentLoaded', function () {
-  fetch('https://provinces.open-api.vn/api/p/')
+  // Fetch JSON data from your Laravel application
+  fetch(assetsPath + 'json/vietnam-provinces.json')
     .then(response => response.json())
-    .then(provinces => {
+    .then(jsonData => {
+      // Populate province select
       const provinceSelect = document.getElementById('client-province');
-      provinces.forEach(province => {
+      jsonData.forEach(province => {
         const option = document.createElement('option');
-        option.value = province.code;
+        option.value = province.name;
         option.textContent = province.name;
         provinceSelect.appendChild(option);
       });
-    });
 
-  document.getElementById('client-province').addEventListener('change', function () {
-    const provinceCode = this.value;
-    const districtSelect = document.getElementById('client-district');
-    districtSelect.innerHTML = '<option value="">Chọn Quận/Huyện</option>'; // Reset district select
+      // Populate district select based on province selection
+      document.getElementById('client-province').addEventListener('change', function () {
+        const selectedProvince = this.value;
+        const districtSelect = document.getElementById('client-district');
+        districtSelect.innerHTML = '<option value="">Chọn Quận/Huyện</option>'; // Reset district select
 
-    if (provinceCode) {
-      fetch(`https://provinces.open-api.vn/api/p/${provinceCode}?depth=2`)
-        .then(response => response.json())
-        .then(data => {
-          data.districts.forEach(district => {
+        const selectedProvinceData = jsonData.find(province => province.name === selectedProvince);
+        if (selectedProvinceData) {
+          selectedProvinceData.districts.forEach(district => {
             const option = document.createElement('option');
-            option.value = district.code;
             option.textContent = district.name;
             districtSelect.appendChild(option);
           });
-        });
-    }
-  });
+        }
+      });
+    })
+    .catch(error => {
+      console.error('Lỗi đồng bộ data:', error);
+    });
 
   const addNewClientForm = document.getElementById('addNewClientForm');
   const submitButton = document.getElementById('submitFormButton');
