@@ -27,7 +27,7 @@
     <!-- Clients List Table -->
     <div class="card">
         <div class="card-datatable table-responsive">
-            <table class="datatables-clients table">
+            <table class="datatables-clients table table-hover">
                 <thead class="border-top">
                     <tr>
                         <th>ID</th>

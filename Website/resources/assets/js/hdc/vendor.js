@@ -3,18 +3,24 @@
  */
 
 'use strict';
-
+import {
+  makeAjaxRequest,
+  extractTextFromHTML,
+  customizePrintView,
+  makeAjaxRequestPromise,
+  fetchAndPopulateSelect
+} from './function.js';
 // Variable declaration for table
 var dt_vendor_table = $('.datatables-vendors'),
-  customerView = baseUrl + 'app/ecommerce/customer/details/overview';
-var dt_vendor;
-
-let vendorData = baseUrl + 'api/v1/vendors';
-let ProjectDCountData = baseUrl + 'api/v1/projects/detailcount';
-let ProjectDCostData = baseUrl + 'api/v1/projects/detailtotal';
-let typeData = baseUrl + 'api/v1/types';
+  customerView = baseUrl + 'app/ecommerce/customer/details/overview',
+  dt_vendor,
+  vendorData = baseUrl + 'api/v1/vendors',
+  ProjectDCountData = baseUrl + 'api/v1/projects/detailcount',
+  ProjectDCostData = baseUrl + 'api/v1/projects/detailtotal',
+  typeData = baseUrl + 'api/v1/types';
 
 document.addEventListener('DOMContentLoaded', function () {
+
   // Fetch JSON data from your Laravel application
   fetch(assetsPath + 'json/vietnam-provinces.json')
     .then(response => response.json())
@@ -48,17 +54,7 @@ document.addEventListener('DOMContentLoaded', function () {
       console.error('Lỗi đồng bộ data:', error);
     });
 
-  fetch(typeData)
-    .then(response => response.json())
-    .then(jsonData => {
-      const typeSelect = document.getElementById('vendor-type');
-      jsonData.data.forEach(type => {
-        const option = document.createElement('option');
-        option.value = type.id; // Assigning id to value
-        option.textContent = type.name; // Assigning name to text content
-        typeSelect.appendChild(option);
-      });
-    });
+  fetchAndPopulateSelect(typeData, 'vendor-type');
 
   const addNewVendorForm = document.getElementById('addNewVendorForm');
   const submitButton = document.getElementById('submitFormButton');
@@ -142,7 +138,7 @@ document.addEventListener('DOMContentLoaded', function () {
       phone: phoneNumber,
       type_id: typeSelect
     };
-    console.log(data);
+
     fetch(vendorData, {
       method: 'POST',
 
@@ -200,55 +196,6 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   });
 });
-
-// Function to handle AJAX requests
-function makeAjaxRequest(url, method, requestData, successCallback) {
-  $.ajax({
-    url: url,
-    method: method,
-    data: requestData,
-    success: successCallback,
-    error: function (error) {
-      console.error(error);
-    }
-  });
-}
-function extractTextFromHTML(inner) {
-  if (inner.length <= 0) return inner;
-  var el = $.parseHTML(inner);
-  var result = '';
-  $.each(el, function (index, item) {
-    if (item.classList !== undefined && item.classList.contains('name')) {
-      result = result + item.lastChild.firstChild.textContent;
-    } else if (item.innerText === undefined) {
-      result = result + item.textContent;
-    } else result = result + item.innerText;
-  });
-  return result;
-}
-
-function customizePrintView(win) {
-  $(win.document.body).css('color', headingColor).css('border-color', borderColor).css('background-color', bodyBg);
-  $(win.document.body)
-    .find('table')
-    .addClass('compact')
-    .css('color', 'inherit')
-    .css('border-color', 'inherit')
-    .css('background-color', 'inherit');
-}
-
-// Function to handle AJAX requests and return a Promise
-function makeAjaxRequestPromise(url, method, requestData) {
-  return new Promise((resolve, reject) => {
-    $.ajax({
-      url: url,
-      method: method,
-      data: requestData,
-      success: resolve,
-      error: reject
-    });
-  });
-}
 
 // Datatable (jquery)
 $(function () {
@@ -322,7 +269,7 @@ $(function () {
         },
         {
           targets: [3],
-          title: 'Số điện thoại',
+          title: 'SĐT',
           render: function (data, type, full, meta) {
             return '<span class="fw-medium">' + full['phone'] + '</span>';
           }
@@ -343,7 +290,7 @@ $(function () {
         },
         {
           targets: [6],
-          title: 'Tổng chi phí',
+          title: 'Tổng chi',
           render: function (data, type, full, meta) {
             return '<span class="fw-medium">' + full['total_cost'] + '</span>';
           }

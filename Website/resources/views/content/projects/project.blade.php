@@ -2,96 +2,83 @@
 
 @section('title', 'Project')
 
+<!-- Vendor Styles -->
 @section('vendor-style')
-    <link rel="stylesheet" href="{{ asset('assets/vendor/libs/datatables-bs5/datatables.bootstrap5.css') }}">
-    <link rel="stylesheet" href="{{ asset('assets/vendor/libs/datatables-responsive-bs5/responsive.bootstrap5.css') }}">
-    <link rel="stylesheet" href="{{ asset('assets/vendor/libs/datatables-buttons-bs5/buttons.bootstrap5.css') }}">
-    <link rel="stylesheet" href="{{ asset('assets/vendor/libs/select2/select2.css') }}" />
-    <link rel="stylesheet" href="{{ asset('assets/vendor/libs/@form-validation/umd/styles/index.min.css') }}" />
-    <link rel="stylesheet" href="{{ asset('assets/vendor/libs/animate-css/animate.css') }}" />
-    <link rel="stylesheet" href="{{ asset('assets/vendor/libs/sweetalert2/sweetalert2.css') }}" />
-
+    @vite(['resources/assets/vendor/libs/datatables-bs5/datatables.bootstrap5.scss', 'resources/assets/vendor/libs/datatables-responsive-bs5/responsive.bootstrap5.scss', 'resources/assets/vendor/libs/datatables-buttons-bs5/buttons.bootstrap5.scss', 'resources/assets/vendor/libs/animate-css/animate.scss', 'resources/assets/vendor/libs/sweetalert2/sweetalert2.scss', 'resources/assets/vendor/libs/select2/select2.scss', 'resources/assets/vendor/libs/@form-validation/form-validation.scss'])
 @endsection
 
+<!-- Vendor Script -->
 @section('vendor-script')
-    <script src="{{ asset('assets/vendor/libs/moment/moment.js') }}"></script>
-    <script src="{{ asset('assets/vendor/libs/datatables-bs5/datatables-bootstrap5.js') }}"></script>
-    <script src="{{ asset('assets/vendor/libs/select2/select2.js') }}"></script>
-    <script src="{{ asset('assets/vendor/libs/@form-validation/umd/bundle/popular.min.js') }}"></script>
-    <script src="{{ asset('assets/vendor/libs/@form-validation/umd/plugin-bootstrap5/index.min.js') }}"></script>
-    <script src="{{ asset('assets/vendor/libs/@form-validation/umd/plugin-auto-focus/index.min.js') }}"></script>
-    <script src="{{ asset('assets/vendor/libs/cleavejs/cleave.js') }}"></script>
-    <script src="{{ asset('assets/vendor/libs/cleavejs/cleave-phone.js') }}"></script>
-    <script src="{{ asset('assets/vendor/libs/sweetalert2/sweetalert2.js') }}"></script>
+    @vite(['resources/assets/vendor/libs/moment/moment.js', 'resources/assets/vendor/libs/datatables-bs5/datatables-bootstrap5.js', 'resources/assets/vendor/libs/sweetalert2/sweetalert2.js', 'resources/assets/vendor/libs/cleavejs/cleave.js', 'resources/assets/vendor/libs/cleavejs/cleave-phone.js', 'resources/assets/vendor/libs/select2/select2.js', 'resources/assets/vendor/libs/@form-validation/popular.js', 'resources/assets/vendor/libs/@form-validation/bootstrap5.js', 'resources/assets/vendor/libs/@form-validation/auto-focus.js'])
 @endsection
 
 @section('page-script')
-    <script src="{{ asset('assets/js/hdc/project.js') }}"></script>
-    {{-- <script src="{{ asset('assets/js/hdc/client.js') }}"></script> --}}
+    @vite(['resources/assets/js/hdc/projects/project.js'])
 @endsection
 
 @section('content')
-<h4 class="py-3 mb-2">
-  <span class="text-muted fw-light">Khách hàng</span>
-</h4>
+    <h4 class="py-3 mb-4">
+        <span class="text-muted fw-light">Quản lý /</span> Dự án
+    </h4>
 
-    <!-- Clients List Table -->
+
+    <!-- Projects List Table -->
     <div class="card">
         <div class="card-header border-bottom">
             <h5 class="card-title mb-3">Lọc</h5>
             <div class="d-flex justify-content-between align-items-center row pb-2 gap-3 gap-md-0">
-                <div class="col-md-4 client_id"></div>
-                <div class="col-md-4 client_plan"></div>
-                <div class="col-md-4 client_status"></div>
+                <div class="col-md-4 project_id"></div>
+                <div class="col-md-4 project_plan"></div>
+                <div class="col-md-4 project_status"></div>
             </div>
         </div>
         <div class="card-datatable table-responsive">
-            <table class="datatables-clients table">
+            <table class="datatables-projects table table-hover">
                 <thead class="border-top">
                     <tr>
                         <th>ID</th>
+                        <th>Tên dự án</th>
+                        <th>Chi phí</th>
                         <th>Khách hàng</th>
-                        <th>Địa chỉ</th>
-                        <th>Dự án</th>
-                        <th>Tổng chi</th>
+                        <th>Trạng thái</th>
                         <th>Chức năng</th>
                     </tr>
                 </thead>
             </table>
         </div>
-        <!-- Offcanvas to add new client -->
-        <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasAddClient"
-            aria-labelledby="offcanvasAddClientLabel">
+        <!-- Offcanvas to add new project -->
+        <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasAddProject"
+            aria-labelledby="offcanvasAddProjectLabel">
             <div class="offcanvas-header">
-                <h5 id="offcanvasAddClientLabel" class="offcanvas-title">Thêm khách hàng</h5>
+                <h5 id="offcanvasAddProjectLabel" class="offcanvas-title">Thêm dự án</h5>
                 <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
             </div>
             <div class="offcanvas-body mx-0 flex-grow-0 pt-0 h-100">
-                <form class="add-new-client pt-0" id="addNewClientForm">
+                <form class="add-new-project pt-0" id="addNewProjectForm">
                     <div class="mb-3">
-                        <label class="form-label" for="add-client-fullname">Tên khách hàng</label>
-                        <input type="text" class="form-control" id="add-client-fullname" placeholder="HDCreative Ltd"
-                            name="clientFullname" aria-label="HDCreative Ltd" />
+                        <label class="form-label" for="add-project-name">Tên dự án</label>
+                        <input type="text" class="form-control" id="add-project-name" placeholder="MTXCSX"
+                            name="projectName" aria-label="MTXCSX" />
                     </div>
 
                     <div class="mb-3">
-                        <label class="form-label" for="client-province">Tỉnh thành</label>
-                        <select id="client-province" class="form-select" name="clientProvince">
-                            <option value="">Chọn Tỉnh thành</option>
+                        <label class="form-label" for="project-client">Khách hàng</label>
+                        <select id="project-client" class="form-select" name="projectClient">
+                            <option value="">Chọn khách hàng</option>
                         </select>
                     </div>
 
                     <div class="mb-3">
-                        <label class="form-label" for="client-district">Quận/Huyện</label>
-                        <select id="client-district" class="form-select" name="clientDistrict">
-                            <option value="">Chọn Quận/Huyện</option>
-                        </select>
+                        <label class="form-label" for="add-project-cost">Chi phí</label>
+                        <input type="text" class="form-control" id="add-project-cost" placeholder="5,100,000,000"
+                            name="projectCost" aria-label="Project Cost" />
                     </div>
 
                     <div class="mb-3">
-                        <label class="form-label" for="add-client-address">Địa chỉ cụ thể</label>
-                        <input type="text" class="form-control" id="add-client-address" placeholder="19F, Pearl Plaza"
-                            name="clientAddress" aria-label="Client Address" />
+                        <label class="form-label" for="project-status">Trạng thái</label>
+                        <select id="project-status" class="form-select" name="projectStatus">
+                            <option value="">Chọn trạng thái</option>
+                        </select>
                     </div>
 
                     <button type="submit" id="submitFormButton"

@@ -12,20 +12,26 @@
     @vite(['resources/assets/vendor/libs/moment/moment.js', 'resources/assets/vendor/libs/datatables-bs5/datatables-bootstrap5.js', 'resources/assets/vendor/libs/sweetalert2/sweetalert2.js', 'resources/assets/vendor/libs/cleavejs/cleave.js', 'resources/assets/vendor/libs/cleavejs/cleave-phone.js', 'resources/assets/vendor/libs/select2/select2.js', 'resources/assets/vendor/libs/@form-validation/popular.js', 'resources/assets/vendor/libs/@form-validation/bootstrap5.js', 'resources/assets/vendor/libs/@form-validation/auto-focus.js'])
 @endsection
 
+<!-- Page Styles -->
+@section('page-style')
+    @vite(['resources/assets/vendor/scss/hdc/vendor.scss'])
+@endsection
+
+<!-- Page Script -->
 @section('page-script')
     @vite(['resources/assets/js/hdc/vendor.js'])
 @endsection
 
 @section('content')
-<h4 class="py-3 mb-4">
-  <span class="text-muted fw-light">Quản lý /</span> Đối tác
-</h4>
+    <h4 class="py-3 mb-4">
+        <span class="text-muted fw-light">Quản lý /</span> Đối tác
+    </h4>
 
 
     <!-- Vendors List Table -->
     <div class="card">
         <div class="card-datatable table-responsive">
-            <table class="datatables-vendors table">
+            <table class="datatables-vendors table table-hover">
                 <thead class="border-top">
                     <tr>
                         <th>ID</th>
@@ -75,16 +81,16 @@
                             name="vendorAddress" aria-label="Vendor Address" />
                     </div>
                     <div class="mb-3">
-                      <label class="form-label" for="add-vendor-phone">Số điện thoại</label>
-                      <input type="text" class="form-control" id="add-vendor-phone" placeholder="0123 456 789"
-                          name="vendorPhone" aria-label="0123 456 789" />
-                  </div>
-                  <div class="mb-3">
-                    <label class="form-label" for="vendor-type">Phân loại</label>
-                    <select id="vendor-type" class="form-select" name="vendorType">
-                        <option value="">Chọn phân loại</option>
-                    </select>
-                </div>
+                        <label class="form-label" for="add-vendor-phone">Số điện thoại</label>
+                        <input type="text" class="form-control" id="add-vendor-phone" placeholder="0123 456 789"
+                            name="vendorPhone" aria-label="0123 456 789" />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="vendor-type">Phân loại</label>
+                        <select id="vendor-type" class="form-select" name="vendorType">
+                            <option value="">Chọn phân loại</option>
+                        </select>
+                    </div>
 
 
                     <button type="submit" id="submitFormButton"

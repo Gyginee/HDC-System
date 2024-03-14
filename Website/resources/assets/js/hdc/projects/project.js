@@ -1,97 +1,56 @@
 /**
- * Page Client List
+ * Page Projects List
  */
 
 'use strict';
 
-// Variable declaration for table
-var dt_client_table = $('.datatables-clients');
-var dt_client;
+import {makeAjaxRequest, extractTextFromHTML, customizePrintView, makeAjaxRequestPromise, fetchAndPopulateSelect} from '../function.js'
 
-let clientData = 'http://127.0.0.1:8000/api/v1/clients';
-let ProjectCountData = 'http://127.0.0.1:8000/api/v1/project/count';
-let ProjectCostData = 'http://127.0.0.1:8000/api/v1/project/total';
+// Variable declaration for table
+var dt_project_table = $('.datatables-projects'),
+  dt_project,
+  projectData = baseUrl + 'api/v1/projects/project',
+  clientData = baseUrl + 'api/v1/clients',
+  statusData = baseUrl + 'api/v1/status';
 
 document.addEventListener('DOMContentLoaded', function () {
-  // Fetch JSON data from your Laravel application
-  fetch(assetsPath + 'json/vietnam-provinces.json')
-    .then(response => response.json())
-    .then(jsonData => {
-      // Populate province select
-      const provinceSelect = document.getElementById('project-province');
-      jsonData.forEach(province => {
-        const option = document.createElement('option');
-        option.value = province.name;
-        option.textContent = province.name;
-        provinceSelect.appendChild(option);
-      });
 
-      // Populate district select based on province selection
-      document.getElementById('project-province').addEventListener('change', function () {
-        const selectedProvince = this.value;
-        const districtSelect = document.getElementById('project-district');
-        districtSelect.innerHTML = '<option value="">Chọn Quận/Huyện</option>'; // Reset district select
+  // Fetch and populate client and status select options
+  fetchAndPopulateSelect(clientData, 'project-client');
+  fetchAndPopulateSelect(statusData, 'project-status');
 
-        const selectedProvinceData = jsonData.find(province => province.name === selectedProvince);
-        if (selectedProvinceData) {
-          selectedProvinceData.districts.forEach(district => {
-            const option = document.createElement('option');
-            option.textContent = district.name;
-            districtSelect.appendChild(option);
-          });
-        }
-      });
-    })
-    .catch(error => {
-      console.error('Lỗi đồng bộ data:', error);
-    });
-
-  const addNewClientForm = document.getElementById('addNewClientForm');
-  const submitButton = document.getElementById('submitFormButton');
+  const addNewProjectForm = document.getElementById('addNewProjectForm'),
+    submitButton = document.getElementById('submitFormButton');
 
   // Initialize Form Validation
-  const fv = FormValidation.formValidation(addNewClientForm, {
+  const fv = FormValidation.formValidation(addNewProjectForm, {
     fields: {
-      clientFullname: {
+      projectName: {
         validators: {
           notEmpty: {
-            message: 'Thiếu tên khách hàng' // Missing client's name
+            message: 'Thiếu tên dự án' // Missing project's name
           }
         }
       },
 
-      clientProvince: {
+      projectCost: {
         validators: {
           notEmpty: {
-            message: 'Vui lòng chọn tỉnh thành' // Please select a province
+            message: 'Vui lòng nhập chi phí dự án'
+          }
+        }
+      },
+
+      projectClient: {
+        validators: {
+          notEmpty: {
+            message: 'Vui lòng chọn khách hàng' // Please select a project
           },
           callback: {
-            message: 'Vui lòng chọn Tỉnh thành', // Please select a province
+            message: 'Vui lòng chọn khách hàng', // Please select a province
             callback: function (value, validator, $field) {
               return value !== '';
             }
-          }
-        }
-      },
-
-      clientDistrict: {
-        validators: {
-          notEmpty: {
-            message: 'Vui lòng chọn quận/huyện' // Please select a province
-          },
-          callback: {
-            message: 'Vui lòng chọn Tỉnh thành', // Please select a province
-            callback: function (value, validator, $field) {
-              return value !== '';
-            }
-          }
-        }
-      },
-
-      clientAddress: {
-        validators: {
-          notEmpty: {
-            message: 'Thiếu địa chỉ khách hàng' // Missing client's address
           }
         }
       }
@@ -111,22 +70,18 @@ document.addEventListener('DOMContentLoaded', function () {
 
   // Function to handle form submission
   function handleFormSubmission() {
-    const name = document.getElementById('add-client-fullname').value;
-    const addressDetail = document.getElementById('add-client-address').value;
-    const provinceSelect = document.getElementById('client-province');
-    const districtSelect = document.getElementById('client-district');
-
-    const provinceName = provinceSelect.options[provinceSelect.selectedIndex].text;
-    const districtName = districtSelect.options[districtSelect.selectedIndex].text;
-    const address = `${addressDetail}, ${districtName}, ${provinceName}`;
-
+    const name = document.getElementById('add-project-name').value,
+      cost = document.getElementById('add-project-cost').value,
+      client_id = document.getElementById('project-client').value,
+      status = document.getElementById('project-status').value;
     const data = {
-      id: '',
       name: name,
-      address: address
+      cost: cost,
+      client_id: client_id,
+      status: status
     };
 
-    fetch(clientData, {
+    fetch(projectData, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -135,12 +90,14 @@ document.addEventListener('DOMContentLoaded', function () {
     })
       .then(response => response.json())
       .then(e => {
-        dt_client.rows
-          .add([{ id: e.data.id, name: e.data.name, address: e.data.address, count: 0, total_cost: 0 }])
+        dt_project.rows
+          .add([
+            { id: e.data.id, name: e.data.name, cost: e.data.cost, status: e.data.status, client_id: e.data.client_id }
+          ])
           .draw();
         Swal.fire({
-          title: 'Good job!',
-          text: 'Thêm khách hàng thành công!',
+          title: 'Success!',
+          text: 'Thêm dự án thành công!',
           icon: 'success',
           customClass: {
             confirmButton: 'btn btn-primary'
@@ -152,7 +109,7 @@ document.addEventListener('DOMContentLoaded', function () {
         console.error('Error:', error);
         Swal.fire({
           title: 'Error!',
-          text: 'Xảy ra sự cố khi thêm khách hàng!',
+          text: 'Xảy ra sự cố khi thêm dự án!',
           icon: 'error',
           customClass: {
             confirmButton: 'btn btn-primary'
@@ -173,55 +130,6 @@ document.addEventListener('DOMContentLoaded', function () {
   });
 });
 
-// Function to handle AJAX requests
-function makeAjaxRequest(url, method, requestData, successCallback) {
-  $.ajax({
-    url: url,
-    method: method,
-    data: requestData,
-    success: successCallback,
-    error: function (error) {
-      console.error(error);
-    }
-  });
-}
-function extractTextFromHTML(inner) {
-  if (inner.length <= 0) return inner;
-  var el = $.parseHTML(inner);
-  var result = '';
-  $.each(el, function (index, item) {
-    if (item.classList !== undefined && item.classList.contains('name')) {
-      result = result + item.lastChild.firstChild.textContent;
-    } else if (item.innerText === undefined) {
-      result = result + item.textContent;
-    } else result = result + item.innerText;
-  });
-  return result;
-}
-
-function customizePrintView(win) {
-  $(win.document.body).css('color', headingColor).css('border-color', borderColor).css('background-color', bodyBg);
-  $(win.document.body)
-    .find('table')
-    .addClass('compact')
-    .css('color', 'inherit')
-    .css('border-color', 'inherit')
-    .css('background-color', 'inherit');
-}
-
-// Function to handle AJAX requests and return a Promise
-function makeAjaxRequestPromise(url, method, requestData) {
-  return new Promise((resolve, reject) => {
-    $.ajax({
-      url: url,
-      method: method,
-      data: requestData,
-      success: resolve,
-      error: reject
-    });
-  });
-}
-
 // Datatable (jquery)
 $(function () {
   let borderColor, bodyBg, headingColor;
@@ -236,9 +144,9 @@ $(function () {
     headingColor = config.colors.headingColor;
   }
 
-  // Clients datatable
-  if (dt_client_table.length) {
-    dt_client = dt_client_table.DataTable({
+  // Projects datatable
+  if (dt_project_table.length) {
+    dt_project = dt_project_table.DataTable({
       columnDefs: [
         {
           targets: [0],
@@ -249,30 +157,30 @@ $(function () {
         },
         {
           targets: [1],
-          title: 'Name',
+          title: 'Tên dự án',
           render: function (data, type, full, meta) {
             return '<span class="fw-medium">' + full['name'] + '</span>';
           }
         },
         {
           targets: [2],
-          title: 'Address',
+          title: 'Chi phí',
           render: function (data, type, full, meta) {
-            return '<span class="fw-medium">' + full['address'] + '</span>';
+            return '<span class="fw-medium">' + full['cost'] + '</span>';
           }
         },
         {
           targets: [3],
-          title: 'Count',
+          title: 'Trạng thái',
           render: function (data, type, full, meta) {
-            return '<span class="fw-medium">' + full['count'] + '</span>';
+            return '<span class="fw-medium">' + full['status'] + '</span>';
           }
         },
         {
           targets: [4],
-          title: 'Cost',
+          title: 'Khách hàng',
           render: function (data, type, full, meta) {
-            return '<span class="fw-medium">' + full['total_cost'] + '</span>';
+            return '<span class="fw-medium">' + full['client_id'] + '</span>';
           }
         },
         {
@@ -382,58 +290,44 @@ $(function () {
           ]
         },
         {
-          text: '<i class="ti ti-plus me-0 me-sm-1 ti-xs"></i><span class="d-none d-sm-inline-block">Thêm khách hàng</span>',
+          text: '<i class="ti ti-plus me-0 me-sm-1 ti-xs"></i><span class="d-none d-sm-inline-block">Thêm dự án</span>',
           className: 'add-new btn btn-primary',
           attr: {
             'data-bs-toggle': 'offcanvas',
-            'data-bs-target': '#offcanvasAddClient'
+            'data-bs-target': '#offcanvasAddProject'
           }
         }
       ]
     });
 
-    // GET Request to retrieve client data
-    makeAjaxRequest(clientData, 'GET', {}, function (response) {
+    // GET Request to retrieve project data
+    makeAjaxRequest(projectData, 'GET', {}, function (response) {
       var cdata = response.data;
       if (Array.isArray(cdata) && cdata.length > 0) {
-        cdata.forEach(function (client) {
-          // Create promises for both count and total_cost requests
-          var countPromise = makeAjaxRequestPromise(ProjectCountData, 'POST', { client_id: client.id });
-          var costPromise = makeAjaxRequestPromise(ProjectCostData, 'POST', { client_id: client.id });
-
-          // Wait for both promises to resolve
-          Promise.all([countPromise, costPromise])
-            .then(function (results) {
-              client.count = results[0].count;
-              client.total_cost = results[1].total_cost;
-
-              // Now that client is fully populated, add it to the DataTable
-              var Data = [
-                {
-                  id: client.id,
-                  name: client.name,
-                  address: client.address,
-                  count: client.count,
-                  total_cost: client.total_cost
-                }
-              ];
-              dt_client.rows.add(Data).draw();
-            })
-            .catch(function (error) {
-              console.error('Error in AJAX requests', error);
-            });
+        cdata.forEach(function (project) {
+          // Now that project is fully populated, add it to the DataTable
+          var Data = [
+            {
+              id: project.id,
+              name: project.name,
+              cost: project.cost,
+              status: project.status,
+              client_id: project.client_id
+            }
+          ];
+          dt_project.rows.add(Data).draw();
         });
       }
     });
 
     // Handle Delete Record
-    $('.datatables-clients tbody').on('click', '.delete-record', function () {
+    $('.datatables-projects tbody').on('click', '.delete-record', function () {
       var row = $(this).closest('tr');
-      var data = dt_client.row(row).data();
+      var data = dt_project.row(row).data();
       var id = data.id;
 
       Swal.fire({
-        title: 'Xác nhận xoá khách hàng?',
+        title: 'Xác nhận xoá dự án?',
         text: 'Không thể hoàn tác nếu như xác nhận!',
         icon: 'warning',
         showCancelButton: true,
@@ -447,11 +341,11 @@ $(function () {
         if (result.value) {
           // Send a delete request to the server
           $.ajax({
-            url: clientData + '/' + id,
+            url: projectData + '/' + id,
             method: 'DELETE',
             success: function (response) {
               // Remove the row from the DataTable
-              dt_client.row(row).remove().draw();
+              dt_project.row(row).remove().draw();
             },
             error: function (error) {
               console.error(error);
@@ -460,12 +354,12 @@ $(function () {
           Swal.fire({
             icon: 'success',
             title: 'Deleted!',
-            text: 'Đã xoá khách hàng.',
+            text: 'Đã xoá dự án.',
             customClass: {
               confirmButton: 'btn btn-success'
             }
           });
-          dt_client.row($(this).parents('tr')).remove().draw();
+          dt_project.row($(this).parents('tr')).remove().draw();
         }
       });
     });
