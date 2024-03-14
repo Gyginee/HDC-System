@@ -10,17 +10,38 @@ import {
   customizePrintView,
   fetchAndPopulateSelect,
   formatDate,
-  makeAjaxRequestPromise
+  makeAjaxRequestPromise,
+  getCssClassForStatusId
 } from '../function.js';
 
 // Variable declaration for table
 var dt_project_table = $('.datatables-projects'),
   dt_project,
+  statusObj,
   projectData = baseUrl + 'api/v1/projects/project',
   clientData = baseUrl + 'api/v1/clients',
   statusData = baseUrl + 'api/v1/status';
 
 document.addEventListener('DOMContentLoaded', function () {
+  //Fetch Status, add into statusObj
+  fetch(statusData)
+    .then(response => response.json())
+    .then(data => {
+      // Check if the fetched data contains the "data" property
+      if (data && Array.isArray(data.data)) {
+        statusObj = data.data.reduce((obj, status) => {
+          obj[status.id] = {
+            title: status.name,
+            class: getCssClassForStatusId(status.id)
+          };
+          return obj;
+        }, {});
+      } else {
+        console.error('Fetched data is not in the expected format:', data);
+      }
+    })
+    .catch(error => console.error('Error fetching status data:', error));
+
   // Fetch and populate client and status select options
   fetchAndPopulateSelect(clientData, 'project-client');
   fetchAndPopulateSelect(statusData, 'project-status');
@@ -202,7 +223,14 @@ $(function () {
           targets: [3],
           title: 'Trạng thái',
           render: function (data, type, full, meta) {
-            return '<span class="fw-medium">' + full['status'] + '</span>';
+            const statusName = full['status'];
+            const statusData = Object.values(statusObj).find(status => status.title === statusName);
+
+            if (statusData) {
+              return `<span class="badge ${statusData.class}" text-capitalized>${statusData.title} </span>`;
+            } else {
+              return `<span class="badge bg-label-default">Chưa cập nhật</span>`;
+            }
           }
         },
         {
@@ -340,38 +368,39 @@ $(function () {
     makeAjaxRequest(projectData, 'GET', {}, function (response) {
       var cdata = response.data;
       if (Array.isArray(cdata) && cdata.length > 0) {
-          cdata.forEach(function (project) {
-              // Create promises for both client and status requests
-              var clientPromise = makeAjaxRequestPromise(clientData + "/" + project.client_id, 'GET', {});
-              var statusPromise = makeAjaxRequestPromise(statusData + "/" + project.status, 'GET', {});
+        cdata.forEach(function (project) {
+          // Create promises for both client and status requests
+          var clientPromise = makeAjaxRequestPromise(clientData + '/' + project.client_id, 'GET', {});
+          var statusPromise = makeAjaxRequestPromise(statusData + '/' + project.status, 'GET', {});
 
-              // Wait for both promises to resolve
-              Promise.all([clientPromise, statusPromise]).then(function (results) {
-                  var clientData = results[0].data;
-                  var statusData = results[1].data;
+          // Wait for both promises to resolve
+          Promise.all([clientPromise, statusPromise])
+            .then(function (results) {
+              var clientData = results[0].data;
+              var statusData = results[1].data;
 
-                  // Update project properties
-                  project.client_id = clientData.name;
-                  project.status = statusData.name;
+              // Update project properties
+              project.client_id = clientData.name;
+              project.status = statusData.name;
 
-                  // Add project data to the DataTable
-                  var dataToAdd = {
-                      id: project.id,
-                      name: project.name,
-                      cost: project.cost,
-                      status: project.status,
-                      client_id: project.client_id,
-                      created_at: project.created_at
-                  };
+              // Add project data to the DataTable
+              var dataToAdd = {
+                id: project.id,
+                name: project.name,
+                cost: project.cost,
+                status: project.status,
+                client_id: project.client_id,
+                created_at: project.created_at
+              };
 
-                  dt_project.row.add(dataToAdd).draw();
-              }).catch(function (error) {
-                  console.error('Error occurred:', error);
-              });
-          });
+              dt_project.row.add(dataToAdd).draw();
+            })
+            .catch(function (error) {
+              console.error('Error occurred:', error);
+            });
+        });
       }
-  });
-
+    });
 
     // Handle Delete Record
     $('.datatables-projects tbody').on('click', '.delete-record', function () {

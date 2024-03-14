@@ -70,6 +70,20 @@ export function makeAjaxRequestPromise(url, method, requestData) {
   });
 }
 
+// Function to get the CSS class for a given status ID
+export function getCssClassForStatusId(statusId) {
+  // Define your mapping of status IDs to CSS classes here
+  const classMapping = {
+    1: 'bg-label-warning',
+    2: 'bg-label-success',
+    3: 'bg-label-primary',
+    4: 'bg-label-secondary',
+    // Add more mappings as needed
+  };
+
+  return classMapping[statusId] || 'bg-label-default';
+}
+
 // Function to fetch and populate select options
 export function fetchAndPopulateSelect(url, selectId) {
   fetch(url)
