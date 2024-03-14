@@ -4,7 +4,14 @@
 
 'use strict';
 
-import {makeAjaxRequest, extractTextFromHTML, customizePrintView, makeAjaxRequestPromise, fetchAndPopulateSelect} from '../function.js'
+import {
+  makeAjaxRequest,
+  extractTextFromHTML,
+  customizePrintView,
+  fetchAndPopulateSelect,
+  formatDate,
+  makeAjaxRequestPromise
+} from '../function.js';
 
 // Variable declaration for table
 var dt_project_table = $('.datatables-projects'),
@@ -14,7 +21,6 @@ var dt_project_table = $('.datatables-projects'),
   statusData = baseUrl + 'api/v1/status';
 
 document.addEventListener('DOMContentLoaded', function () {
-
   // Fetch and populate client and status select options
   fetchAndPopulateSelect(clientData, 'project-client');
   fetchAndPopulateSelect(statusData, 'project-status');
@@ -53,6 +59,19 @@ document.addEventListener('DOMContentLoaded', function () {
             }
           }
         }
+      },
+      projectStatus: {
+        validators: {
+          notEmpty: {
+            message: 'Vui lòng chọn trạng thái dự án' // Please select a status
+          },
+          callback: {
+            message: 'Vui lòng chọn trạng thái dự án', // Please select a status
+            callback: function (value, validator, $field) {
+              return value !== '';
+            }
+          }
+        }
       }
     },
     plugins: {
@@ -74,6 +93,7 @@ document.addEventListener('DOMContentLoaded', function () {
       cost = document.getElementById('add-project-cost').value,
       client_id = document.getElementById('project-client').value,
       status = document.getElementById('project-status').value;
+
     const data = {
       name: name,
       cost: cost,
@@ -90,9 +110,18 @@ document.addEventListener('DOMContentLoaded', function () {
     })
       .then(response => response.json())
       .then(e => {
+        // Move the definition of date inside the promise chain
+        const date = formatDate();
         dt_project.rows
           .add([
-            { id: e.data.id, name: e.data.name, cost: e.data.cost, status: e.data.status, client_id: e.data.client_id }
+            {
+              id: e.data.id,
+              name: e.data.name,
+              cost: e.data.cost,
+              status: e.data.status,
+              client_id: e.data.client_id,
+              created_at: date
+            }
           ])
           .draw();
         Swal.fire({
@@ -181,6 +210,13 @@ $(function () {
           title: 'Khách hàng',
           render: function (data, type, full, meta) {
             return '<span class="fw-medium">' + full['client_id'] + '</span>';
+          }
+        },
+        {
+          targets: [5],
+          title: 'Ngày tạo',
+          render: function (data, type, full, meta) {
+            return '<span class="fw-medium">' + formatDate(full['created_at']) + '</span>';
           }
         },
         {
@@ -304,21 +340,38 @@ $(function () {
     makeAjaxRequest(projectData, 'GET', {}, function (response) {
       var cdata = response.data;
       if (Array.isArray(cdata) && cdata.length > 0) {
-        cdata.forEach(function (project) {
-          // Now that project is fully populated, add it to the DataTable
-          var Data = [
-            {
-              id: project.id,
-              name: project.name,
-              cost: project.cost,
-              status: project.status,
-              client_id: project.client_id
-            }
-          ];
-          dt_project.rows.add(Data).draw();
-        });
+          cdata.forEach(function (project) {
+              // Create promises for both client and status requests
+              var clientPromise = makeAjaxRequestPromise(clientData + "/" + project.client_id, 'GET', {});
+              var statusPromise = makeAjaxRequestPromise(statusData + "/" + project.status, 'GET', {});
+
+              // Wait for both promises to resolve
+              Promise.all([clientPromise, statusPromise]).then(function (results) {
+                  var clientData = results[0].data;
+                  var statusData = results[1].data;
+
+                  // Update project properties
+                  project.client_id = clientData.name;
+                  project.status = statusData.name;
+
+                  // Add project data to the DataTable
+                  var dataToAdd = {
+                      id: project.id,
+                      name: project.name,
+                      cost: project.cost,
+                      status: project.status,
+                      client_id: project.client_id,
+                      created_at: project.created_at
+                  };
+
+                  dt_project.row.add(dataToAdd).draw();
+              }).catch(function (error) {
+                  console.error('Error occurred:', error);
+              });
+          });
       }
-    });
+  });
+
 
     // Handle Delete Record
     $('.datatables-projects tbody').on('click', '.delete-record', function () {

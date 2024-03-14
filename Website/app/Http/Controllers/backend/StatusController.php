@@ -68,4 +68,5 @@ class StatusController extends Controller
         $status->delete();
         return response()->json(null, 204);
     }
+
 }

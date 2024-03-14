@@ -11,6 +11,26 @@ export function makeAjaxRequest(url, method, requestData, successCallback) {
   });
 }
 
+// Function to get current date or format a given date
+export function formatDate(inputDate) {
+  let date;
+  if (!inputDate) {
+      // If no inputDate provided, use current date
+      date = new Date();
+  } else {
+      // If inputDate provided, parse it
+      date = new Date(inputDate);
+  }
+
+  // Extract day, month, and year components
+  const day = String(date.getDate()).padStart(2, '0');
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const year = date.getFullYear();
+
+  // Return formatted date string
+  return `${day}/${month}/${year}`;
+}
+
 // Exported function to extract text from HTML
 export function extractTextFromHTML(inner) {
   if (inner.length <= 0) return inner;

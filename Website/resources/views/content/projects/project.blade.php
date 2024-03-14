@@ -41,6 +41,7 @@
                         <th>Chi phí</th>
                         <th>Khách hàng</th>
                         <th>Trạng thái</th>
+                        <th>Ngày tạo</th>
                         <th>Chức năng</th>
                     </tr>
                 </thead>
