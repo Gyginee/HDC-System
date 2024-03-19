@@ -30,7 +30,7 @@ use App\Http\Controllers\backend\UserPermissionController;
 */
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+  return $request->user();
 });
 
 
@@ -45,6 +45,9 @@ Route::prefix('v1')->group(function () {
     Route::apiResource('project', ProjectController::class)->names('projects');
 
     Route::apiResource('detail', ProjectDetailController::class)->names('project-details');
+
+
+
     //function with req body
     Route::post('detailcount', [ProjectDetailController::class, 'project_detailCount']);
     Route::post('detailtotal', [ProjectDetailController::class, 'project_detailTotal']);
@@ -55,6 +58,9 @@ Route::prefix('v1')->group(function () {
     //function with req body
     Route::post('count', [ProjectController::class, 'projectCount']);
     Route::post('total', [ProjectController::class, 'projectTotal']);
+
+    //Project Detail
+    Route::post('total-cost', [ProjectDetailController::class, 'getTotalCost']);
   });
 
   // Group staff related resources

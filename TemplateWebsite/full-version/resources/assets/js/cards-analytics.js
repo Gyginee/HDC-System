@@ -826,7 +826,7 @@
     };
     return earningReportBarChartOpt;
   }
-  
+
   var chartJson = 'earning-reports-charts.json';
   // Earning Chart JSON data
   var earningReportsChart = $.ajax({

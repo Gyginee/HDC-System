@@ -12,11 +12,31 @@ import {
   getCssClassForStatusId
 } from '../function.js';
 
+/*
+series
+[
+  {
+    name: 'Delivery rate',
+    type: 'column',
+    data: [5, 4.5, 4, 3]
+  },
+  {
+    name: 'Delivery time',
+    type: 'column',
+    data: [4, 3.5, 3, 2.5]
+  },
+  {
+    name: 'Delivery exceptions',
+    type: 'column',
+    data: [3.5, 3, 2.5, 2]
+  }
+], */
+
 // Variable declaration for table
 var dt_cost_table = $('.datatables-cost'),
   dt_cost,
   statusObj,
-  typeNames,projectId,
+  projectId,typeCategories, costSeries,
   vendorData = baseUrl + 'api/v1/vendors',
   statusData = baseUrl + 'api/v1/status',
   projectDetail = baseUrl + 'api/v1/projects/detail',
@@ -564,8 +584,8 @@ $(function () {
     });
   }
 
-  const carrierPerformance = document.querySelector('#carrierPerformance'),
-    carrierPerformanceChartConfig = {
+  const costReport = document.querySelector('#costReport'),
+    costReportChartConfig = {
       chart: {
         height: 275,
         type: 'bar',
@@ -590,26 +610,10 @@ $(function () {
       dataLabels: {
         enabled: false
       },
-      series: [
-        {
-          name: 'Delivery rate',
-          type: 'column',
-          data: [5, 4.5, 4, 3]
-        },
-        {
-          name: 'Delivery time',
-          type: 'column',
-          data: [4, 3.5, 3, 2.5]
-        },
-        {
-          name: 'Delivery exceptions',
-          type: 'column',
-          data: [3.5, 3, 2.5, 2]
-        }
-      ],
+      series: costSeries,
       xaxis: {
         tickAmount: 10,
-        categories: ['Carrier A', 'Carrier B', 'Carrier C', 'Carrier D'],
+        categories: typeCategories,
         labels: {
           style: {
             colors: labelColor,
@@ -705,9 +709,9 @@ $(function () {
         }
       ]
     };
-  if (typeof carrierPerformance !== undefined && carrierPerformance !== null) {
-    const carrierPerformanceChart = new ApexCharts(carrierPerformance, carrierPerformanceChartConfig);
-    carrierPerformanceChart.render();
+  if (typeof costReport !== undefined && costReport !== null) {
+    const costReportChart = new ApexCharts(costReport, costReportChartConfig);
+    costReportChart.render();
   }
 
 

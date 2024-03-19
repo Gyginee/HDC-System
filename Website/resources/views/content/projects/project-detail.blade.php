@@ -32,20 +32,9 @@
                     <small class="text-muted">Các cột chi phí được hiển thị trong bảng bao gồm thông tin, tổng tiền của từng
                         loại</small>
                 </div>
-                <div class="dropdown">
-                    <button class="btn p-0" type="button" id="performance" data-bs-toggle="dropdown" aria-haspopup="true"
-                        aria-expanded="false">
-                        <i class="ti ti-dots-vertical"></i>
-                    </button>
-                    <div class="dropdown-menu dropdown-menu-end" aria-labelledby="performance">
-                        <a class="dropdown-item" href="javascript:void(0);">Delivery rate</a>
-                        <a class="dropdown-item" href="javascript:void(0);">Delivery time</a>
-                        <a class="dropdown-item" href="javascript:void(0);">Delivery exceptions</a>
-                    </div>
-                </div>
             </div>
             <div class="card-body">
-                <div id="carrierPerformance"></div>
+                <div id="costReport"></div>
             </div>
         </div>
     </div>

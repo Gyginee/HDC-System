@@ -93,7 +93,7 @@ class ProjectDetailController extends Controller
 
         return response()->json(['total_cost' => $totalCost], 200);
     }
-/**
+     /**
      * Lấy tổng các chi phí theo id và type.
      *
      * @param  \Illuminate\Http\Request  $request
