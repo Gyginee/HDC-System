@@ -42,9 +42,9 @@ Route::prefix('v1')->group(function () {
   Route::prefix('projects')->group(function () {
 
     // Explicit names
-    Route::resource('project', ProjectController::class)->names('projects');
+    Route::apiResource('project', ProjectController::class)->names('projects');
 
-    Route::resource('detail', ProjectDetailController::class)->names('project-details');
+    Route::apiResource('detail', ProjectDetailController::class)->names('project-details');
     //function with req body
     Route::post('detailcount', [ProjectDetailController::class, 'project_detailCount']);
     Route::post('detailtotal', [ProjectDetailController::class, 'project_detailTotal']);

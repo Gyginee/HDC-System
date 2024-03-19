@@ -424,6 +424,7 @@ $(function () {
           }
         }
       ],
+      
       // For responsive popup
       responsive: {
         details: {

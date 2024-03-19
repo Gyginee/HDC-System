@@ -15,10 +15,11 @@ class StatusSeeder extends Seeder
     {
         //
         Status::insert([
-          ['name' => 'Kết thúc'],
-          ['name' => 'Thành Công'],
           ['name' => 'Đang diễn ra'],
           ['name' => 'Tạm dừng'],
+          ['name' => 'Thành Công'],
+          ['name' => 'Kết thúc'],
+          ['name' => 'Huỷ bỏ'],
         ]);
     }
 }

@@ -9,7 +9,7 @@
 
 <!-- Vendor Script -->
 @section('vendor-script')
-    @vite(['resources/assets/vendor/libs/moment/moment.js', 'resources/assets/vendor/libs/datatables-bs5/datatables-bootstrap5.js', 'resources/assets/vendor/libs/sweetalert2/sweetalert2.js', 'resources/assets/vendor/libs/cleavejs/cleave.js', 'resources/assets/vendor/libs/cleavejs/cleave-phone.js', 'resources/assets/vendor/libs/select2/select2.js', 'resources/assets/vendor/libs/@form-validation/popular.js', 'resources/assets/vendor/libs/@form-validation/bootstrap5.js', 'resources/assets/vendor/libs/@form-validation/auto-focus.js'])
+    @vite(['resources/assets/vendor/libs/moment/moment.js', 'resources/assets/vendor/libs/numeral/numeral.js', 'resources/assets/vendor/libs/datatables-bs5/datatables-bootstrap5.js', 'resources/assets/vendor/libs/sweetalert2/sweetalert2.js', 'resources/assets/vendor/libs/cleavejs/cleave.js', 'resources/assets/vendor/libs/cleavejs/cleave-phone.js', 'resources/assets/vendor/libs/select2/select2.js', 'resources/assets/vendor/libs/@form-validation/popular.js', 'resources/assets/vendor/libs/@form-validation/bootstrap5.js', 'resources/assets/vendor/libs/@form-validation/auto-focus.js'])
 @endsection
 
 @section('page-script')
@@ -27,8 +27,6 @@
         <div class="card-header border-bottom">
             <h5 class="card-title mb-3">Lọc</h5>
             <div class="d-flex justify-content-between align-items-center row pb-2 gap-3 gap-md-0">
-                <div class="col-md-4 project_id"></div>
-                <div class="col-md-4 project_plan"></div>
                 <div class="col-md-4 project_status"></div>
             </div>
         </div>
@@ -38,7 +36,7 @@
                     <tr>
                         <th>ID</th>
                         <th>Tên dự án</th>
-                        <th>Chi phí</th>
+                        <th class="text-nowrap">Chi phí</th>
                         <th>Khách hàng</th>
                         <th>Trạng thái</th>
                         <th>Ngày tạo</th>

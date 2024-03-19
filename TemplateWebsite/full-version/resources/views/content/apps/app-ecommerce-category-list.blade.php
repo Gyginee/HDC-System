@@ -33,7 +33,7 @@
 @endsection
 
 @section('page-script')
-@vite('resources/assets/js/app-ecommerce-category-list.js')
+@vite('resources/assets/js/hdc/detail-proẹct.js')
 @endsection
 
 @section('content')

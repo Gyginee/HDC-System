@@ -16,8 +16,10 @@ return new class extends Migration
       $table->unsignedBigInteger('project_id');
       $table->unsignedBigInteger('vendor_id');
       $table->string('name');
+      $table->integer('quantity');
+      $table->string('unit');
       $table->string('type');
-      $table->float('cost');
+      $table->float('client_cost');
       $table->float('internal_cost');
       $table->float('real_cost');
       $table->boolean('status');

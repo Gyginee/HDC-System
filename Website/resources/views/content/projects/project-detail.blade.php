@@ -1,116 +1,162 @@
 @extends('layouts/layoutMaster')
-@section('title', 'Project')
 
+@section('title', 'Detail Project')
+
+<!-- Vendor Styles -->
 @section('vendor-style')
-<link rel="stylesheet" href="{{asset('assets/vendor/libs/datatables-bs5/datatables.bootstrap5.css')}}" />
-<link rel="stylesheet" href="{{asset('assets/vendor/libs/datatables-responsive-bs5/responsive.bootstrap5.css')}}" />
-<link rel="stylesheet" href="{{asset('assets/vendor/libs/datatables-buttons-bs5/buttons.bootstrap5.css')}}" />
-<link rel="stylesheet" href="{{asset('assets/vendor/libs/select2/select2.css')}}" />
-<link rel="stylesheet" href="{{asset('assets/vendor/libs/@form-validation/umd/styles/index.min.css')}}" />
+    @vite(['resources/assets/vendor/libs/apex-charts/apex-charts.scss', 'resources/assets/vendor/libs/datatables-bs5/datatables.bootstrap5.scss', 'resources/assets/vendor/libs/datatables-responsive-bs5/responsive.bootstrap5.scss', 'resources/assets/vendor/libs/datatables-buttons-bs5/buttons.bootstrap5.scss', 'resources/assets/vendor/libs/animate-css/animate.scss', 'resources/assets/vendor/libs/sweetalert2/sweetalert2.scss', 'resources/assets/vendor/libs/select2/select2.scss', 'resources/assets/vendor/libs/@form-validation/form-validation.scss'])
 @endsection
 
+<!-- Vendor Script -->
 @section('vendor-script')
-<script src="{{asset('assets/vendor/libs/moment/moment.js')}}"></script>
-<script src="{{asset('assets/vendor/libs/datatables-bs5/datatables-bootstrap5.js')}}"></script>
-<script src="{{asset('assets/vendor/libs/select2/select2.js')}}"></script>
-<script src="{{asset('assets/vendor/libs/@form-validation/umd/bundle/popular.min.js')}}"></script>
-<script src="{{asset('assets/vendor/libs/@form-validation/umd/plugin-bootstrap5/index.min.js')}}"></script>
-<script src="{{asset('assets/vendor/libs/@form-validation/umd/plugin-auto-focus/index.min.js')}}"></script>
-<script src="{{asset('assets/vendor/libs/cleavejs/cleave.js')}}"></script>
-<script src="{{asset('assets/vendor/libs/cleavejs/cleave-phone.js')}}"></script>
+    @vite(['resources/assets/vendor/libs/apex-charts/apexcharts.js', 'resources/assets/vendor/libs/moment/moment.js', 'resources/assets/vendor/libs/datatables-bs5/datatables-bootstrap5.js', 'resources/assets/vendor/libs/sweetalert2/sweetalert2.js', 'resources/assets/vendor/libs/cleavejs/cleave.js', 'resources/assets/vendor/libs/cleavejs/cleave-phone.js', 'resources/assets/vendor/libs/select2/select2.js', 'resources/assets/vendor/libs/@form-validation/popular.js', 'resources/assets/vendor/libs/@form-validation/bootstrap5.js', 'resources/assets/vendor/libs/@form-validation/auto-focus.js'])
 @endsection
 
+<!-- Page Script -->
 @section('page-script')
-<script src="{{asset('assets/js/app-ecommerce-customer-all.js')}}"></script>
+    @vite(['resources/assets/js/hdc/projects/detail.js'])
 @endsection
+
 
 @section('content')
-<h4 class="py-3 mb-2">
-  <span class="text-muted fw-light">Khách hàng</span>
-</h4>
-
-
-<!-- customers List Table -->
-<div class="card">
-
-  <div class="card-datatable table-responsive">
-    <table class="datatables-customers table border-top">
-      <thead>
-        <tr>
-          <th></th>
-          <th></th>
-          <th>Khách hàng</th>
-          <th class="text-nowrap">Số điện thoại</th>
-          <th>Địa chỉ</th>
-          <th>Dự án</th>
-          <th class="text-nowrap">Tổng dự án</th>
-        </tr>
-      </thead>
-    </table>
-  </div>
-  <!-- Offcanvas to add new customer -->
-  <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasEcommerceCustomerAdd" aria-labelledby="offcanvasEcommerceCustomerAddLabel">
-    <div class="offcanvas-header">
-      <h5 id="offcanvasEcommerceCustomerAddLabel" class="offcanvas-title">Thêm khách hàng</h5>
-      <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    <h4 class="py-3 mb-4">
+        <span class="text-muted fw-light">Dự án/</span>
+        <span id="project_name_placeholder"></span>
+    </h4>
+    <!-- Report Cost -->
+    <div class="col-12 col-lg-12 mb-4 order-3 order-xl-0">
+        <div class="card">
+            <div class="card-header d-flex align-items-center justify-content-between">
+                <div class="card-title m-0">
+                    <h5 class="card-title m-0 me-2">Báo cáo thống kê chi phí của loại chi phí</h5>
+                    <small class="text-muted">Các cột chi phí được hiển thị trong bảng bao gồm thông tin, tổng tiền của từng
+                        loại</small>
+                </div>
+                <div class="dropdown">
+                    <button class="btn p-0" type="button" id="performance" data-bs-toggle="dropdown" aria-haspopup="true"
+                        aria-expanded="false">
+                        <i class="ti ti-dots-vertical"></i>
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-end" aria-labelledby="performance">
+                        <a class="dropdown-item" href="javascript:void(0);">Delivery rate</a>
+                        <a class="dropdown-item" href="javascript:void(0);">Delivery time</a>
+                        <a class="dropdown-item" href="javascript:void(0);">Delivery exceptions</a>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <div id="carrierPerformance"></div>
+            </div>
+        </div>
     </div>
-    <div class="offcanvas-body mx-0 flex-grow-0">
-      <form class="ecommerce-customer-add pt-0" id="eCommerceCustomerAddForm" onsubmit="return false">
-        <div class="ecommerce-customer-add-basic mb-3">
-          <h6 class="mb-3">Basic Information</h6>
-          <div class="mb-3">
-            <label class="form-label" for="ecommerce-customer-add-name">Tên khách hàng</label>
-            <input type="text" class="form-control" id="ecommerce-customer-add-name" placeholder="John Doe" name="customerName" aria-label="John Doe" />
-          </div>
-          <div class="mb-3">
-            <label class="form-label" for="ecommerce-customer-add-email">Email</label>
-            <input type="text" id="ecommerce-customer-add-email" class="form-control" placeholder="john.doe@example.com" aria-label="john.doe@example.com" name="customerEmail" />
-          </div>
-          <div>
-            <label class="form-label" for="ecommerce-customer-add-contact">Số điện thoại</label>
-            <input type="text" id="ecommerce-customer-add-contact" class="form-control phone-mask" placeholder="+(123) 456-7890" aria-label="+(123) 456-7890" name="customerContact" />
-          </div>
+
+    <div class="d-flex justify-content-between align-items-center flex-wrap mb-2 gap-1">
+        <div class="me-1">
+            <h5 class="mb-1">Chi phí dự án</h5>
+            <p class="mb-1 fw-medium">Các khoản chi của dự án và tình trạng tiến độ thanh toán</p>
         </div>
-
-        <div class="ecommerce-customer-add-shiping mb-3 pt-3">
-          <h6 class="mb-3">Địa chỉ khách hàng (nếu có)</h6>
-          <div class="mb-3">
-            <label class="form-label" for="ecommerce-customer-add-address">Địa chỉ</label>
-            <input type="text" id="ecommerce-customer-add-address" class="form-control" placeholder="19F, Pearl Plaza" aria-label="19F, Pearl Plaza" name="customerAddress1" />
-          </div>
-
-          <div class="mb-3">
-            <label class="form-label" for="ecommerce-customer-add-town">Quận/Huyện</label>
-            <input type="text" id="ecommerce-customer-add-town" class="form-control" placeholder="Bình Thạnh" aria-label="Bình Thạnh" name="customerTown" />
-          </div>
-          <div class="mb-3">
-            <label class="form-label" for="ecommerce-customer-add-city">Thành Phố</label>
-            <input type="text" id="ecommerce-customer-add-city" class="form-control" placeholder="TP.HCM" aria-label="TP.HCM" name="customerCity" />
-          </div>
-
-
-
+        <div class="d-flex align-items-center">
+            <span class="badge bg-label-danger">Chi phí</span>
         </div>
-
-        <div class="d-sm-flex mb-3 pt-3">
-          <div class="me-auto mb-2 mb-md-0">
-            <h6 class="mb-0">Sử dụng làm địa chỉ nhận văn bản, hoá đơn ?</h6>
-            <small class="text-muted">Thông tin chi tiết sẽ được bổ sung sau.</small>
-          </div>
-          <label class="switch m-auto pe-2">
-            <input type="checkbox" class="switch-input" />
-            <span class="switch-toggle-slider">
-              <span class="switch-on"></span>
-              <span class="switch-off"></span>
-            </span>
-          </label>
-        </div>
-        <div class="pt-3">
-          <button type="submit" class="btn btn-primary me-sm-3 me-1 data-submit">Thêm</button>
-          <button type="reset" class="btn btn-label-danger" data-bs-dismiss="offcanvas">Huỷ</button>
-        </div>
-      </form>
     </div>
-  </div>
-</div>
+
+    <!-- Cost List Table -->
+    <div class="card">
+        <div class="card-datatable table-responsive">
+            <table class="datatables-cost table border-top">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Đối tác</th>
+                        <th>Tên chi phí</th>
+                        <th>Số lượng</th>
+                        <th>Đơn vị</th>
+                        <th>Loại</th>
+                        <th>Giá khách</th>
+                        <th>Giá nội bộ</th>
+                        <th>Giá thực tế</th>
+                        <th>Trạng thái</th>
+                        <th>Chức năng</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+
+        <!-- Offcanvas to add new customer -->
+        <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasCostAdd" aria-labelledby="offcanvasCostAddLabel">
+            <div class="offcanvas-header">
+                <h5 id="offcanvasCostAddLabel" class="offcanvas-title">Thêm chi phí</h5>
+                <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+            </div>
+
+            <div class="offcanvas-body mx-0 flex-grow-0">
+                <form class="cost-add pt-0" id="CostAddForm" onsubmit="return false">
+                    <div class="cost-add-basic mb-3">
+                        <h6 class="mb-3">Basic Information</h6>
+
+                        <div class="mb-3">
+                            <label class="form-label" for="cost-vendor">Đối tác</label>
+                            <select id="cost-vendor" class="form-select" name="costVendor">
+                                <option value="">Chọn đối tác</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label" for="cost-name">Tên chi phí</label>
+                            <input type="text" id="cost-name" class="form-control" placeholder="Màn hình led"
+                                aria-label="Màn hình led" name="costName" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label" for="cost-quantity">Số lượng</label>
+                            <input type="text" id="cost-quantity" class="form-control" placeholder="10" aria-label="10"
+                                name="costQuantity" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label" for="cost-unit">Đơn vị</label>
+                            <input type="text" id="cost-unit" class="form-control" placeholder="m2" aria-label="m2"
+                                name="costUnit" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label" for="cost-type">Phân loại</label>
+                            <select id="cost-type" class="form-select" name="costType">
+                                <option value="">Chọn phân loại</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label" for="cost-client">Giá báo khách</label>
+                            <input type="text" id="cost-client" class="form-control" placeholder="1,000,000"
+                                aria-label="1,000,000" name="costClient" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label" for="cost-internal">Giá nội bộ</label>
+                            <input type="text" id="cost-internal" class="form-control" placeholder="800,000"
+                                aria-label="800,000" name="costInternal" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label" for="cost-real">Giá thực tế</label>
+                            <small class="text-muted">Có thể bổ sung sau.</small>
+                            <input type="text" id="cost-real" class="form-control" placeholder="900,000"
+                                aria-label="900,000" name="costReal" />
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label" for="cost-status">Trạng thái</label>
+                            <select id="cost-status" class="form-select" name="costStatus">
+                                <option value="">Chọn trạng thái</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <button type="submit" id="submitFormButton"
+                        class="btn btn-primary me-sm-3 me-1 data-submit">Tạo</button>
+                    <button type="reset" class="btn btn-label-secondary" data-bs-dismiss="offcanvas">Huỷ</button>
+                </form>
+            </div>
+        </div>
+    </div>
 @endsection

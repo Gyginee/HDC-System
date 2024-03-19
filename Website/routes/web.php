@@ -19,7 +19,9 @@ Route::get('logout', [LoginController::class, 'logout'])->name('logout');
 Route::middleware(['auth.staff', 'role:admin,manager'])->group(function () {
 
   Route::get('projects', [ProjectController::class, 'index'])->name('projects');
-  Route::get('project/detail', [ProjectDetailController::class, 'index'])->name('projects-detail');
+  Route::get('project/detail/{id}', [ProjectDetailController::class, 'index'])
+    ->where('id', '[0-9]+')
+    ->name('projects-detail');
 
   Route::get('clients', [ClientController::class, 'index'])->name('clients');
   Route::get('vendors', [VendorController::class, 'index'])->name('vendors');

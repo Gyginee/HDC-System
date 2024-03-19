@@ -10,6 +10,10 @@ import {
   makeAjaxRequestPromise,
   fetchAndPopulateSelect
 } from './function.js';
+
+// Set Vietnamese as the default language
+numeral.locale('vi');
+
 // Variable declaration for table
 var dt_vendor_table = $('.datatables-vendors'),
   customerView = baseUrl + 'app/ecommerce/customer/details/overview',
@@ -20,7 +24,6 @@ var dt_vendor_table = $('.datatables-vendors'),
   typeData = baseUrl + 'api/v1/types';
 
 document.addEventListener('DOMContentLoaded', function () {
-
   // Fetch JSON data from your Laravel application
   fetch(assetsPath + 'json/vietnam-provinces.json')
     .then(response => response.json())
@@ -164,7 +167,7 @@ document.addEventListener('DOMContentLoaded', function () {
           .draw();
         Swal.fire({
           title: 'Thành công!',
-          text: 'Thêm vendor thành công!',
+          text: 'Thêm đối tác thành công!',
           icon: 'success',
           customClass: {
             confirmButton: 'btn btn-primary'
@@ -176,7 +179,7 @@ document.addEventListener('DOMContentLoaded', function () {
         // console.error('Error:', error);
         Swal.fire({
           title: 'Lỗi!',
-          text: 'Xảy ra sự cố khi thêm vendor!',
+          text: 'Xảy ra sự cố khi thêm đối tác!',
           icon: 'error',
           customClass: {
             confirmButton: 'btn btn-primary'
@@ -219,7 +222,7 @@ $(function () {
           targets: [0],
           title: 'ID',
           render: function (data, type, full, meta) {
-            return '<span class="fw-medium">' + full['id'] + '</span>';
+            return '<span class="fw-light">' + full['id'] + '</span>';
           }
         },
         {
@@ -285,14 +288,14 @@ $(function () {
           targets: [5],
           title: 'Dự án',
           render: function (data, type, full, meta) {
-            return '<span class="fw-medium">' + full['count'] + '</span>';
+            return '<span class="fw-light">' + full['count'] + '</span>';
           }
         },
         {
           targets: [6],
           title: 'Tổng chi',
           render: function (data, type, full, meta) {
-            return '<span class="fw-medium">' + full['total_cost'] + '</span>';
+            return '<span class="fw-light">' + numeral(full['total_cost']).format('0,0$') + '</span>';
           }
         },
         {

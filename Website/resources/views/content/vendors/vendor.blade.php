@@ -9,7 +9,7 @@
 
 <!-- Vendor Script -->
 @section('vendor-script')
-    @vite(['resources/assets/vendor/libs/moment/moment.js', 'resources/assets/vendor/libs/datatables-bs5/datatables-bootstrap5.js', 'resources/assets/vendor/libs/sweetalert2/sweetalert2.js', 'resources/assets/vendor/libs/cleavejs/cleave.js', 'resources/assets/vendor/libs/cleavejs/cleave-phone.js', 'resources/assets/vendor/libs/select2/select2.js', 'resources/assets/vendor/libs/@form-validation/popular.js', 'resources/assets/vendor/libs/@form-validation/bootstrap5.js', 'resources/assets/vendor/libs/@form-validation/auto-focus.js'])
+    @vite(['resources/assets/vendor/libs/moment/moment.js', 'resources/assets/vendor/libs/numeral/numeral.js', 'resources/assets/vendor/libs/datatables-bs5/datatables-bootstrap5.js', 'resources/assets/vendor/libs/sweetalert2/sweetalert2.js', 'resources/assets/vendor/libs/cleavejs/cleave.js', 'resources/assets/vendor/libs/cleavejs/cleave-phone.js', 'resources/assets/vendor/libs/select2/select2.js', 'resources/assets/vendor/libs/@form-validation/popular.js', 'resources/assets/vendor/libs/@form-validation/bootstrap5.js', 'resources/assets/vendor/libs/@form-validation/auto-focus.js'])
 @endsection
 
 <!-- Page Styles -->
@@ -47,8 +47,7 @@
             </table>
         </div>
         <!-- Offcanvas to add new vendor -->
-        <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasAddVendor"
-            aria-labelledby="offcanvasAddVendorLabel">
+        <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasAddVendor" aria-labelledby="offcanvasAddVendorLabel">
             <div class="offcanvas-header">
                 <h5 id="offcanvasAddVendorLabel" class="offcanvas-title">Thêm Vendor</h5>
                 <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
@@ -82,7 +81,7 @@
                     </div>
                     <div class="mb-3">
                         <label class="form-label" for="add-vendor-phone">Số điện thoại</label>
-                        <input type="text" class="form-control" id="add-vendor-phone" placeholder="0123 456 789"
+                        <input type="text" class="form-control phone-mask" id="add-vendor-phone" placeholder="0123 456 789"
                             name="vendorPhone" aria-label="0123 456 789" />
                     </div>
                     <div class="mb-3">

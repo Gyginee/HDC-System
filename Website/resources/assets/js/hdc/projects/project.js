@@ -16,11 +16,13 @@ import {
 
 // Variable declaration for table
 var dt_project_table = $('.datatables-projects'),
+  card = $('.card'),
   dt_project,
   statusObj,
   projectData = baseUrl + 'api/v1/projects/project',
   clientData = baseUrl + 'api/v1/clients',
-  statusData = baseUrl + 'api/v1/status';
+  statusData = baseUrl + 'api/v1/status',
+  detailData = baseUrl + 'project/detail';
 
 document.addEventListener('DOMContentLoaded', function () {
   //Fetch Status, add into statusObj
@@ -107,6 +109,9 @@ document.addEventListener('DOMContentLoaded', function () {
       autoFocus: new FormValidation.plugins.AutoFocus()
     }
   });
+
+  // Set Vietnamese as the default language
+  numeral.locale('vi');
 
   // Function to handle form submission
   function handleFormSubmission() {
@@ -202,7 +207,7 @@ $(function () {
           targets: [0],
           title: 'ID',
           render: function (data, type, full, meta) {
-            return '<span class="fw-medium">' + full['id'] + '</span>';
+            return '<span class="fw-light">' + full['id'] + '</span>';
           }
         },
         {
@@ -216,7 +221,8 @@ $(function () {
           targets: [2],
           title: 'Chi phí',
           render: function (data, type, full, meta) {
-            return '<span class="fw-medium">' + full['cost'] + '</span>';
+            return '<span class="fw-light">' + numeral(full['cost']).format('0,0$');
+            +'</span>';
           }
         },
         {
@@ -244,7 +250,7 @@ $(function () {
           targets: [5],
           title: 'Ngày tạo',
           render: function (data, type, full, meta) {
-            return '<span class="fw-medium">' + formatDate(full['created_at']) + '</span>';
+            return '<span class="fw-light">' + formatDate(full['created_at']) + '</span>';
           }
         },
         {
@@ -361,7 +367,72 @@ $(function () {
             'data-bs-target': '#offcanvasAddProject'
           }
         }
-      ]
+      ],
+      // Handle row click event
+      rowCallback: function (row, data) {
+        $(row).on('click', function () {
+          // Redirect to another page with the project ID
+          window.location.href = detailData + '/' + data.id;
+        });
+      },
+      // For responsive popup
+      responsive: {
+        details: {
+          display: $.fn.dataTable.Responsive.display.modal({
+            header: function (row) {
+              var data = row.data();
+              return 'Details of ' + data['status'];
+            }
+          }),
+          type: 'column',
+          renderer: function (api, rowIdx, columns) {
+            var data = $.map(columns, function (col, i) {
+              return col.title !== '' // ? Do not show row in modal popup if title is blank (for check box)
+                ? '<tr data-dt-row="' +
+                    col.rowIndex +
+                    '" data-dt-column="' +
+                    col.columnIndex +
+                    '">' +
+                    '<td>' +
+                    col.title +
+                    ':' +
+                    '</td> ' +
+                    '<td>' +
+                    col.data +
+                    '</td>' +
+                    '</tr>'
+                : '';
+            }).join('');
+
+            return data ? $('<table class="table"/><tbody />').append(data) : false;
+          }
+        }
+      },
+      initComplete: function () {
+        // Adding status filter once table initialized
+        this.api()
+          .columns(-2)
+          .every(function () {
+            var column = this;
+            var select = $(
+              '<select id="project_status" class="form-select text-capitalize"><option value="">Trạng thái</option></select>'
+            )
+              .appendTo('.project_status')
+              .on('change', function () {
+                var val = $.fn.dataTable.util.escapeRegex($(this).val());
+                column.search(val ? '^' + val + '$' : '', true, false).draw();
+              });
+
+            column
+              .data()
+              .unique()
+              .sort()
+              .each(function (d, j) {
+                console.log(statusObj[d].title);
+                select.append('<option value="' + statusObj[d].title + '">' + statusObj[d].title + '</option>');
+              });
+          });
+      }
     });
 
     // GET Request to retrieve project data

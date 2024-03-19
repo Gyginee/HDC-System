@@ -93,5 +93,42 @@ class ProjectDetailController extends Controller
 
         return response()->json(['total_cost' => $totalCost], 200);
     }
+/**
+     * Lấy tổng các chi phí theo id và type.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function getTotalCost(Request $request)
+    {
+        // Validate the incoming request data
+        $request->validate([
+            'id' => 'required|integer',
+            'type' => 'required|string',
+        ]);
 
+        // Lấy id và type từ request
+        $id = $request->input('id');
+        $type = $request->input('type');
+
+        // Lấy tổng các trường client_cost, internal_cost, và real_cost
+        $totalClientCost = Project_detail::where('project_id', $id)
+                                         ->where('type', $type)
+                                         ->sum('client_cost');
+
+        $totalInternalCost = Project_detail::where('project_id', $id)
+                                           ->where('type', $type)
+                                           ->sum('internal_cost');
+
+        $totalRealCost = Project_detail::where('project_id', $id)
+                                       ->where('type', $type)
+                                       ->sum('real_cost');
+
+        // Trả về kết quả
+        return response()->json([
+            'total_client_cost' => $totalClientCost,
+            'total_internal_cost' => $totalInternalCost,
+            'total_real_cost' => $totalRealCost,
+        ]);
+    }
 }

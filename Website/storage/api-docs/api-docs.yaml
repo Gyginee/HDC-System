@@ -1150,7 +1150,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Project'
 
-  /api/v1/projects/{id}:
+  /api/v1/projects/project/{id}:
     get:
       summary: Get a specific project
       operationId: projects.show

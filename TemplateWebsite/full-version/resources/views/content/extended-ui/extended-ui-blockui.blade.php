@@ -161,7 +161,7 @@
             Default
           </button>
           <button class="btn btn-primary btn-form-block-overlay">
-            Overlay Color
+            Overlay Colors
           </button>
           <button class="btn btn-primary btn-form-block-spinner">
             Custom Spinner

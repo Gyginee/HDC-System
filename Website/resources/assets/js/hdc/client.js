@@ -4,6 +4,9 @@
 
 'use strict';
 
+// Set Vietnamese as the default language
+numeral.locale('vi');
+
 // Variable declaration for table
 var dt_client_table = $('.datatables-clients'),
   customerView = baseUrl + 'app/ecommerce/customer/details/overview';
@@ -246,7 +249,7 @@ $(function () {
           targets: [0],
           title: 'ID',
           render: function (data, type, full, meta) {
-            return '<span class="fw-medium">' + full['id'] + '</span>';
+            return '<span class="fw-light">' + full['id'] + '</span>';
           }
         },
         {
@@ -298,14 +301,14 @@ $(function () {
           targets: [3],
           title: 'Dự án',
           render: function (data, type, full, meta) {
-            return '<span class="fw-medium">' + full['count'] + '</span>';
+            return '<span class="fw-light">' + full['count'] + '</span>';
           }
         },
         {
           targets: [4],
           title: 'Tổng dự án',
           render: function (data, type, full, meta) {
-            return '<span class="fw-medium">' + full['total_cost'] + '</span>';
+            return '<span class="fw-light">' + numeral(full['total_cost']).format('0,0$') + '</span>';
           }
         },
         {

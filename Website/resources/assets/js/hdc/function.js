@@ -99,3 +99,148 @@ export function fetchAndPopulateSelect(url, selectId) {
     })
     .catch(error => console.error('Error fetching data:', error));
 }
+
+// Earning Reports Tabs Function with modified categories
+function EarningReportsBarChart(arrayData, highlightData, categories) {
+  const basicColor = config.colors_label.primary,
+    highlightColor = config.colors.primary;
+  var colorArr = [];
+
+  for (let i = 0; i < arrayData.length; i++) {
+    if (i === highlightData) {
+      colorArr.push(highlightColor);
+    } else {
+      colorArr.push(basicColor);
+    }
+  }
+
+  const earningReportBarChartOpt = {
+    chart: {
+      height: 258,
+      parentHeightOffset: 0,
+      type: 'bar',
+      toolbar: {
+        show: false
+      }
+    },
+    plotOptions: {
+      bar: {
+        columnWidth: '32%',
+        startingShape: 'rounded',
+        borderRadius: 4,
+        distributed: true,
+        dataLabels: {
+          position: 'top'
+        }
+      }
+    },
+    grid: {
+      show: false,
+      padding: {
+        top: 0,
+        bottom: 0,
+        left: -10,
+        right: -10
+      }
+    },
+    colors: colorArr,
+    dataLabels: {
+      enabled: true,
+      formatter: function (val) {
+        return val + 'k';
+      },
+      offsetY: -20,
+      style: {
+        fontSize: '15px',
+        colors: [legendColor],
+        fontWeight: '500',
+        fontFamily: 'Public Sans'
+      }
+    },
+    series: [
+      {
+        data: arrayData
+      }
+    ],
+    legend: {
+      show: false
+    },
+    tooltip: {
+      enabled: false
+    },
+    xaxis: {
+      categories: categories, // Use the provided categories
+      axisBorder: {
+        show: true,
+        color: borderColor
+      },
+      axisTicks: {
+        show: false
+      },
+      labels: {
+        style: {
+          colors: labelColor,
+          fontSize: '13px',
+          fontFamily: 'Public Sans'
+        }
+      }
+    },
+    yaxis: {
+      labels: {
+        offsetX: -15,
+        formatter: function (val) {
+          return parseInt(val / 1) + 'k';
+        },
+        style: {
+          fontSize: '13px',
+          colors: labelColor,
+          fontFamily: 'Public Sans'
+        },
+        min: 0,
+        max: 60000,
+        tickAmount: 6
+      }
+    },
+    responsive: [
+      {
+        breakpoint: 1441,
+        options: {
+          plotOptions: {
+            bar: {
+              columnWidth: '41%'
+            }
+          }
+        }
+      },
+      {
+        breakpoint: 590,
+        options: {
+          plotOptions: {
+            bar: {
+              columnWidth: '61%',
+              borderRadius: 5
+            }
+          },
+          yaxis: {
+            labels: {
+              show: false
+            }
+          },
+          grid: {
+            padding: {
+              right: 0,
+              left: -20
+            }
+          },
+          dataLabels: {
+            style: {
+              fontSize: '12px',
+              fontWeight: '400'
+            }
+          }
+        }
+      }
+    ]
+  };
+  return earningReportBarChartOpt;
+}
