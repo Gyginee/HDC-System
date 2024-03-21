@@ -36,7 +36,8 @@
                     <tr>
                         <th>ID</th>
                         <th>Tên dự án</th>
-                        <th class="text-nowrap">Chi phí</th>
+                        <th class="text-nowrap">Kinh phí</th>
+                        <th class="text-nowrap">Chi phí thực tế</th>
                         <th>Khách hàng</th>
                         <th>Trạng thái</th>
                         <th>Ngày tạo</th>
@@ -68,7 +69,7 @@
                     </div>
 
                     <div class="mb-3">
-                        <label class="form-label" for="add-project-cost">Chi phí</label>
+                        <label class="form-label" for="add-project-cost">Chi phí báo khách</label>
                         <input type="text" class="form-control" id="add-project-cost" placeholder="5,100,000,000"
                             name="projectCost" aria-label="Project Cost" />
                     </div>

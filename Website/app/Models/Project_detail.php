@@ -7,16 +7,20 @@ use Illuminate\Database\Eloquent\Model;
 
 class Project_detail extends Model
 {
-    use HasFactory;
+  use HasFactory;
 
-    protected $fillable = [
-        'name',
-        'type',
-        'cost',
-        'internal_cost',
-        'real_cost',
-        'status',
-    ];
+  protected $fillable = [
+    'project_id',
+    'vendor_id',
+    'name',
+    'quantity',
+    'unit',
+    'type',
+    'client_cost',
+    'internal_cost',
+    'real_cost',
+    'status',
+  ];
 
-    protected $table = 'project_detail';
+  protected $table = 'project_detail';
 }

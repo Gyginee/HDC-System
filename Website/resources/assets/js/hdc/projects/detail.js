@@ -36,12 +36,19 @@ series
 var dt_cost_table = $('.datatables-cost'),
   dt_cost,
   statusObj,
-  projectId,typeCategories, costSeries,
+  typeObj,
+  vendorObj,
+  typeObject,
+  seriesData = [],
+  typeCategories = [],
+  projectId,
+  costReportChartConfig,
   vendorData = baseUrl + 'api/v1/vendors',
   statusData = baseUrl + 'api/v1/status',
   projectDetail = baseUrl + 'api/v1/projects/detail',
   projectData = baseUrl + 'api/v1/projects/project',
-  typeData = baseUrl + 'api/v1/types';
+  typeData = baseUrl + 'api/v1/types',
+  costRepostData = baseUrl + 'api/v1/projects/total-cost';
 
 document.addEventListener('DOMContentLoaded', function () {
   // Lấy ID của dự án từ URL
@@ -64,16 +71,42 @@ document.addEventListener('DOMContentLoaded', function () {
       document.getElementById('project_name_placeholder').innerText = 'Dự án không tồn tại';
     });
 
+  //Fetch vendor, add into vendorObj
+  fetch(vendorData)
+    .then(response => response.json())
+    .then(data => {
+      // Check if the fetched data contains the "data" property
+      if (data && Array.isArray(data.data)) {
+        vendorObj = data.data.reduce((obj, vendor) => {
+          obj[vendor.id] = {
+            title: vendor.name
+          };
+          return obj;
+        }, {});
+      } else {
+        console.error('Fetched data is not in the expected format:', data);
+      }
+    })
+    .catch(error => console.error('Error fetching status data:', error));
+
   //Fetch Status, add into statusObj
   fetch(typeData)
     .then(response => response.json())
     .then(data => {
-      // Extract only the names
-      typeNames = data.data.map(item => item.name);
+      // Check if the fetched data contains the "data" property
+      if (data && Array.isArray(data.data)) {
+        typeObject = data.data.reduce((obj, type) => {
+          obj[type.id] = {
+            title: type.name
+          };
+          return obj;
+        }, {});
+        // Extract all the names from the data
+      } else {
+        console.error('Fetched data is not in the expected format:', data);
+      }
     })
-    .catch(error => {
-      console.error('Error:', error);
-    });
+    .catch(error => console.error('Error fetching status data:', error));
 
   //Fetch Status, add into statusObj
   fetch(statusData)
@@ -189,14 +222,14 @@ document.addEventListener('DOMContentLoaded', function () {
     const costName = document.getElementById('cost-name').value;
     const costVendor = document.getElementById('cost-vendor').value;
     const costQuantity = parseInt(document.getElementById('cost-quantity').value);
-    const costUnit = document.getElementById('cost-unit');
-    const costType = document.getElementById('cost-type');
+    const costUnit = document.getElementById('cost-unit').value;
+    const costType = document.getElementById('cost-type').value;
     const costClient = parseInt(document.getElementById('cost-client').value);
     const costInternal = parseInt(document.getElementById('cost-internal').value);
-    const costRealInput = document.getElementById('cost-real');
+    const costRealInput = document.getElementById('cost-real').value;
     const costReal = isNaN(parseInt(costRealInput.value)) ? 0 : parseInt(costRealInput.value);
 
-    const costStatus = document.getElementById('cost-status');
+    const costStatus = document.getElementById('cost-status').value;
 
     const data = {
       project_id: projectId,
@@ -274,18 +307,35 @@ document.addEventListener('DOMContentLoaded', function () {
 
 // Datatable (jquery)
 $(function () {
-  let borderColor, bodyBg, headingColor;
-
+  let cardColor, headingColor, legendColor, labelColor, borderColor;
   if (isDarkStyle) {
-    borderColor = config.colors_dark.borderColor;
-    bodyBg = config.colors_dark.bodyBg;
+    cardColor = config.colors_dark.cardColor;
+    labelColor = config.colors_dark.textMuted;
+    legendColor = config.colors_dark.bodyColor;
     headingColor = config.colors_dark.headingColor;
+    borderColor = config.colors_dark.borderColor;
   } else {
-    borderColor = config.colors.borderColor;
-    bodyBg = config.colors.bodyBg;
+    cardColor = config.colors.cardColor;
+    labelColor = config.colors.textMuted;
+    legendColor = config.colors.bodyColor;
     headingColor = config.colors.headingColor;
+    borderColor = config.colors.borderColor;
   }
 
+  // Chart Colors
+  const chartColors = {
+    donut: {
+      series1: config.colors.success,
+      series2: '#4fddaa',
+      series3: '#8ae8c7',
+      series4: '#c4f4e3'
+    },
+    bar: {
+      series1: config.colors.primary,
+      series2: '#7367F0CC',
+      series3: '#7367f099'
+    }
+  };
   // Cost datatable
   if (dt_cost_table.length) {
     dt_cost = dt_cost_table.DataTable({
@@ -299,40 +349,10 @@ $(function () {
         },
         {
           targets: [1],
-          title: 'Vendor',
+          title: 'Đối tác',
           render: function (data, type, full, meta) {
-            var $image = full['imagePath'],
-              $name = full['name'];
-            if ($image) {
-              // For Avatar image
-              var $output =
-                '<img src="' + assetsPath + 'img/vendors/' + $image + '" alt="Vendors" class="rounded-circle">';
-            } else {
-              // For Avatar badge
-              var stateNum = Math.floor(Math.random() * 6);
-              var states = ['success', 'danger', 'warning', 'info', 'dark', 'primary', 'secondary'];
-              var $state = states[stateNum],
-                $initials = $name.match(/\b\w/g) || [];
-              $initials = (($initials.shift() || '') + ($initials.pop() || '')).toUpperCase();
-              $output = '<span class="avatar-initial rounded-circle bg-label-' + $state + '">' + $initials + '</span>';
-            }
-
-            var $row_output =
-              '<div class="d-flex justify-content-start align-items-center vendor-name">' +
-              '<div class="avatar-wrapper">' +
-              '<div class="avatar me-2">' +
-              $output +
-              '</div>' +
-              '</div>' +
-              '<div class="d-flex flex-column">' +
-              '<a href="' +
-              customerView +
-              '" ><span class="fw-medium">' +
-              $name +
-              '</span></a>' +
-              '</div>' +
-              '</div>';
-            return $row_output;
+            const vendorData = vendorObj[full['vendor_id']];
+            return '<span class="fw-medium">' + vendorData.title + '</span>';
           }
         },
         {
@@ -353,35 +373,36 @@ $(function () {
           targets: [4],
           title: 'Đơn vị',
           render: function (data, type, full, meta) {
-            return '<span class="fw-medium">' + full['unit'] + '</span>';
+            return '<span class="fw-light">' + full['unit'] + '</span>';
           }
         },
         {
           targets: [5],
           title: 'Loại',
           render: function (data, type, full, meta) {
-            return '<span class="fw-light">' + full['type'] + '</span>';
+            const typeData = typeObject[full['type']];
+            return '<span class="fw-light">' + typeData.title + '</span>';
           }
         },
         {
           targets: [6],
           title: 'Giá khách',
           render: function (data, type, full, meta) {
-            return '<span class="fw-light">' + numeral(full['client_cost']).format('0,0$') + '</span>';
+            return '<span class="fw-medium">' + numeral(full['client_cost']).format('0,0$') + '</span>';
           }
         },
         {
           targets: [7],
           title: 'Giá nội bộ',
           render: function (data, type, full, meta) {
-            return '<span class="fw-light">' + numeral(full['client_cost']).format('0,0$') + '</span>';
+            return '<span class="fw-light">' + numeral(full['internal_cost']).format('0,0$') + '</span>';
           }
         },
         {
           targets: [8],
-          title: 'Giá thực thế',
+          title: 'Giá thực tế',
           render: function (data, type, full, meta) {
-            return '<span class="fw-light">' + numeral(full['client_cost']).format('0,0$') + '</span>';
+            return '<span class="fw-medium">' + numeral(full['real_cost']).format('0,0$') + '</span>';
           }
         },
         {
@@ -389,12 +410,12 @@ $(function () {
           title: 'Trạng thái',
           render: function (data, type, full, meta) {
             const statusName = full['status'];
-            const statusData = Object.values(statusObj).find(status => status.title === statusName);
+            const statusData = statusObj[statusName];
 
             if (statusData) {
               return `<span class="badge ${statusData.class}" text-capitalized>${statusData.title} </span>`;
             } else {
-              return `<span class="badge bg-label-default">Chưa cập nhật</span>`;
+              return `<span class="badge bg-label-dark">Chưa cập nhật</span>`;
             }
           }
         },
@@ -584,143 +605,210 @@ $(function () {
     });
   }
 
-  const costReport = document.querySelector('#costReport'),
-    costReportChartConfig = {
-      chart: {
-        height: 275,
-        type: 'bar',
-        parentHeightOffset: 0,
-        stacked: false,
-        toolbar: {
-          show: false
-        },
-        zoom: {
-          enabled: false
-        }
-      },
-      plotOptions: {
-        bar: {
-          horizontal: false,
-          columnWidth: '50%',
-          startingShape: 'rounded',
-          endingShape: 'flat',
-          borderRadius: 4
-        }
-      },
-      dataLabels: {
-        enabled: false
-      },
-      series: costSeries,
-      xaxis: {
-        tickAmount: 10,
-        categories: typeCategories,
-        labels: {
-          style: {
-            colors: labelColor,
-            fontSize: '13px',
-            fontFamily: 'Public Sans',
-            fontWeight: 400
-          }
-        },
-        axisBorder: {
-          show: false
-        },
-        axisTicks: {
-          show: false
-        }
-      },
-      yaxis: {
-        tickAmount: 4,
-        min: 1,
-        max: 5,
-        labels: {
-          style: {
-            colors: labelColor,
-            fontSize: '13px',
-            fontFamily: 'Public Sans',
-            fontWeight: 400
-          },
-          formatter: function (val) {
-            return val;
-          }
-        }
-      },
-      legend: {
-        show: true,
-        position: 'bottom',
-        markers: {
-          width: 8,
-          height: 8,
-          offsetX: -3,
-          radius: 12
-        },
-        height: 40,
-        offsetY: 0,
-        itemMargin: {
-          horizontal: 10,
-          vertical: 0
-        },
-        fontSize: '13px',
-        fontFamily: 'Public Sans',
-        fontWeight: 400,
-        labels: {
-          colors: headingColor,
-          useSeriesColors: false
-        },
-        offsetY: 10
-      },
-      grid: {
-        strokeDashArray: 6,
-        padding: {
-          bottom: 5
-        }
-      },
-      colors: [chartColors.bar.series1, chartColors.bar.series2, chartColors.bar.series3],
-      fill: {
-        opacity: 1
-      },
-      responsive: [
-        {
-          breakpoint: 1400,
-          options: {
-            chart: {
-              height: 275
-            },
-            legend: {
-              fontSize: '13px',
-              offsetY: 10
-            }
-          }
-        },
-        {
-          breakpoint: 576,
-          options: {
-            chart: {
-              height: 300
-            },
-            legend: {
-              itemMargin: {
-                vertical: 5,
-                horizontal: 10
-              },
-              offsetY: 7
-            }
-          }
-        }
-      ]
-    };
-  if (typeof costReport !== undefined && costReport !== null) {
-    const costReportChart = new ApexCharts(costReport, costReportChartConfig);
-    costReportChart.render();
-  }
-
-
-  let reportChart = fetch(projectDetail)
+  const costReport = document.querySelector('#costReport');
+  // Fetch data for each type
+  fetch(typeData)
     .then(response => response.json())
     .then(data => {
+      // Check if the fetched data contains the "data" property
+      if (data && Array.isArray(data.data)) {
+        // Reduce the fetched data to create typeObj
+        let typeObj = data.data.reduce((obj, type) => {
+          obj[type.id] = {
+            title: type.name
+          };
+          return obj;
+        }, {});
 
-    });
+        // Now fetch data for each type using the API
+        Promise.all(
+          Object.keys(typeObj).map(id => {
+            return fetch(costRepostData, {
+              method: 'POST',
+              body: JSON.stringify({
+                id: projectId,
+                type: id
+              }),
+              headers: {
+                'Content-Type': 'application/json'
+              }
+            })
+              .then(response => response.json())
+              .then(responseData => {
+                // Assuming responseData contains x, y, and z
+                const x = responseData.total_client_cost,
+                  y = responseData.total_internal_cost,
+                  z = responseData.total_real_cost;
 
+                // Store the fetched data in typeObj
+                typeObj[id].data = [x, y, z];
+              })
+              .catch(error => console.error('Error fetching data for type', typeObj[id].title, ':', error));
+          })
+        ).then(() => {
+          const clientArray = Object.keys(typeObj).map(id => parseInt(typeObj[id].data[0]));
+          const internalArray = Object.keys(typeObj).map(id => parseInt(typeObj[id].data[1]));
+          const realArray = Object.keys(typeObj).map(id => parseInt(typeObj[id].data[2]));
+
+          seriesData.push(
+            {
+              name: 'Giá khách',
+              type: 'line',
+              data: clientArray
+            },
+            {
+              name: 'Giá nội bộ',
+              type: 'line',
+              data: internalArray
+            },
+            {
+              name: 'Giá thực tế',
+              type: 'line',
+              data: realArray
+            }
+          );
+          //Type Categorie
+          typeCategories = Object.keys(typeObj).map(id => typeObj[id].title);
+          //Define Config of Report Chart
+          costReportChartConfig = {
+            chart: {
+              height: 400,
+              type: 'bar',
+              parentHeightOffset: 0,
+              stacked: false,
+              toolbar: {
+                show: true
+              },
+              zoom: {
+                enabled: false
+              }
+            },
+            plotOptions: {
+              bar: {
+                horizontal: false,
+                columnWidth: '50%',
+                startingShape: 'rounded',
+                endingShape: 'flat',
+                borderRadius: 4
+              }
+            },
+            dataLabels: {
+              enabled: false
+            },
+            series: seriesData,
+
+            xaxis: {
+              tickAmount: 10,
+              categories: typeCategories,
+              labels: {
+                style: {
+                  colors: labelColor,
+                  fontSize: '13px',
+                  fontFamily: 'Public Sans',
+                  fontWeight: 400
+                }
+              },
+              axisBorder: {
+                show: false
+              },
+              axisTicks: {
+                show: false
+              }
+            },
+            yaxis: {
+              tickAmount: 5,
+              min: 40000000,
+              max: 8000000000,
+              labels: {
+                style: {
+                  colors: labelColor,
+                  fontSize: '13px',
+                  fontFamily: 'Public Sans',
+                  fontWeight: 400
+                },
+                formatter: function (val) {
+                  return val;
+                }
+              }
+            },
+            legend: {
+              show: true,
+              position: 'bottom',
+              markers: {
+                width: 8,
+                height: 8,
+                offsetX: -3,
+                radius: 12
+              },
+              height: 40,
+              offsetY: 0,
+              itemMargin: {
+                horizontal: 10,
+                vertical: 0
+              },
+              fontSize: '13px',
+              fontFamily: 'Public Sans',
+              fontWeight: 400,
+              labels: {
+                colors: headingColor,
+                useSeriesColors: false
+              },
+              offsetY: 10
+            },
+            grid: {
+              strokeDashArray: 6,
+              padding: {
+                bottom: 5
+              }
+            },
+            colors: [chartColors.bar.series1, chartColors.bar.series2, chartColors.bar.series3],
+            fill: {
+              opacity: 1
+            },
+            responsive: [
+              {
+                breakpoint: 1400,
+                options: {
+                  chart: {
+                    height: 275
+                  },
+                  legend: {
+                    fontSize: '13px',
+                    offsetY: 10
+                  }
+                }
+              },
+              {
+                breakpoint: 576,
+                options: {
+                  chart: {
+                    height: 300
+                  },
+                  legend: {
+                    itemMargin: {
+                      vertical: 5,
+                      horizontal: 10
+                    },
+                    offsetY: 7
+                  }
+                }
+              }
+            ]
+          };
+
+          console.log(seriesData);
+          console.log(costReportChartConfig);
+
+          if (typeof costReport !== undefined && costReport !== null) {
+            const costReportChart = new ApexCharts(costReport, costReportChartConfig);
+            costReportChart.render();
+          }
+        });
+      } else {
+        console.error('Fetched data is not in the expected format:', data);
+      }
+    })
+    .catch(error => console.error('Error fetching status data:', error));
 
   // Filter form control to default size
   // ? setTimeout used for multilingual table initialization

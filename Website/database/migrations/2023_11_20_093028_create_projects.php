@@ -15,7 +15,7 @@ return new class extends Migration
       $table->id();
       $table->string('name');
       $table->bigInteger('cost');
-      $table->bigInteger('real_cost');
+      $table->bigInteger('real_cost')->nullable();
       $table->string('status');
       $table->unsignedBigInteger('client_id');
 

@@ -11,6 +11,7 @@ class Project extends Model
     protected $fillable = [
         'name',
         'cost',
+        'real_cost',
         'status',
         'client_id'
     ];

@@ -65,7 +65,7 @@ document.addEventListener('DOMContentLoaded', function () {
       projectCost: {
         validators: {
           notEmpty: {
-            message: 'Vui lòng nhập chi phí dự án'
+            message: 'Vui lòng nhập kinh phí dự án'
           }
         }
       },
@@ -122,10 +122,12 @@ document.addEventListener('DOMContentLoaded', function () {
 
     const data = {
       name: name,
-      cost: cost,
+      cost: parseInt(cost),
+      real_cost: 0,
       client_id: client_id,
       status: status
     };
+    console.log(data)
 
     fetch(projectData, {
       method: 'POST',
@@ -144,6 +146,7 @@ document.addEventListener('DOMContentLoaded', function () {
               id: e.data.id,
               name: e.data.name,
               cost: e.data.cost,
+              real_cost: 0,
               status: e.data.status,
               client_id: e.data.client_id,
               created_at: date
@@ -219,7 +222,7 @@ $(function () {
         },
         {
           targets: [2],
-          title: 'Chi phí',
+          title: 'Kinh phí',
           render: function (data, type, full, meta) {
             return '<span class="fw-light">' + numeral(full['cost']).format('0,0$');
             +'</span>';
@@ -227,27 +230,35 @@ $(function () {
         },
         {
           targets: [3],
-          title: 'Trạng thái',
+          title: 'Chi phí thực tế',
           render: function (data, type, full, meta) {
-            const statusName = full['status'];
-            const statusData = Object.values(statusObj).find(status => status.title === statusName);
-
-            if (statusData) {
-              return `<span class="badge ${statusData.class}" text-capitalized>${statusData.title} </span>`;
-            } else {
-              return `<span class="badge bg-label-default">Chưa cập nhật</span>`;
-            }
+            return '<span class="fw-light">' + numeral(full['real_cost']).format('0,0$');
+            +'</span>';
           }
         },
         {
           targets: [4],
+          title: 'Trạng thái',
+          render: function (data, type, full, meta) {
+            const statusName = full['status'];
+            const statusData = statusObj[statusName];
+
+            if (statusData) {
+              return `<span class="badge ${statusData.class}" text-capitalized>${statusData.title} </span>`;
+            } else {
+              return `<span class="badge bg-label-dark">Chưa cập nhật</span>`;
+            }
+          }
+        },
+        {
+          targets: [5],
           title: 'Khách hàng',
           render: function (data, type, full, meta) {
             return '<span class="fw-medium">' + full['client_id'] + '</span>';
           }
         },
         {
-          targets: [5],
+          targets: [6],
           title: 'Ngày tạo',
           render: function (data, type, full, meta) {
             return '<span class="fw-light">' + formatDate(full['created_at']) + '</span>';
@@ -459,6 +470,7 @@ $(function () {
                 id: project.id,
                 name: project.name,
                 cost: project.cost,
+                real_cost: project.real_cost,
                 status: project.status,
                 client_id: project.client_id,
                 created_at: project.created_at

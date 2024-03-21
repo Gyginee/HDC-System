@@ -18,11 +18,11 @@ return new class extends Migration
       $table->string('name');
       $table->integer('quantity');
       $table->string('unit');
-      $table->string('type');
-      $table->float('client_cost');
-      $table->float('internal_cost');
-      $table->float('real_cost');
-      $table->boolean('status');
+      $table->integer('type');
+      $table->bigInteger('client_cost');
+      $table->bigInteger('internal_cost');
+      $table->bigInteger('real_cost');
+      $table->integer('status');
       $table->timestamps();
     });
   }

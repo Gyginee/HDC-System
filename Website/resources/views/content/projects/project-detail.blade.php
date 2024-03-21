@@ -9,12 +9,17 @@
 
 <!-- Vendor Script -->
 @section('vendor-script')
-    @vite(['resources/assets/vendor/libs/apex-charts/apexcharts.js', 'resources/assets/vendor/libs/moment/moment.js', 'resources/assets/vendor/libs/datatables-bs5/datatables-bootstrap5.js', 'resources/assets/vendor/libs/sweetalert2/sweetalert2.js', 'resources/assets/vendor/libs/cleavejs/cleave.js', 'resources/assets/vendor/libs/cleavejs/cleave-phone.js', 'resources/assets/vendor/libs/select2/select2.js', 'resources/assets/vendor/libs/@form-validation/popular.js', 'resources/assets/vendor/libs/@form-validation/bootstrap5.js', 'resources/assets/vendor/libs/@form-validation/auto-focus.js'])
+    @vite(['resources/assets/vendor/libs/numeral/numeral.js', 'resources/assets/vendor/libs/apex-charts/apexcharts.js', 'resources/assets/vendor/libs/moment/moment.js', 'resources/assets/vendor/libs/datatables-bs5/datatables-bootstrap5.js', 'resources/assets/vendor/libs/sweetalert2/sweetalert2.js', 'resources/assets/vendor/libs/cleavejs/cleave.js', 'resources/assets/vendor/libs/cleavejs/cleave-phone.js', 'resources/assets/vendor/libs/select2/select2.js', 'resources/assets/vendor/libs/@form-validation/popular.js', 'resources/assets/vendor/libs/@form-validation/bootstrap5.js', 'resources/assets/vendor/libs/@form-validation/auto-focus.js'])
 @endsection
 
 <!-- Page Script -->
 @section('page-script')
     @vite(['resources/assets/js/hdc/projects/detail.js'])
+@endsection
+
+<!-- Page Styles -->
+@section('page-style')
+@vite(['resources/assets/vendor/scss/pages/app-logistics-dashboard.scss'])
 @endsection
 
 
@@ -52,7 +57,7 @@
     <!-- Cost List Table -->
     <div class="card">
         <div class="card-datatable table-responsive">
-            <table class="datatables-cost table border-top">
+            <table class="datatables-cost table border-top table-hover">
                 <thead>
                     <tr>
                         <th>ID</th>
