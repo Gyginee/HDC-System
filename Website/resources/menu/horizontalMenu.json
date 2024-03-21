@@ -43,10 +43,10 @@
           "slug": "assets"
         },
         {
-          "url": "/assets",
+          "url": "/fixedcost",
           "name": "Chi phí cố định",
           "icon": "menu-icon tf-icons ti ti-server",
-          "slug": "assets"
+          "slug": "fixedcost"
         }
       ]
     },

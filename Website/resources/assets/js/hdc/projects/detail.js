@@ -50,6 +50,15 @@ var dt_cost_table = $('.datatables-cost'),
   typeData = baseUrl + 'api/v1/types',
   costRepostData = baseUrl + 'api/v1/projects/total-cost';
 
+// Chart Colors
+const chartColors = {
+  bar: {
+    series1: config.colors.primary,
+    series2: '#7367F0CC',
+    series3: '#7367f099'
+  }
+};
+
 document.addEventListener('DOMContentLoaded', function () {
   // Lấy ID của dự án từ URL
   projectId = window.location.pathname.split('/').pop();
@@ -322,20 +331,6 @@ $(function () {
     borderColor = config.colors.borderColor;
   }
 
-  // Chart Colors
-  const chartColors = {
-    donut: {
-      series1: config.colors.success,
-      series2: '#4fddaa',
-      series3: '#8ae8c7',
-      series4: '#c4f4e3'
-    },
-    bar: {
-      series1: config.colors.primary,
-      series2: '#7367F0CC',
-      series3: '#7367f099'
-    }
-  };
   // Cost datatable
   if (dt_cost_table.length) {
     dt_cost = dt_cost_table.DataTable({
@@ -653,17 +648,17 @@ $(function () {
           seriesData.push(
             {
               name: 'Giá khách',
-              type: 'line',
+              type: 'column',
               data: clientArray
             },
             {
               name: 'Giá nội bộ',
-              type: 'line',
+              type: 'column',
               data: internalArray
             },
             {
               name: 'Giá thực tế',
-              type: 'line',
+              type: 'column',
               data: realArray
             }
           );
@@ -672,7 +667,7 @@ $(function () {
           //Define Config of Report Chart
           costReportChartConfig = {
             chart: {
-              height: 400,
+              height: 550,
               type: 'bar',
               parentHeightOffset: 0,
               stacked: false,
@@ -717,8 +712,8 @@ $(function () {
             },
             yaxis: {
               tickAmount: 5,
-              min: 40000000,
-              max: 8000000000,
+              min: 0,
+              max: 5000000,
               labels: {
                 style: {
                   colors: labelColor,

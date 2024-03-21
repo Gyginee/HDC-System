@@ -11,6 +11,8 @@ use App\Http\Controllers\backend\ProjectController;
 use App\Http\Controllers\backend\ProjectDetailController;
 use App\Http\Controllers\backend\ProjectPermissionController;
 use App\Http\Controllers\backend\RoleController;
+use App\Http\Controllers\backend\FixedCostController;
+use App\Http\Controllers\backend\CostTypeController;
 use App\Http\Controllers\backend\SalaryController;
 use App\Http\Controllers\backend\StaffController;
 use App\Http\Controllers\backend\StaffDetailController;
@@ -46,8 +48,6 @@ Route::prefix('v1')->group(function () {
 
     Route::apiResource('detail', ProjectDetailController::class)->names('project-details');
 
-
-
     //function with req body
     Route::post('detailcount', [ProjectDetailController::class, 'project_detailCount']);
     Route::post('detailtotal', [ProjectDetailController::class, 'project_detailTotal']);
@@ -63,6 +63,11 @@ Route::prefix('v1')->group(function () {
     Route::post('total-cost', [ProjectDetailController::class, 'getTotalCost']);
   });
 
+  // Group internal related resources
+  Route::prefix('internals')->group(function () {
+    Route::apiResource('fixedcost', FixedCostController::class)->names('fixed-cost');
+    Route::apiResource('costtype', CostTypeController::class)->names('cost-type');
+  });
   // Group staff related resources
   Route::prefix('staffs')->group(function () {
 
