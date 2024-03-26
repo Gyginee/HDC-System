@@ -73,7 +73,7 @@ class ProjectDetailController extends Controller
     $vendor_id = $request->input('vendor_id');
 
     if (!$vendor_id) {
-      return response()->json(['error' => 'Client ID parameter is missing'], 400);
+      return response()->json(['error' => 'Vendor ID parameter is missing'], 400);
     }
 
     $count = Project_detail::where('vendor_id', $vendor_id)->count();
@@ -86,10 +86,10 @@ class ProjectDetailController extends Controller
     $vendor_id = $request->input('vendor_id');
 
     if (!$vendor_id) {
-      return response()->json(['error' => 'Client ID parameter is missing'], 400);
+      return response()->json(['error' => 'Vendor ID parameter is missing'], 400);
     }
 
-    $totalCost = Project_detail::where('vendor_id', $vendor_id)->sum('cost');
+    $totalCost = Project_detail::where('vendor_id', $vendor_id)->sum('internal_cost');
 
     return response()->json(['total_cost' => $totalCost], 200);
   }

@@ -16,6 +16,44 @@ let clientData = baseUrl + 'api/v1/clients';
 let ProjectCountData = baseUrl + 'api/v1/projects/count';
 let ProjectCostData = baseUrl + 'api/v1/projects/total';
 
+// Function to reload data and redraw the DataTable
+function reloadDataAndRedrawTable() {
+  // GET Request to retrieve client data
+  makeAjaxRequest(clientData, 'GET', {}, function (response) {
+    var cdata = response.data;
+    if (Array.isArray(cdata) && cdata.length > 0) {
+      cdata.forEach(function (client) {
+        // Create promises for both count and total_cost requests
+        var countPromise = makeAjaxRequestPromise(ProjectCountData, 'POST', { client_id: client.id });
+        var costPromise = makeAjaxRequestPromise(ProjectCostData, 'POST', { client_id: client.id });
+
+        // Wait for both promises to resolve
+        Promise.all([countPromise, costPromise])
+          .then(function (results) {
+            client.count = results[0].count;
+            client.total_cost = results[1].total_cost;
+
+            // Now that client is fully populated, add it to the DataTable
+            var Data = [
+              {
+                id: client.id,
+                name: client.name,
+                imagePath: client.imagePath,
+                address: client.address,
+                count: client.count,
+                total_cost: client.total_cost
+              }
+            ];
+            dt_client.rows.add(Data).draw();
+          })
+          .catch(function (error) {
+            console.error('Error in AJAX requests', error);
+          });
+      });
+    }
+  });
+}
+
 document.addEventListener('DOMContentLoaded', function () {
   // Fetch JSON data from your Laravel application
   fetch(assetsPath + 'json/vietnam-provinces.json')
@@ -140,9 +178,7 @@ document.addEventListener('DOMContentLoaded', function () {
     })
       .then(response => response.json())
       .then(e => {
-        dt_client.rows
-          .add([{ id: e.data.id, name: e.data.name, address: e.data.address, count: 0, total_cost: 0 }])
-          .draw();
+        reloadDataAndRedrawTable();
         Swal.fire({
           title: 'Thành công!',
           text: 'Thêm khách hàng thành công!',
@@ -427,40 +463,7 @@ $(function () {
       ]
     });
 
-    // GET Request to retrieve client data
-    makeAjaxRequest(clientData, 'GET', {}, function (response) {
-      var cdata = response.data;
-      if (Array.isArray(cdata) && cdata.length > 0) {
-        cdata.forEach(function (client) {
-          // Create promises for both count and total_cost requests
-          var countPromise = makeAjaxRequestPromise(ProjectCountData, 'POST', { client_id: client.id });
-          var costPromise = makeAjaxRequestPromise(ProjectCostData, 'POST', { client_id: client.id });
-
-          // Wait for both promises to resolve
-          Promise.all([countPromise, costPromise])
-            .then(function (results) {
-              client.count = results[0].count;
-              client.total_cost = results[1].total_cost;
-
-              // Now that client is fully populated, add it to the DataTable
-              var Data = [
-                {
-                  id: client.id,
-                  name: client.name,
-                  imagePath: client.imagePath,
-                  address: client.address,
-                  count: client.count,
-                  total_cost: client.total_cost
-                }
-              ];
-              dt_client.rows.add(Data).draw();
-            })
-            .catch(function (error) {
-              console.error('Error in AJAX requests', error);
-            });
-        });
-      }
-    });
+    reloadDataAndRedrawTable();
 
     // Handle Delete Record
     $('.datatables-clients tbody').on('click', '.delete-record', function () {

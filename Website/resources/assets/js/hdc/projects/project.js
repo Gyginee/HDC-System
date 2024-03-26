@@ -14,6 +14,20 @@ import {
   getCssClassForStatusId
 } from '../function.js';
 
+// Define a custom format for Vietnamese đồng (VNĐ)
+numeral.register('format', 'vn', {
+  regexps: {
+    format: /(\d)(?=(\d{3})+(?!\d))/g,
+    unformat: /(\d+)/g
+  },
+  format: function (value) {
+    return value.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,') + 'VNĐ';
+  },
+  unformat: function (string) {
+    return parseFloat(string.replace(/[^\d]+/g, ''));
+  }
+});
+
 // Variable declaration for table
 var dt_project_table = $('.datatables-projects'),
   card = $('.card'),
@@ -23,6 +37,44 @@ var dt_project_table = $('.datatables-projects'),
   clientData = baseUrl + 'api/v1/clients',
   statusData = baseUrl + 'api/v1/status',
   detailData = baseUrl + 'project/detail';
+
+function reloadDataAndRedrawTable() {
+  // GET Request to retrieve project data
+  makeAjaxRequest(projectData, 'GET', {}, function (response) {
+    var cdata = response.data;
+    if (Array.isArray(cdata) && cdata.length > 0) {
+      cdata.forEach(function (project) {
+        // Create promises for both client and status requests
+        var clientPromise = makeAjaxRequestPromise(clientData + '/' + project.client_id, 'GET', {});
+
+        // Wait for both promises to resolve
+        Promise.all([clientPromise])
+          .then(function (results) {
+            var clientData = results[0].data;
+
+            // Update project properties
+            project.client_id = clientData.name;
+
+            // Add project data to the DataTable
+            var dataToAdd = {
+              id: project.id,
+              name: project.name,
+              cost: project.cost,
+              real_cost: project.real_cost,
+              status: project.status,
+              client_id: project.client_id,
+              created_at: project.created_at
+            };
+
+            dt_project.row.add(dataToAdd).draw();
+          })
+          .catch(function (error) {
+            console.error('Error occurred:', error);
+          });
+      });
+    }
+  });
+}
 
 document.addEventListener('DOMContentLoaded', function () {
   //Fetch Status, add into statusObj
@@ -118,7 +170,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const name = document.getElementById('add-project-name').value,
       cost = document.getElementById('add-project-cost').value,
       client_id = document.getElementById('project-client').value,
-      status = document.getElementById('project-status').value;
+      status = parseInt(document.getElementById('project-status').value);
 
     const data = {
       name: name,
@@ -127,7 +179,7 @@ document.addEventListener('DOMContentLoaded', function () {
       client_id: client_id,
       status: status
     };
-    console.log(data)
+    console.log(data);
 
     fetch(projectData, {
       method: 'POST',
@@ -138,21 +190,7 @@ document.addEventListener('DOMContentLoaded', function () {
     })
       .then(response => response.json())
       .then(e => {
-        // Move the definition of date inside the promise chain
-        const date = formatDate();
-        dt_project.rows
-          .add([
-            {
-              id: e.data.id,
-              name: e.data.name,
-              cost: e.data.cost,
-              real_cost: 0,
-              status: e.data.status,
-              client_id: e.data.client_id,
-              created_at: date
-            }
-          ])
-          .draw();
+        reloadDataAndRedrawTable();
         Swal.fire({
           title: 'Success!',
           text: 'Thêm dự án thành công!',
@@ -224,7 +262,7 @@ $(function () {
           targets: [2],
           title: 'Kinh phí',
           render: function (data, type, full, meta) {
-            return '<span class="fw-light">' + numeral(full['cost']).format('0,0$');
+            return '<span class="fw-light">' + numeral(full['cost']).format('0,0.00[.]vn');
             +'</span>';
           }
         },
@@ -232,7 +270,7 @@ $(function () {
           targets: [3],
           title: 'Chi phí thực tế',
           render: function (data, type, full, meta) {
-            return '<span class="fw-light">' + numeral(full['real_cost']).format('0,0$');
+            return '<span class="fw-light">' + numeral(full['real_cost']).format('0,0.00[.]vn');
             +'</span>';
           }
         },
@@ -445,45 +483,7 @@ $(function () {
           });
       }
     });
-
-    // GET Request to retrieve project data
-    makeAjaxRequest(projectData, 'GET', {}, function (response) {
-      var cdata = response.data;
-      if (Array.isArray(cdata) && cdata.length > 0) {
-        cdata.forEach(function (project) {
-          // Create promises for both client and status requests
-          var clientPromise = makeAjaxRequestPromise(clientData + '/' + project.client_id, 'GET', {});
-          var statusPromise = makeAjaxRequestPromise(statusData + '/' + project.status, 'GET', {});
-
-          // Wait for both promises to resolve
-          Promise.all([clientPromise, statusPromise])
-            .then(function (results) {
-              var clientData = results[0].data;
-              var statusData = results[1].data;
-
-              // Update project properties
-              project.client_id = clientData.name;
-              project.status = statusData.name;
-
-              // Add project data to the DataTable
-              var dataToAdd = {
-                id: project.id,
-                name: project.name,
-                cost: project.cost,
-                real_cost: project.real_cost,
-                status: project.status,
-                client_id: project.client_id,
-                created_at: project.created_at
-              };
-
-              dt_project.row.add(dataToAdd).draw();
-            })
-            .catch(function (error) {
-              console.error('Error occurred:', error);
-            });
-        });
-      }
-    });
+    reloadDataAndRedrawTable();
 
     // Handle Delete Record
     $('.datatables-projects tbody').on('click', '.delete-record', function () {

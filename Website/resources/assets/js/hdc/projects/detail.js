@@ -12,26 +12,6 @@ import {
   getCssClassForStatusId
 } from '../function.js';
 
-/*
-series
-[
-  {
-    name: 'Delivery rate',
-    type: 'column',
-    data: [5, 4.5, 4, 3]
-  },
-  {
-    name: 'Delivery time',
-    type: 'column',
-    data: [4, 3.5, 3, 2.5]
-  },
-  {
-    name: 'Delivery exceptions',
-    type: 'column',
-    data: [3.5, 3, 2.5, 2]
-  }
-], */
-
 // Variable declaration for table
 var dt_cost_table = $('.datatables-cost'),
   dt_cost,
@@ -98,7 +78,7 @@ document.addEventListener('DOMContentLoaded', function () {
     })
     .catch(error => console.error('Error fetching status data:', error));
 
-  //Fetch Status, add into statusObj
+  //Fetch Type, add into typeObj
   fetch(typeData)
     .then(response => response.json())
     .then(data => {

@@ -18,12 +18,32 @@ numeral.locale('vi');
 var dt_vendor_table = $('.datatables-vendors'),
   customerView = baseUrl + 'app/ecommerce/customer/details/overview',
   dt_vendor,
+  typeObject,
   vendorData = baseUrl + 'api/v1/vendors',
   ProjectDCountData = baseUrl + 'api/v1/projects/detailcount',
   ProjectDCostData = baseUrl + 'api/v1/projects/detailtotal',
   typeData = baseUrl + 'api/v1/types';
 
 document.addEventListener('DOMContentLoaded', function () {
+  //Fetch Type, add into typeObj
+  fetch(typeData)
+    .then(response => response.json())
+    .then(data => {
+      // Check if the fetched data contains the "data" property
+      if (data && Array.isArray(data.data)) {
+        typeObject = data.data.reduce((obj, type) => {
+          obj[type.id] = {
+            title: type.name
+          };
+          return obj;
+        }, {});
+        // Extract all the names from the data
+      } else {
+        console.error('Fetched data is not in the expected format:', data);
+      }
+    })
+    .catch(error => console.error('Error fetching status data:', error));
+
   // Fetch JSON data from your Laravel application
   fetch(assetsPath + 'json/vietnam-provinces.json')
     .then(response => response.json())
@@ -152,19 +172,7 @@ document.addEventListener('DOMContentLoaded', function () {
     })
       .then(response => response.json())
       .then(e => {
-        dt_vendor.rows
-          .add([
-            {
-              id: e.data.id,
-              name: e.data.name,
-              address: e.data.address,
-              phone: e.data.phone,
-              type: e.data.type,
-              count: 0,
-              total_cost: 0
-            }
-          ])
-          .draw();
+        reloadDataAndRedrawTable();
         Swal.fire({
           title: 'Thành công!',
           text: 'Thêm đối tác thành công!',
@@ -281,7 +289,8 @@ $(function () {
           targets: [4],
           title: 'Loại',
           render: function (data, type, full, meta) {
-            return '<span class="fw-medium">' + full['type'] + '</span>';
+            const typeData = typeObject[full['type']];
+            return '<span class="fw-medium">' + typeData.title + '</span>';
           }
         },
         {
@@ -413,43 +422,8 @@ $(function () {
         }
       ]
     });
-
-    // GET Request to retrieve vendor data
-    makeAjaxRequest(vendorData, 'GET', {}, function (response) {
-      var cdata = response.data;
-      if (Array.isArray(cdata) && cdata.length > 0) {
-        cdata.forEach(function (vendor) {
-          // Create promises for both count and total_cost requests
-          var countPromise = makeAjaxRequestPromise(ProjectDCountData, 'POST', { vendor_id: vendor.id });
-          var costPromise = makeAjaxRequestPromise(ProjectDCostData, 'POST', { vendor_id: vendor.id });
-
-          // Wait for both promises to resolve
-          Promise.all([countPromise, costPromise])
-            .then(function (results) {
-              vendor.count = results[0].count;
-              vendor.total_cost = results[1].total_cost;
-
-              // Now that vendor is fully populated, add it to the DataTable
-              var Data = [
-                {
-                  id: vendor.id,
-                  name: vendor.name,
-                  imagePath: vendor.imagePath,
-                  address: vendor.address,
-                  phone: vendor.phone,
-                  type: vendor.type_id,
-                  count: vendor.count,
-                  total_cost: vendor.total_cost
-                }
-              ];
-              dt_vendor.rows.add(Data).draw();
-            })
-            .catch(function (error) {
-              console.error('Error in AJAX requests', error);
-            });
-        });
-      }
-    });
+    // After successful submission, reload data and redraw table
+    reloadDataAndRedrawTable();
 
     // Handle Delete Record
     $('.datatables-vendors tbody').on('click', '.delete-record', function () {
@@ -484,7 +458,7 @@ $(function () {
           });
           Swal.fire({
             icon: 'success',
-            title: 'Deleted!',
+            title: 'Xoá thành công!',
             text: 'Đã xoá vendor.',
             customClass: {
               confirmButton: 'btn btn-success'
@@ -503,3 +477,48 @@ $(function () {
     $('.dataTables_length .form-select').removeClass('form-select-sm');
   }, 300);
 });
+
+function reloadDataAndRedrawTable() {
+  dt_vendor.clear().draw(); // Clear existing data in DataTables
+
+  // Make AJAX request to retrieve vendor data
+  makeAjaxRequest(vendorData, 'GET', {}, function (response) {
+    var cdata = response.data;
+    if (Array.isArray(cdata) && cdata.length > 0) {
+      cdata.forEach(function (vendor) {
+        // Create promises for both count and total_cost requests
+        var countPromise = makeAjaxRequestPromise(ProjectDCountData, 'POST', {
+          vendor_id: vendor.id
+        });
+        var costPromise = makeAjaxRequestPromise(ProjectDCostData, 'POST', {
+          vendor_id: vendor.id
+        });
+
+        // Wait for both promises to resolve
+        Promise.all([countPromise, costPromise])
+          .then(function (results) {
+            vendor.count = results[0].count;
+            vendor.total_cost = results[1].total_cost;
+
+            // Now that vendor is fully populated, add it to the DataTable
+            var Data = [
+              {
+                id: vendor.id,
+                name: vendor.name,
+                imagePath: vendor.imagePath,
+                address: vendor.address,
+                phone: vendor.phone,
+                type: vendor.type_id,
+                count: vendor.count,
+                total_cost: vendor.total_cost
+              }
+            ];
+            dt_vendor.rows.add(Data).draw(); // Add data and draw table
+          })
+          .catch(function (error) {
+            console.error('Error in AJAX requests', error);
+          });
+      });
+    }
+  });
+}

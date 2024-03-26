@@ -70,6 +70,30 @@ export function makeAjaxRequestPromise(url, method, requestData) {
   });
 }
 
+// define datepicker
+export function initializeDatepicker(selector, dateFormat) {
+  let datePickr = $(selector);
+
+  if (datePickr.length) {
+    datePickr.flatpickr({
+      monthSelectorType: 'static',
+      dateFormat: 'dd-mm-YYYY',
+      orientation: isRtl ? 'auto right' : 'auto left',
+      locale: {
+        format: dateFormat
+      },
+      onClose: function (selectedDates, dateStr, instance) {
+        var selectedDate = '';
+        if (selectedDates[0]) {
+          selectedDate = moment(selectedDates[0]).format(dateFormat);
+        }
+        datePickr.val(selectedDate);
+        datePickr.trigger('change').trigger('keyup');
+      }
+    });
+  }
+}
+
 // Function to get the CSS class for a given status ID
 export function getCssClassForStatusId(statusId) {
   // Define your mapping of status IDs to CSS classes here

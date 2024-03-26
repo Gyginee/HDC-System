@@ -7,6 +7,7 @@ use App\Http\Controllers\pages\ProjectController;
 use App\Http\Controllers\pages\ProjectDetailController;
 use App\Http\Controllers\pages\ClientController;
 use App\Http\Controllers\pages\VendorController;
+use App\Http\Controllers\pages\FixedCostController;
 
 
 // Main Page Route
@@ -25,6 +26,8 @@ Route::middleware(['auth.staff', 'role:admin,manager'])->group(function () {
 
   Route::get('clients', [ClientController::class, 'index'])->name('clients');
   Route::get('vendors', [VendorController::class, 'index'])->name('vendors');
+
+  Route::get('fixedcost', [FixedCostController::class, 'index'])->name('fixedcost');
 
   // Locale - accessible only to authenticated users
   Route::get('lang/{locale}', [LanguageController::class, 'swap']);
