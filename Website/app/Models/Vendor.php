@@ -15,6 +15,8 @@ class Vendor extends Model
         'address',
         'imagePath',
         'type_id',
+        'tax_code',
+        'contract_duration',
     ];
 
     protected $table = 'vendors';

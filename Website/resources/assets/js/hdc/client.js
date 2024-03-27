@@ -9,12 +9,14 @@ numeral.locale('vi');
 
 // Variable declaration for table
 var dt_client_table = $('.datatables-clients'),
-  customerView = baseUrl + 'app/ecommerce/customer/details/overview';
-var dt_client;
+  customerView = baseUrl + 'app/ecommerce/customer/details/overview',
+  dt_client;
 
-let clientData = baseUrl + 'api/v1/clients';
-let ProjectCountData = baseUrl + 'api/v1/projects/count';
-let ProjectCostData = baseUrl + 'api/v1/projects/total';
+let clientData = baseUrl + 'api/v1/clients',
+  ProjectCountData = baseUrl + 'api/v1/projects/count',
+  ProjectCostData = baseUrl + 'api/v1/projects/total',
+  infoCompanyData = 'https://thongtindoanhnghiep.co/api/company/'
+
 
 // Function to reload data and redraw the DataTable
 function reloadDataAndRedrawTable() {

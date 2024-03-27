@@ -17,6 +17,8 @@ return new class extends Migration
       $table->integer('phone');
       $table->string('address');
       $table->unsignedBigInteger('type_id');
+      $table->string('tax_code');
+      $table->string('contract_duration');
       $table->timestamps();
     });
   }

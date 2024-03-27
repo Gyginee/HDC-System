@@ -10,7 +10,15 @@ class Client extends Model
     protected $fillable = [
         'name',
         'address',
-        'imagePath'
+        'imagePath',
+        'en_name',
+        'owner',
+        'address',
+        'dif_address',
+        'industry_type',
+        'category',
+        'tax_code',
+        'contract_duration',
     ];
 
     protected $table = 'clients';
