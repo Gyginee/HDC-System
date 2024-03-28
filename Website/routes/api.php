@@ -11,6 +11,7 @@ use App\Http\Controllers\backend\ProjectController;
 use App\Http\Controllers\backend\ProjectDetailController;
 use App\Http\Controllers\backend\ProjectPermissionController;
 use App\Http\Controllers\backend\RoleController;
+use App\Http\Controllers\backend\CategoryController;
 use App\Http\Controllers\backend\FixedCostController;
 use App\Http\Controllers\backend\CostTypeController;
 use App\Http\Controllers\backend\SalaryController;
@@ -86,5 +87,6 @@ Route::prefix('v1')->group(function () {
   Route::apiResource('roles', RoleController::class);
   Route::apiResource('status', StatusController::class);
   Route::apiResource('types', TypeController::class);
+  Route::apiResource('category', CategoryController::class);
   Route::apiResource('vendors', VendorController::class);
 });

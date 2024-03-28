@@ -6,12 +6,12 @@ use App\Http\Controllers\Controller;
 
 use Illuminate\Http\Request;
 
-class ProjectDetailController extends Controller
+class ClientDetailController extends Controller
 {
     //
     public function index()
     {
 
-      return view('content.projects.project-detail');
+      return view('content.clients.client-detail');
     }
 }

@@ -13,7 +13,7 @@
 @endsection
 
 @section('page-script')
-    @vite(['resources/assets/js/hdc/client.js'])
+    @vite(['resources/assets/js/hdc/clients/client.js'])
 @endsection
 
 @section('content')
