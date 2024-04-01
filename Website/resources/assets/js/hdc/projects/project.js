@@ -97,8 +97,8 @@ document.addEventListener('DOMContentLoaded', function () {
     .catch(error => console.error('Error fetching status data:', error));
 
   // Fetch and populate client and status select options
-  fetchAndPopulateSelect(clientData, 'project-client');
-  fetchAndPopulateSelect(statusData, 'project-status');
+  fetchAndPopulateSelect(clientData, 'project-client','id','name');
+  fetchAndPopulateSelect(statusData, 'project-status','id','name');
 
   const addNewProjectForm = document.getElementById('addNewProjectForm'),
     submitButton = document.getElementById('submitFormButton');

@@ -9,13 +9,11 @@ class Client extends Model
 {
     protected $fillable = [
         'name',
+        'short_name',
         'address',
         'imagePath',
-        'en_name',
-        'owner',
         'address',
         'dif_address',
-        'industry_type',
         'category',
         'tax_code',
         'contract_duration',

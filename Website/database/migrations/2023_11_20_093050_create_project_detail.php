@@ -15,7 +15,7 @@ return new class extends Migration
       $table->id();
       $table->unsignedBigInteger('project_id');
       $table->unsignedBigInteger('vendor_id');
-      $table->unsignedBigInteger('staff_id');
+      $table->string('staff_id');
       $table->string('name');
       $table->integer('quantity');
       $table->string('unit');

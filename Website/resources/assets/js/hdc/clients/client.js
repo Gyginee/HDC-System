@@ -4,21 +4,33 @@
 
 'use strict';
 
+import {
+  makeAjaxRequest,
+  extractTextFromHTML,
+  customizePrintView,
+  makeAjaxRequestPromise,
+  fetchAndPopulateSelect,
+  getCssClassForStatusId
+} from '../function.js';
+
+
 // Set Vietnamese as the default language
 numeral.locale('vi');
 
 // Variable declaration for table
 var dt_client_table = $('.datatables-clients'),
-  customerView = baseUrl + 'app/ecommerce/customer/details/overview',
+  detailUrl = baseUrl + 'client/detail',
   dt_client;
 
-let clientData = baseUrl + 'api/v1/clients',
+const clientData = baseUrl + 'api/v1/clients',
   ProjectCountData = baseUrl + 'api/v1/projects/count',
   ProjectCostData = baseUrl + 'api/v1/projects/total',
-  infoCompanyData = 'https://thongtindoanhnghiep.co/api/company/'
+  infoCompanyData = 'https://api.vietqr.io/v2/business',
+  categoryData = baseUrl + 'api/v1/category';
 
 
-// Function to reload data and redraw the DataTable
+
+// Function to reload data and edraw the DataTable
 function reloadDataAndRedrawTable() {
   // GET Request to retrieve client data
   makeAjaxRequest(clientData, 'GET', {}, function (response) {
@@ -40,10 +52,15 @@ function reloadDataAndRedrawTable() {
               {
                 id: client.id,
                 name: client.name,
+                tax_code: client.tax_code,
                 imagePath: client.imagePath,
                 address: client.address,
                 count: client.count,
-                total_cost: client.total_cost
+                total_cost: client.total_cost,
+                category: client.category,
+                contract_duration: client.contract_duration,
+                short_name: client.short_name,
+                dif_address: client.dif_address,
               }
             ];
             dt_client.rows.add(Data).draw();
@@ -56,7 +73,38 @@ function reloadDataAndRedrawTable() {
   });
 }
 
+const tax_code = document.getElementById('add-tax-code'),
+  clientFullname = document.getElementById('add-client-fullname'),
+  clientShortname = document.getElementById('add-client-shortname'),
+  clientAddress = document.getElementById('add-client-address');
+
+fetchAndPopulateSelect(categoryData, 'client-category','id','name')
+
 document.addEventListener('DOMContentLoaded', function () {
+  // Attach the event listener
+  tax_code.addEventListener('input', function () {
+
+    const tax_codeData = tax_code.value.toString(); // Ensure to get the current value inside the event listener
+
+    if (tax_codeData.length >= 10 && tax_codeData.length <= 13) {
+      // Gọi API để lấy thông tin từ MST
+
+      fetch(infoCompanyData + '/' + tax_codeData)
+        .then(response => response.json())
+        .then(e => {
+          //console.log(e);
+          clientFullname.value = e.data.name;
+          clientAddress.value = e.data.address;
+          clientShortname.value = e.data.shortName;
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    } else {
+      // Handle the case where the tax code length is not within the specified range
+      return;
+    }
+  });
   // Fetch JSON data from your Laravel application
   fetch(assetsPath + 'json/vietnam-provinces.json')
     .then(response => response.json())
@@ -96,21 +144,14 @@ document.addEventListener('DOMContentLoaded', function () {
   // Initialize Form Validation
   const fv = FormValidation.formValidation(addNewClientForm, {
     fields: {
-      clientFullname: {
-        validators: {
-          notEmpty: {
-            message: 'Thiếu tên khách hàng' // Missing client's name
-          }
-        }
-      },
 
-      clientProvince: {
+      clientCategory: {
         validators: {
           notEmpty: {
-            message: 'Vui lòng chọn tỉnh thành' // Please select a province
+            message: 'Vui lòng chọn phân loại'
           },
           callback: {
-            message: 'Vui lòng chọn Tỉnh thành', // Please select a province
+            message: 'Vui lòng chọn phân loại',
             callback: function (value, validator, $field) {
               return value !== '';
             }
@@ -118,24 +159,10 @@ document.addEventListener('DOMContentLoaded', function () {
         }
       },
 
-      clientDistrict: {
+      taxCode: {
         validators: {
           notEmpty: {
-            message: 'Vui lòng chọn quận/huyện' // Please select a province
-          },
-          callback: {
-            message: 'Vui lòng chọn Tỉnh thành', // Please select a province
-            callback: function (value, validator, $field) {
-              return value !== '';
-            }
-          }
-        }
-      },
-
-      clientAddress: {
-        validators: {
-          notEmpty: {
-            message: 'Thiếu địa chỉ khách hàng' // Missing client's address
+            message: 'Thiếu mã số thuế' // Missing client's tax code
           }
         }
       }
@@ -156,23 +183,33 @@ document.addEventListener('DOMContentLoaded', function () {
   // Function to handle form submission
   function handleFormSubmission() {
     const name = document.getElementById('add-client-fullname').value;
-    const addressDetail = document.getElementById('add-client-address').value;
+
+    const addressDetail = document.getElementById('add-client-diffaddress').value;
     const provinceSelect = document.getElementById('client-province');
     const districtSelect = document.getElementById('client-district');
-
     const provinceName = provinceSelect.options[provinceSelect.selectedIndex].text;
     const districtName = districtSelect.options[districtSelect.selectedIndex].text;
-    const address = `${addressDetail}, ${districtName}, ${provinceName}`;
+    const diffaddress = `${addressDetail}, ${districtName}, ${provinceName}`;
+
+    const category = document.getElementById('client-category').value;
+    const tax_code = document.getElementById('add-tax-code').value;
+    const short_name = document.getElementById('add-client-shortname').value;
+    const address = document.getElementById('add-client-address').value;
+    const contract_duration = document.getElementById('client-contract').value;
 
     const data = {
-      id: '',
       name: name,
-      address: address
+      short_name: short_name,
+      address: address,
+      dif_address: diffaddress,
+      tax_code: tax_code,
+      category: category,
+      contract_duration: contract_duration,
+
     };
 
     fetch(clientData, {
       method: 'POST',
-
       headers: {
         'Content-Type': 'application/json'
       },
@@ -216,55 +253,6 @@ document.addEventListener('DOMContentLoaded', function () {
   });
 });
 
-// Function to handle AJAX requests
-function makeAjaxRequest(url, method, requestData, successCallback) {
-  $.ajax({
-    url: url,
-    method: method,
-    data: requestData,
-    success: successCallback,
-    error: function (error) {
-      console.error(error);
-    }
-  });
-}
-function extractTextFromHTML(inner) {
-  if (inner.length <= 0) return inner;
-  var el = $.parseHTML(inner);
-  var result = '';
-  $.each(el, function (index, item) {
-    if (item.classList !== undefined && item.classList.contains('name')) {
-      result = result + item.lastChild.firstChild.textContent;
-    } else if (item.innerText === undefined) {
-      result = result + item.textContent;
-    } else result = result + item.innerText;
-  });
-  return result;
-}
-
-function customizePrintView(win) {
-  $(win.document.body).css('color', headingColor).css('border-color', borderColor).css('background-color', bodyBg);
-  $(win.document.body)
-    .find('table')
-    .addClass('compact')
-    .css('color', 'inherit')
-    .css('border-color', 'inherit')
-    .css('background-color', 'inherit');
-}
-
-// Function to handle AJAX requests and return a Promise
-function makeAjaxRequestPromise(url, method, requestData) {
-  return new Promise((resolve, reject) => {
-    $.ajax({
-      url: url,
-      method: method,
-      data: requestData,
-      success: resolve,
-      error: reject
-    });
-  });
-}
-
 // Datatable (jquery)
 $(function () {
   let borderColor, bodyBg, headingColor;
@@ -294,8 +282,11 @@ $(function () {
           targets: [1],
           title: 'Khách hàng',
           render: function (data, type, full, meta) {
+            let $detailUrl = detailUrl + '/' + full['id'];
             var $image = full['imagePath'],
-              $name = full['name'];
+              $name = full['name'],
+              $short_name = full['short_name'];
+
             if ($image) {
               // For Avatar image
               var $output =
@@ -310,7 +301,7 @@ $(function () {
               $output = '<span class="avatar-initial rounded-circle bg-label-' + $state + '">' + $initials + '</span>';
             }
 
-            var $row_output =
+            var $row_output1 =
               '<div class="d-flex justify-content-start align-items-center client-name">' +
               '<div class="avatar-wrapper">' +
               '<div class="avatar me-2">' +
@@ -319,20 +310,43 @@ $(function () {
               '</div>' +
               '<div class="d-flex flex-column">' +
               '<a href="' +
-              customerView +
+              $detailUrl +
               '" ><span class="fw-medium">' +
               $name +
               '</span></a>' +
               '</div>' +
               '</div>';
-            return $row_output;
+
+            var $row_output2 =
+              '<div class="d-flex justify-content-start align-items-center client-name">' +
+              '<div class="avatar-wrapper">' +
+              '<div class="avatar me-2">' +
+              $output +
+              '</div>' +
+              '</div>' +
+              '<div class="d-flex flex-column">' +
+              '<a href="' +
+              $detailUrl +
+              '" ><span class="fw-medium">' +
+              $short_name +
+              '</span></a>' +
+              '</div>' +
+              '</div>';
+
+              console.log($short_name);
+              console.log(full)
+              if (typeof $short_name === 'undefined') {
+                return $row_output1;
+            } else {
+                return $row_output2;
+            }
           }
         },
         {
           targets: [2],
-          title: 'Địa chỉ',
+          title: 'Mã số thuế',
           render: function (data, type, full, meta) {
-            return '<span class="fw-medium">' + full['address'] + '</span>';
+            return '<span class="fw-medium">' + full['tax_code'] + '</span>';
           }
         },
         {
@@ -344,9 +358,16 @@ $(function () {
         },
         {
           targets: [4],
-          title: 'Tổng dự án',
+          title: 'Tổng chi phí',
           render: function (data, type, full, meta) {
             return '<span class="fw-light">' + numeral(full['total_cost']).format('0,0$') + '</span>';
+          }
+        },
+        {
+          targets: [5],
+          title: 'Thời gian hạch toán',
+          render: function (data, type, full, meta) {
+            return '<span class="fw-light">' + full['contract_duration'] + '</span>';
           }
         },
         {

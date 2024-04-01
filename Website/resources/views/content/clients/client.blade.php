@@ -9,7 +9,7 @@
 
 <!-- Vendor Script -->
 @section('vendor-script')
-    @vite(['resources/assets/vendor/libs/moment/moment.js','resources/assets/vendor/libs/numeral/numeral.js', 'resources/assets/vendor/libs/datatables-bs5/datatables-bootstrap5.js', 'resources/assets/vendor/libs/sweetalert2/sweetalert2.js', 'resources/assets/vendor/libs/cleavejs/cleave.js', 'resources/assets/vendor/libs/cleavejs/cleave-phone.js', 'resources/assets/vendor/libs/select2/select2.js', 'resources/assets/vendor/libs/@form-validation/popular.js', 'resources/assets/vendor/libs/@form-validation/bootstrap5.js', 'resources/assets/vendor/libs/@form-validation/auto-focus.js'])
+    @vite(['resources/assets/vendor/libs/moment/moment.js', 'resources/assets/vendor/libs/numeral/numeral.js', 'resources/assets/vendor/libs/datatables-bs5/datatables-bootstrap5.js', 'resources/assets/vendor/libs/sweetalert2/sweetalert2.js', 'resources/assets/vendor/libs/cleavejs/cleave.js', 'resources/assets/vendor/libs/cleavejs/cleave-phone.js', 'resources/assets/vendor/libs/select2/select2.js', 'resources/assets/vendor/libs/@form-validation/popular.js', 'resources/assets/vendor/libs/@form-validation/bootstrap5.js', 'resources/assets/vendor/libs/@form-validation/auto-focus.js'])
 @endsection
 
 @section('page-script')
@@ -32,9 +32,10 @@
                     <tr>
                         <th>ID</th>
                         <th>Khách hàng</th>
-                        <th>Địa chỉ</th>
+                        <th>Mã số thuế</th>
                         <th>Dự án</th>
                         <th>Tổng chi</th>
+                        <th>Thời gian hạch toán</th>
                         <th>Chức năng</th>
                     </tr>
                 </thead>
@@ -48,30 +49,68 @@
             </div>
             <div class="offcanvas-body mx-0 flex-grow-0 pt-0 h-100">
                 <form class="add-new-client pt-0" id="addNewClientForm">
+
+                    <div class="mb-3">
+                        <label class="form-label" for="add-tax-code">Mã số thuế</label>
+                        <input type="text" class="form-control" id="add-tax-code" placeholder="0123456789" name="taxCode"
+                            aria-label="" />
+                    </div>
+
                     <div class="mb-3">
                         <label class="form-label" for="add-client-fullname">Tên khách hàng</label>
-                        <input type="text" class="form-control" id="add-client-fullname" placeholder="HDCreative Ltd"
-                            name="clientFullname" aria-label="HDCreative Ltd" />
+                        <input type="text" class="form-control" id="add-client-fullname" placeholder=""
+                            name="clientFullname" aria-label="" disabled />
                     </div>
 
                     <div class="mb-3">
-                        <label class="form-label" for="client-province">Tỉnh thành</label>
-                        <select id="client-province" class="form-select" name="clientProvince">
-                            <option value="">Chọn Tỉnh thành</option>
+                        <label class="form-label" for="add-client-shortname">Tên viết tắt</label>
+                        <input type="text" class="form-control" id="add-client-shortname" placeholder="HD Creative"
+                            name="clientShortname" aria-label="" />
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label" for="add-client-address">Địa chỉ khách hàng</label>
+                        <input type="text" class="form-control" id="add-client-address" placeholder=""
+                            name="clientAddress" aria-label="" disabled />
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label" for="client-address">ĐỊA CHỈ LIÊN HỆ (nếu có)</label>
+                        <div class="mb-3">
+                            <label class="form-label" for="client-address">Tỉnh/Thành phố</label>
+                            <select id="client-province" class="form-select" name="clientProvince">
+                                <option value="">Chọn Tỉnh/Thành phố</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label" for="client-address">Quận/Huyện</label>
+                            <select id="client-district" class="form-select" name="clientDistrict">
+                                <option value="">Chọn Quận/Huyện</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label" for="project-status">Địa chỉ cụ thể</label>
+                            <input type="text" class="form-control" id="add-client-diffaddress" placeholder=""
+                                name="clientIndustry" aria-label="" />
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="client-contract">Thời hạn hợp đồng</label>
+                        <select id="client-contract" class="form-select" name="clientCategory">
+                            <option value="30 Ngày">30 Ngày</option>
+                            <option value="35 Ngày">35 Ngày</option>
+                            <option value="40 Ngày">40 Ngày</option>
+                            <option value="45 Ngày">45 Ngày</option>
+                            <option value="50 Ngày">50 Ngày</option>
+                            <option value="55 Ngày">55 Ngày</option>
+                            <option value="60 Ngày">60 Ngày</option>
                         </select>
                     </div>
-
                     <div class="mb-3">
-                        <label class="form-label" for="client-district">Quận/Huyện</label>
-                        <select id="client-district" class="form-select" name="clientDistrict">
-                            <option value="">Chọn Quận/Huyện</option>
+                        <label class="form-label" for="client-category">Phân loại</label>
+                        <select id="client-category" class="form-select" name="clientCategory">
+                            <option value="">Chọn phân loại</option>
                         </select>
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="form-label" for="add-client-address">Địa chỉ cụ thể</label>
-                        <input type="text" class="form-control" id="add-client-address" placeholder="19F, Pearl Plaza"
-                            name="clientAddress" aria-label="Client Address" />
                     </div>
 
                     <button type="submit" id="submitFormButton"

@@ -77,7 +77,7 @@ document.addEventListener('DOMContentLoaded', function () {
       console.error('Lỗi đồng bộ data:', error);
     });
 
-  fetchAndPopulateSelect(typeData, 'vendor-type');
+  fetchAndPopulateSelect(typeData, 'vendor-type','id','name');
 
   const addNewVendorForm = document.getElementById('addNewVendorForm');
   const submitButton = document.getElementById('submitFormButton');
@@ -155,11 +155,16 @@ document.addEventListener('DOMContentLoaded', function () {
     const districtName = districtSelect.options[districtSelect.selectedIndex].text;
     const address = `${addressDetail}, ${districtName}, ${provinceName}`;
 
+    const contract_duration = document.getElementById('vendor-contract').value;
+    const tax_code = document.getElementById('add-tax-code').value;
+
     const data = {
       name: name,
       address: address,
       phone: phoneNumber,
-      type_id: typeSelect
+      type_id: typeSelect,
+      contract_duration: contract_duration,
+      tax_code: tax_code,
     };
 
     fetch(vendorData, {
@@ -273,11 +278,18 @@ $(function () {
         },
         {
           targets: [2],
+          title: 'Mã số thuế',
+          render: function (data, type, full, meta) {
+            return '<span class="fw-medium">' + full['tax_code'] + '</span>';
+          }
+        },
+     /*    {
+          targets: [3],
           title: 'Địa chỉ',
           render: function (data, type, full, meta) {
             return '<span class="fw-medium">' + full['address'] + '</span>';
           }
-        },
+        }, */
         {
           targets: [3],
           title: 'SĐT',
@@ -305,6 +317,13 @@ $(function () {
           title: 'Tổng chi',
           render: function (data, type, full, meta) {
             return '<span class="fw-light">' + numeral(full['total_cost']).format('0,0$') + '</span>';
+          }
+        },
+        {
+          targets: [7],
+          title: 'Thời gian hạch toán',
+          render: function (data, type, full, meta) {
+            return '<span class="fw-light">' + full['contract_duration'] + '</span>';
           }
         },
         {
@@ -510,7 +529,9 @@ function reloadDataAndRedrawTable() {
                 phone: vendor.phone,
                 type: vendor.type_id,
                 count: vendor.count,
-                total_cost: vendor.total_cost
+                total_cost: vendor.total_cost,
+                contract_duration: vendor.contract_duration,
+                tax_code: vendor.tax_code,
               }
             ];
             dt_vendor.rows.add(Data).draw(); // Add data and draw table

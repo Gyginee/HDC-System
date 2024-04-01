@@ -70,6 +70,7 @@
                         <th>Giá nội bộ</th>
                         <th>Giá thực tế</th>
                         <th>Trạng thái</th>
+                        <th>Phụ trách</th>
                         <th>Chức năng</th>
                     </tr>
                 </thead>
@@ -144,6 +145,12 @@
                                 <option value="">Chọn trạng thái</option>
                             </select>
                         </div>
+                        <div class="mb-3">
+                          <label class="form-label" for="cost-handle">Phụ trách</label>
+                          <select id="cost-handle" class="form-select" name="costHandle">
+                              <option value="">Chọn nhân viên</option>
+                          </select>
+                      </div>
                     </div>
 
                     <button type="submit" id="submitFormButton"

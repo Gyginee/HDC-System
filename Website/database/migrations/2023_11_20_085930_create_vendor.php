@@ -14,7 +14,7 @@ return new class extends Migration
     Schema::create('vendors', function (Blueprint $table) {
       $table->id(); // This creates an auto-incrementing primary key column 'id'
       $table->string('name');
-      $table->integer('phone');
+      $table->string('phone');
       $table->string('address');
       $table->unsignedBigInteger('type_id');
       $table->string('tax_code');

@@ -25,6 +25,7 @@ var dt_cost_table = $('.datatables-cost'),
   costReportChartConfig,
   vendorData = baseUrl + 'api/v1/vendors',
   statusData = baseUrl + 'api/v1/status',
+  staffData = baseUrl + 'api/v1/staffs/staff',
   projectDetail = baseUrl + 'api/v1/projects/detail',
   projectData = baseUrl + 'api/v1/projects/project',
   typeData = baseUrl + 'api/v1/types',
@@ -117,9 +118,10 @@ document.addEventListener('DOMContentLoaded', function () {
     .catch(error => console.error('Error fetching status data:', error));
 
   //Fetch Select
-  fetchAndPopulateSelect(typeData, 'cost-type');
-  fetchAndPopulateSelect(vendorData, 'cost-vendor');
-  fetchAndPopulateSelect(statusData, 'cost-status');
+  fetchAndPopulateSelect(typeData, 'cost-type','id','name');
+  fetchAndPopulateSelect(vendorData, 'cost-vendor','id','name');
+  fetchAndPopulateSelect(statusData, 'cost-status','id','name');
+  fetchAndPopulateSelect(staffData, 'cost-handle','staff_id','fullname');
 
   // Initialize Form Validation
   let addNewCostForm = document.getElementById('CostAddForm'),
@@ -219,6 +221,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const costReal = isNaN(parseInt(costRealInput.value)) ? 0 : parseInt(costRealInput.value);
 
     const costStatus = document.getElementById('cost-status').value;
+    const costHandle = document.getElementById('cost-handle').value;
 
     const data = {
       project_id: projectId,
@@ -230,8 +233,11 @@ document.addEventListener('DOMContentLoaded', function () {
       client_cost: costClient,
       internal_cost: costInternal,
       real_cost: costReal,
-      status: costStatus
+      status: costStatus,
+      staff_id: costHandle,
     };
+
+    console.log(data)
 
     fetch(projectDetail, {
       method: 'POST',
@@ -255,7 +261,8 @@ document.addEventListener('DOMContentLoaded', function () {
               client_cost: e.data.client_cost,
               internal_cost: e.data.internal_cost,
               real_cost: e.data.real_cost,
-              status: e.data.status
+              status: e.data.status,
+              staff_id: e.data.staff_id
             }
           ])
           .draw();
@@ -380,6 +387,7 @@ $(function () {
             return '<span class="fw-medium">' + numeral(full['real_cost']).format('0,0$') + '</span>';
           }
         },
+
         {
           targets: [9],
           title: 'Trạng thái',
@@ -392,6 +400,13 @@ $(function () {
             } else {
               return `<span class="badge bg-label-dark">Chưa cập nhật</span>`;
             }
+          }
+        },
+        {
+          targets: [10],
+          title: 'Phụ trách',
+          render: function (data, type, full, meta) {
+            return '<span class="fw-medium">' + full['staff_id'] + '</span>';
           }
         },
         {
@@ -527,7 +542,8 @@ $(function () {
               client_cost: cost.client_cost,
               internal_cost: cost.internal_cost,
               real_cost: cost.real_cost,
-              status: cost.status
+              status: cost.status,
+              staff_id: cost.staff_id
             }
           ];
           dt_cost.rows.add(Data).draw();

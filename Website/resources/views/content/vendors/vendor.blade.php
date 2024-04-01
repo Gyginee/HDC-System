@@ -36,11 +36,13 @@
                     <tr>
                         <th>ID</th>
                         <th>Vendor</th>
-                        <th>Địa chỉ</th>
+                        <th>Mã số thuế</th>
+                     {{--    <th>Địa chỉ</th> --}}
                         <th>Số điện thoại</th>
                         <th>Loại</th>
                         <th>Dự án</th>
                         <th>Tổng chi</th>
+                        <th>Thời gian hạch toán</th>
                         <th>Chức năng</th>
                     </tr>
                 </thead>
@@ -54,10 +56,17 @@
             </div>
             <div class="offcanvas-body mx-0 flex-grow-0 pt-0 h-100">
                 <form class="add-new-vendor pt-0" id="addNewVendorForm">
+
                     <div class="mb-3">
                         <label class="form-label" for="add-vendor-fullname">Tên Vendor</label>
                         <input type="text" class="form-control" id="add-vendor-fullname" placeholder="HDCreative Ltd"
                             name="vendorFullname" aria-label="HDCreative Ltd" />
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label" for="add-tax-code">Mã số thuế</label>
+                        <input type="text" class="form-control" id="add-tax-code" placeholder=""
+                            name="vendorTaxCode" aria-label="" />
                     </div>
 
                     <div class="mb-3">
@@ -79,11 +88,13 @@
                         <input type="text" class="form-control" id="add-vendor-address" placeholder="19F, Pearl Plaza"
                             name="vendorAddress" aria-label="Vendor Address" />
                     </div>
+
                     <div class="mb-3">
                         <label class="form-label" for="add-vendor-phone">Số điện thoại</label>
-                        <input type="text" class="form-control phone-mask" id="add-vendor-phone" placeholder="0123 456 789"
-                            name="vendorPhone" aria-label="0123 456 789" />
+                        <input type="text" class="form-control phone-mask" id="add-vendor-phone"
+                            placeholder="0123 456 789" name="vendorPhone" aria-label="0123 456 789" />
                     </div>
+
                     <div class="mb-3">
                         <label class="form-label" for="vendor-type">Phân loại</label>
                         <select id="vendor-type" class="form-select" name="vendorType">
@@ -91,6 +102,18 @@
                         </select>
                     </div>
 
+                    <div class="mb-3">
+                        <label class="form-label" for="vendor-contract">Thời hạn hợp đồng</label>
+                        <select id="vendor-contract" class="form-select" name="vendorCategory">
+                            <option value="30 Ngày">30 Ngày</option>
+                            <option value="35 Ngày">35 Ngày</option>
+                            <option value="40 Ngày">40 Ngày</option>
+                            <option value="45 Ngày">45 Ngày</option>
+                            <option value="50 Ngày">50 Ngày</option>
+                            <option value="55 Ngày">55 Ngày</option>
+                            <option value="60 Ngày">60 Ngày</option>
+                        </select>
+                    </div>
 
                     <button type="submit" id="submitFormButton"
                         class="btn btn-primary me-sm-3 me-1 data-submit">Tạo</button>

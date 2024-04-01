@@ -32,12 +32,10 @@ class ClientController extends Controller
     // Validate the request data
     $validatedData = $request->validate([
       'name' => 'required|string',
+      'short_name' => 'string',
       'address' => 'required|string',
       'imagePath' => 'nullable|string',
-      'en_name' => 'string',
-      'owner' => 'string',
       'dif_address' => 'string',
-      'industry_type' => 'string',
       'category' => 'string',
       'tax_code' => 'string',
       'contract_duration' => 'string',
@@ -72,12 +70,10 @@ class ClientController extends Controller
     // Validate the request data
     $validatedData = $request->validate([
       'name' => 'required|string',
+      'short_name' => 'string',
       'address' => 'required|string',
       'imagePath' => 'nullable|string',
-      'en_name' => 'string',
-      'owner' => 'string',
       'dif_address' => 'string',
-      'industry_type' => 'string',
       'category' => 'string',
       'tax_code' => 'string',
       'contract_duration' => 'string',

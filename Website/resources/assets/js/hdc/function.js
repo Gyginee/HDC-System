@@ -109,15 +109,15 @@ export function getCssClassForStatusId(statusId) {
 }
 
 // Function to fetch and populate select options
-export function fetchAndPopulateSelect(url, selectId) {
+export function fetchAndPopulateSelect(url, selectId, tableId, tableContent) {
   fetch(url)
     .then(response => response.json())
     .then(jsonData => {
       const selectElement = document.getElementById(selectId);
       jsonData.data.forEach(item => {
         const option = document.createElement('option');
-        option.value = item.id;
-        option.textContent = item.name;
+        option.value = item[tableId];
+        option.textContent = item[tableContent];
         selectElement.appendChild(option);
       });
     })

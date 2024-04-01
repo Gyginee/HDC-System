@@ -33,7 +33,7 @@ document.addEventListener('DOMContentLoaded', function () {
   // Khởi tạo datepicker cho Ngày kết thúc
   initializeDatepicker('.flatpickr-end-date', 'DD/MM/YYYY');
   //Fetch Select
-  fetchAndPopulateSelect(costTypeData, 'fixedcost-type');
+  fetchAndPopulateSelect(costTypeData, 'fixedcost-type','id','name');
 
   // Initialize Form Validation
   let addNewCostForm = document.getElementById('addNewFixedCostForm'),
