@@ -36,7 +36,7 @@
                         <th>Dự án</th>
                         <th>Tổng chi</th>
                         <th>Thời gian hạch toán</th>
-                        <th>Chức năng</th>
+
                     </tr>
                 </thead>
             </table>
@@ -120,5 +120,61 @@
             </div>
         </div>
     </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="clientModal" tabindex="-1" aria-labelledby="clientModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="clientModalLabel">Thông tin khách hàng</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+
+                                <label for="clientName" class="form-label">Tên khách hàng</label>
+                                <input type="text" class="form-control" id="clientName" readonly>
+
+                            </div>
+                            <div class="mb-3">
+                                <label for="clientShortName" class="form-label">Tên viết tắt</label>
+                                <input type="text" class="form-control" id="clientShortName" readonly>
+                            </div>
+                            <div class="mb-3">
+                                <label for="clientAddress" class="form-label">Địa chỉ</label>
+                                <input type="text" class="form-control" id="clientAddress" readonly>
+                            </div>
+                            <div class="mb-3">
+                                <label for="clientDiffAddress" class="form-label">Địa chỉ liên hệ</label>
+                                <input type="text" class="form-control" id="clientDiffAddress" readonly>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="clientCategory" class="form-label">Phân loại</label>
+                                <input type="text" class="form-control" id="clientCategory" readonly>
+                            </div>
+                            <div class="mb-3">
+                                <label for="clientTaxCode" class="form-label">Mã số thuế</label>
+                                <input type="text" class="form-control" id="clientTaxCode" readonly>
+                            </div>
+                            <div class="mb-3">
+                                <label for="clientContractDuration" class="form-label">Thời hạn hợp đồng</label>
+                                <input type="text" class="form-control" id="clientContractDuration" readonly>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type='button' class='btn btn-danger'><i class="ti ti-trash ti-sm mx-2"></i>Xoá khách
+                        hàng</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
 
 @endsection

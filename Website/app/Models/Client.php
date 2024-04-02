@@ -10,7 +10,6 @@ class Client extends Model
     protected $fillable = [
         'name',
         'short_name',
-        'address',
         'imagePath',
         'address',
         'dif_address',

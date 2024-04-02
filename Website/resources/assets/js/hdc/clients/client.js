@@ -13,14 +13,14 @@ import {
   getCssClassForStatusId
 } from '../function.js';
 
-
 // Set Vietnamese as the default language
 numeral.locale('vi');
 
 // Variable declaration for table
 var dt_client_table = $('.datatables-clients'),
   detailUrl = baseUrl + 'client/detail',
-  dt_client;
+  dt_client,
+  categoryObj;
 
 const clientData = baseUrl + 'api/v1/clients',
   ProjectCountData = baseUrl + 'api/v1/projects/count',
@@ -28,10 +28,11 @@ const clientData = baseUrl + 'api/v1/clients',
   infoCompanyData = 'https://api.vietqr.io/v2/business',
   categoryData = baseUrl + 'api/v1/category';
 
-
-
 // Function to reload data and edraw the DataTable
 function reloadDataAndRedrawTable() {
+  // Clear existing data from the table
+  dt_client.clear().draw();
+
   // GET Request to retrieve client data
   makeAjaxRequest(clientData, 'GET', {}, function (response) {
     var cdata = response.data;
@@ -60,7 +61,7 @@ function reloadDataAndRedrawTable() {
                 category: client.category,
                 contract_duration: client.contract_duration,
                 short_name: client.short_name,
-                dif_address: client.dif_address,
+                dif_address: client.dif_address
               }
             ];
             dt_client.rows.add(Data).draw();
@@ -78,12 +79,28 @@ const tax_code = document.getElementById('add-tax-code'),
   clientShortname = document.getElementById('add-client-shortname'),
   clientAddress = document.getElementById('add-client-address');
 
-fetchAndPopulateSelect(categoryData, 'client-category','id','name')
+fetchAndPopulateSelect(categoryData, 'client-category', 'id', 'name');
 
 document.addEventListener('DOMContentLoaded', function () {
+  //Fetch Data from Category
+  fetch(categoryData)
+    .then(response => response.json())
+    .then(data => {
+      if (data && Array.isArray(data.data)) {
+        categoryObj = data.data.reduce((obj, category) => {
+          obj[category.id] = {
+            title: category.name
+          };
+          return obj;
+        }, {});
+      } else {
+        console.error('Fetched data is not in the expected format:', data);
+      }
+    })
+    .catch(error => console.error('Error fetching status data:', error));
+
   // Attach the event listener
   tax_code.addEventListener('input', function () {
-
     const tax_codeData = tax_code.value.toString(); // Ensure to get the current value inside the event listener
 
     if (tax_codeData.length >= 10 && tax_codeData.length <= 13) {
@@ -144,7 +161,6 @@ document.addEventListener('DOMContentLoaded', function () {
   // Initialize Form Validation
   const fv = FormValidation.formValidation(addNewClientForm, {
     fields: {
-
       clientCategory: {
         validators: {
           notEmpty: {
@@ -204,8 +220,7 @@ document.addEventListener('DOMContentLoaded', function () {
       dif_address: diffaddress,
       tax_code: tax_code,
       category: category,
-      contract_duration: contract_duration,
-
+      contract_duration: contract_duration
     };
 
     fetch(clientData, {
@@ -267,6 +282,20 @@ $(function () {
     headingColor = config.colors.headingColor;
   }
 
+  // Function to handle client modal display
+  function displayClientModal(clientData) {
+    $('#clientName').val(clientData.name);
+    $('#clientShortName').val(clientData.short_name);
+    $('#clientAddress').val(clientData.address);
+    $('#clientDiffAddress').val(clientData.dif_address);
+    $('#clientCategory').val(categoryObj[clientData.category].title);
+    $('#clientTaxCode').val(clientData.tax_code);
+    $('#clientContractDuration').val(clientData.contract_duration);
+
+    // Show the modal
+    $('#clientModal').modal('show');
+  }
+
   // Clients datatable
   if (dt_client_table.length) {
     dt_client = dt_client_table.DataTable({
@@ -309,9 +338,7 @@ $(function () {
               '</div>' +
               '</div>' +
               '<div class="d-flex flex-column">' +
-              '<a href="' +
-              $detailUrl +
-              '" ><span class="fw-medium">' +
+              '<a href="#" class="text-body text-truncate"><span class="fw-medium">' +
               $name +
               '</span></a>' +
               '</div>' +
@@ -325,20 +352,16 @@ $(function () {
               '</div>' +
               '</div>' +
               '<div class="d-flex flex-column">' +
-              '<a href="' +
-              $detailUrl +
-              '" ><span class="fw-medium">' +
+              '<a href="#" class="text-body text-truncate"><span class="fw-medium">' +
               $short_name +
               '</span></a>' +
               '</div>' +
               '</div>';
 
-              console.log($short_name);
-              console.log(full)
-              if (typeof $short_name === 'undefined') {
-                return $row_output1;
+            if (typeof $short_name === 'undefined') {
+              return $row_output1;
             } else {
-                return $row_output2;
+              return $row_output2;
             }
           }
         },
@@ -368,19 +391,6 @@ $(function () {
           title: 'Thời gian hạch toán',
           render: function (data, type, full, meta) {
             return '<span class="fw-light">' + full['contract_duration'] + '</span>';
-          }
-        },
-        {
-          targets: [-1],
-          title: 'Chức năng',
-          orderable: false,
-          searchable: false,
-          render: function (data, type, full, meta) {
-            return (
-              '<div class="d-flex align-items-center">' +
-              '<a href="javascript:;" id="del-btn" class="text-body delete-record"><i class="ti ti-trash ti-sm mx-2"></i></a>' +
-              '</div>'
-            );
           }
         }
       ],
@@ -483,54 +493,63 @@ $(function () {
             'data-bs-target': '#offcanvasAddClient'
           }
         }
-      ]
+      ],
+      // Bổ sung sự kiện click cho mỗi dòng
+      rowCallback: function (row, data, index) {
+        // Thêm sự kiện click cho mỗi dòng
+        $(row).on('click', function () {
+          displayClientModal(data);
+        });
+
+        // Event delegation for delete button click inside modal
+        $('#clientModal').on('click', '.btn-danger', function () {
+          var id = data.id;
+
+          Swal.fire({
+            title: 'Xác nhận xoá khách hàng?',
+            text: 'Không thể hoàn tác nếu như xác nhận!',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Chắc chắn!',
+            customClass: {
+              confirmButton: 'btn btn-primary me-3',
+              cancelButton: 'btn btn-label-secondary'
+            },
+            buttonsStyling: false
+          }).then(function (result) {
+            if (result.value) {
+              // Send a delete request to the server
+              $.ajax({
+                url: clientData + '/' + id,
+                method: 'DELETE',
+                success: function (response) {
+                  // Remove the row from the DataTable
+                  dt_client.row(row).remove().draw();
+                   // Show the modal
+                   $('#clientModal').modal('hide');
+                },
+                error: function (error) {
+                  console.error(error);
+                }
+              });
+              Swal.fire({
+                icon: 'success',
+                title: 'Deleted!',
+                text: 'Đã xoá khách hàng.',
+                customClass: {
+                  confirmButton: 'btn btn-success'
+                }
+              });
+              dt_client.row($(this).parents('tr')).remove().draw();
+            }
+          });
+        });
+      }
     });
 
     reloadDataAndRedrawTable();
 
     // Handle Delete Record
-    $('.datatables-clients tbody').on('click', '.delete-record', function () {
-      var row = $(this).closest('tr');
-      var data = dt_client.row(row).data();
-      var id = data.id;
-
-      Swal.fire({
-        title: 'Xác nhận xoá khách hàng?',
-        text: 'Không thể hoàn tác nếu như xác nhận!',
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonText: 'Chắc chắn!',
-        customClass: {
-          confirmButton: 'btn btn-primary me-3',
-          cancelButton: 'btn btn-label-secondary'
-        },
-        buttonsStyling: false
-      }).then(function (result) {
-        if (result.value) {
-          // Send a delete request to the server
-          $.ajax({
-            url: clientData + '/' + id,
-            method: 'DELETE',
-            success: function (response) {
-              // Remove the row from the DataTable
-              dt_client.row(row).remove().draw();
-            },
-            error: function (error) {
-              console.error(error);
-            }
-          });
-          Swal.fire({
-            icon: 'success',
-            title: 'Deleted!',
-            text: 'Đã xoá khách hàng.',
-            customClass: {
-              confirmButton: 'btn btn-success'
-            }
-          });
-          dt_client.row($(this).parents('tr')).remove().draw();
-        }
-      });
-    });
   }
 
   // Filter form control to default size

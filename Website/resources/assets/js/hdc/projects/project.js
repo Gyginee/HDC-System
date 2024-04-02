@@ -39,6 +39,8 @@ var dt_project_table = $('.datatables-projects'),
   detailData = baseUrl + 'project/detail';
 
 function reloadDataAndRedrawTable() {
+    // Clear existing data from the table
+    dt_client.clear().draw();
   // GET Request to retrieve project data
   makeAjaxRequest(projectData, 'GET', {}, function (response) {
     var cdata = response.data;
