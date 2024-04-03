@@ -49,9 +49,7 @@ Route::prefix('v1')->group(function () {
 
     Route::apiResource('detail', ProjectDetailController::class)->names('project-details');
 
-    //function with req body
-    Route::post('detailcount', [ProjectDetailController::class, 'project_detailCount']);
-    Route::post('detailtotal', [ProjectDetailController::class, 'project_detailTotal']);
+
 
     Route::resource('project-permissions', ProjectPermissionController::class)
       ->names('project-permissions');
@@ -61,7 +59,12 @@ Route::prefix('v1')->group(function () {
     Route::post('total', [ProjectController::class, 'projectTotal']);
 
     //Project Detail
-    Route::post('total-cost', [ProjectDetailController::class, 'getTotalCost']);
+    Route::post('total-cost-type', [ProjectDetailController::class, 'getTotalCostByType']);
+    Route::post('total-cost-id', [ProjectDetailController::class, 'getTotalCostById']);
+    //function with req body
+    Route::post('detailcount', [ProjectDetailController::class, 'project_detailCount']);
+    Route::post('detailtotal', [ProjectDetailController::class, 'project_detailTotal']);
+
   });
 
   // Group internal related resources
@@ -82,7 +85,12 @@ Route::prefix('v1')->group(function () {
   // Remaining resources
   Route::apiResource('assets', AssetsController::class);
   Route::apiResource('user-permission', UserPermissionController::class);
-  Route::apiResource('clients', ClientController::class);
+
+
+  Route::prefix('clients')->group(function () {
+    Route::apiResource('clients', ClientController::class);
+    Route::post('get-real-cost', [ClientController::class, 'getRealCost']);
+  });
   Route::apiResource('permissions', PermissionController::class);
   Route::apiResource('roles', RoleController::class);
   Route::apiResource('status', StatusController::class);

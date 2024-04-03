@@ -11,22 +11,12 @@ import {
   fetchAndPopulateSelect,
   formatDate,
   makeAjaxRequestPromise,
-  getCssClassForStatusId
+  getCssClassForStatusId,
+  loadNumeral
 } from '../function.js';
 
-// Define a custom format for Vietnamese đồng (VNĐ)
-numeral.register('format', 'vn', {
-  regexps: {
-    format: /(\d)(?=(\d{3})+(?!\d))/g,
-    unformat: /(\d+)/g
-  },
-  format: function (value) {
-    return value.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,') + 'VNĐ';
-  },
-  unformat: function (string) {
-    return parseFloat(string.replace(/[^\d]+/g, ''));
-  }
-});
+
+loadNumeral()
 
 // Variable declaration for table
 var dt_project_table = $('.datatables-projects'),
@@ -34,23 +24,29 @@ var dt_project_table = $('.datatables-projects'),
   dt_project,
   statusObj,
   projectData = baseUrl + 'api/v1/projects/project',
-  clientData = baseUrl + 'api/v1/clients',
+  clientData = baseUrl + 'api/v1/clients/client',
   statusData = baseUrl + 'api/v1/status',
-  detailData = baseUrl + 'project/detail';
+  detailData = baseUrl + 'project/detail',
+  costRepostData = baseUrl + 'api/v1/projects/total-cost-id';
 
 function reloadDataAndRedrawTable() {
-    // Clear existing data from the table
-    dt_client.clear().draw();
+  // Clear existing data from the table
+  dt_project.clear().draw();
   // GET Request to retrieve project data
   makeAjaxRequest(projectData, 'GET', {}, function (response) {
     var cdata = response.data;
     if (Array.isArray(cdata) && cdata.length > 0) {
       cdata.forEach(function (project) {
         // Create promises for both client and status requests
-        var clientPromise = makeAjaxRequestPromise(clientData + '/' + project.client_id, 'GET', {});
+        var clientPromise = makeAjaxRequestPromise(clientData + '/' + project.client_id, 'GET', {}),
+          projectPromise = makeAjaxRequestPromise(costRepostData, 'POST', {
+            project_id: project.project_id
+          });
+
+        console.log(projectPromise);
 
         // Wait for both promises to resolve
-        Promise.all([clientPromise])
+        Promise.all([clientPromise, projectPromise])
           .then(function (results) {
             var clientData = results[0].data;
 
@@ -61,8 +57,9 @@ function reloadDataAndRedrawTable() {
             var dataToAdd = {
               id: project.id,
               name: project.name,
-              cost: project.cost,
-              real_cost: project.real_cost,
+              location: project.location,
+              real_client_cost: project.total_real_client_cost,
+              real_internal_cost: project.total_real_internal_cost,
               status: project.status,
               client_id: project.client_id,
               created_at: project.created_at
@@ -79,6 +76,22 @@ function reloadDataAndRedrawTable() {
 }
 
 document.addEventListener('DOMContentLoaded', function () {
+  // Fetch JSON data from your Laravel application
+  fetch(assetsPath + 'json/vietnam-provinces.json')
+    .then(response => response.json())
+    .then(jsonData => {
+      // Populate province select
+      const locationSelect = document.getElementById('add-project-location');
+      jsonData.forEach(location => {
+        const option = document.createElement('option');
+        option.value = location.name;
+        option.textContent = location.name;
+        locationSelect.appendChild(option);
+      });
+    })
+    .catch(error => {
+      console.error('Lỗi đồng bộ data:', error);
+    });
   //Fetch Status, add into statusObj
   fetch(statusData)
     .then(response => response.json())
@@ -99,8 +112,8 @@ document.addEventListener('DOMContentLoaded', function () {
     .catch(error => console.error('Error fetching status data:', error));
 
   // Fetch and populate client and status select options
-  fetchAndPopulateSelect(clientData, 'project-client','id','name');
-  fetchAndPopulateSelect(statusData, 'project-status','id','name');
+  fetchAndPopulateSelect(clientData, 'project-client', 'id', 'name');
+  fetchAndPopulateSelect(statusData, 'project-status', 'id', 'name');
 
   const addNewProjectForm = document.getElementById('addNewProjectForm'),
     submitButton = document.getElementById('submitFormButton');
@@ -164,21 +177,19 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   });
 
-  // Set Vietnamese as the default language
-  numeral.locale('vi');
-
   // Function to handle form submission
   function handleFormSubmission() {
     const name = document.getElementById('add-project-name').value,
-      cost = document.getElementById('add-project-cost').value,
       client_id = document.getElementById('project-client').value,
-      status = parseInt(document.getElementById('project-status').value);
+      status = parseInt(document.getElementById('project-status').value),
+      location = document.getElementById('add-project-location').value;
 
     const data = {
       name: name,
-      cost: parseInt(cost),
-      real_cost: 0,
+      real_client_cost: 0,
+      real_internal_cost: 0,
       client_id: client_id,
+      location: location,
       status: status
     };
     console.log(data);
@@ -264,7 +275,7 @@ $(function () {
           targets: [2],
           title: 'Kinh phí',
           render: function (data, type, full, meta) {
-            return '<span class="fw-light">' + numeral(full['cost']).format('0,0.00[.]vn');
+            return '<span class="fw-light">' + numeral(full['real_client_cost']).format('0,0.00[.]vn');
             +'</span>';
           }
         },
@@ -272,7 +283,7 @@ $(function () {
           targets: [3],
           title: 'Chi phí thực tế',
           render: function (data, type, full, meta) {
-            return '<span class="fw-light">' + numeral(full['real_cost']).format('0,0.00[.]vn');
+            return '<span class="fw-light">' + numeral(full['real_internal_cost']).format('0,0.00[.]vn');
             +'</span>';
           }
         },
@@ -299,6 +310,13 @@ $(function () {
         },
         {
           targets: [6],
+          title: 'Địa điểm',
+          render: function (data, type, full, meta) {
+            return '<span class="fw-medium">' + full['location'] + '</span>';
+          }
+        },
+        {
+          targets: [7],
           title: 'Ngày tạo',
           render: function (data, type, full, meta) {
             return '<span class="fw-light">' + formatDate(full['created_at']) + '</span>';
@@ -306,7 +324,7 @@ $(function () {
         },
         {
           targets: [-1],
-          title: 'Actions',
+          title: 'Chức năng',
           orderable: false,
           searchable: false,
           render: function (data, type, full, meta) {

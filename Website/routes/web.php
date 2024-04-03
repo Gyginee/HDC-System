@@ -28,7 +28,6 @@ Route::middleware(['auth.staff', 'role:admin,manager'])->group(function () {
 
   //Clients
   Route::get('clients', [ClientController::class, 'index'])->name('clients');
-  Route::get('client/detail/{id}', [ClientDetailController::class, 'index'])->where('id', '[0-9]+')->name('client-detail');
 
   //Vendors
   Route::get('vendors', [VendorController::class, 'index'])->name('vendors');

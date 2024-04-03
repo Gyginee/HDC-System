@@ -106,7 +106,7 @@ paths:
         '404':
           description: Asset not found
 
-  /api/v1/clients:
+  /api/v1/clients/client:
     get:
       summary: Get a list of clients
       operationId: clients.index
@@ -140,7 +140,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Client'
 
-  /api/v1/clients/{id}:
+  /api/v1/clients/client/{id}:
     get:
       summary: Get a specific client
       operationId: clients.show

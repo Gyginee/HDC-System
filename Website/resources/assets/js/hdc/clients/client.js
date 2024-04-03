@@ -22,11 +22,11 @@ var dt_client_table = $('.datatables-clients'),
   dt_client,
   categoryObj;
 
-const clientData = baseUrl + 'api/v1/clients',
+const clientData = baseUrl + 'api/v1/client',
   ProjectCountData = baseUrl + 'api/v1/projects/count',
-  ProjectCostData = baseUrl + 'api/v1/projects/total',
   infoCompanyData = 'https://api.vietqr.io/v2/business',
-  categoryData = baseUrl + 'api/v1/category';
+  categoryData = baseUrl + 'api/v1/category',
+  getRealCost = bareUrl + 'api/v1/clients/get-real-cost';
 
 // Function to reload data and edraw the DataTable
 function reloadDataAndRedrawTable() {
@@ -40,13 +40,14 @@ function reloadDataAndRedrawTable() {
       cdata.forEach(function (client) {
         // Create promises for both count and total_cost requests
         var countPromise = makeAjaxRequestPromise(ProjectCountData, 'POST', { client_id: client.id });
-        var costPromise = makeAjaxRequestPromise(ProjectCostData, 'POST', { client_id: client.id });
+        var RealCostPromise = makeAjaxRequestPromise(getRealCost, 'POST', { client_id: client.id });
 
         // Wait for both promises to resolve
-        Promise.all([countPromise, costPromise])
+        Promise.all([countPromise, RealCostPromise])
           .then(function (results) {
             client.count = results[0].count;
-            client.total_cost = results[1].total_cost;
+            client.totalClient = results[0].total_real_client_cost;
+            client.totalInternal = results[0].total_real_internal_cost;
 
             // Now that client is fully populated, add it to the DataTable
             var Data = [
@@ -57,7 +58,8 @@ function reloadDataAndRedrawTable() {
                 imagePath: client.imagePath,
                 address: client.address,
                 count: client.count,
-                total_cost: client.total_cost,
+                totalClient: client.totalClient,
+                totalRevenue: client.totalClient - client.totalInternal,
                 category: client.category,
                 contract_duration: client.contract_duration,
                 short_name: client.short_name,
@@ -383,11 +385,18 @@ $(function () {
           targets: [4],
           title: 'Tổng chi phí',
           render: function (data, type, full, meta) {
-            return '<span class="fw-light">' + numeral(full['total_cost']).format('0,0$') + '</span>';
+            return '<span class="fw-light">' + numeral(full['totalClient']).format('0,0$') + '</span>';
           }
         },
         {
           targets: [5],
+          title: 'Doanh thu',
+          render: function (data, type, full, meta) {
+            return '<span class="fw-light">' + numeral(full['totalRevenue']).format('0,0$') + '</span>';
+          }
+        },
+        {
+          targets: [6],
           title: 'Thời gian hạch toán',
           render: function (data, type, full, meta) {
             return '<span class="fw-light">' + full['contract_duration'] + '</span>';
@@ -525,8 +534,8 @@ $(function () {
                 success: function (response) {
                   // Remove the row from the DataTable
                   dt_client.row(row).remove().draw();
-                   // Show the modal
-                   $('#clientModal').modal('hide');
+                  // Show the modal
+                  $('#clientModal').modal('hide');
                 },
                 error: function (error) {
                   console.error(error);

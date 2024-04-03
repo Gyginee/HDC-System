@@ -39,6 +39,7 @@
                         <th class="text-nowrap">Kinh phí</th>
                         <th class="text-nowrap">Chi phí thực tế</th>
                         <th>Khách hàng</th>
+                        <th>Địa điểm</th>
                         <th>Trạng thái</th>
                         <th>Ngày tạo</th>
                         <th>Chức năng</th>
@@ -69,10 +70,11 @@
                     </div>
 
                     <div class="mb-3">
-                        <label class="form-label" for="add-project-cost">Chi phí báo khách</label>
-                        <input type="text" class="form-control" id="add-project-cost" placeholder="5,100,000,000"
-                            name="projectCost" aria-label="Project Cost" />
-                    </div>
+                      <label class="form-label" for="add-project-location">Địa điểm</label>
+                      <select id="add-project-location" class="form-select" name="add-project-location">
+                          <option value="">Chọn Tỉnh/Thành phố</option>
+                      </select>
+                  </div>
 
                     <div class="mb-3">
                         <label class="form-label" for="project-status">Trạng thái</label>

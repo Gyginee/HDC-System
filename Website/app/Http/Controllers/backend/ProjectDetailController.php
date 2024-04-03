@@ -89,7 +89,7 @@ class ProjectDetailController extends Controller
       return response()->json(['error' => 'Vendor ID parameter is missing'], 400);
     }
 
-    $totalCost = Project_detail::where('vendor_id', $vendor_id)->sum('internal_cost');
+    $totalCost = Project_detail::where('vendor_id', $vendor_id)->sum('real_internal_cost');
 
     return response()->json(['total_cost' => $totalCost], 200);
   }
@@ -100,7 +100,7 @@ class ProjectDetailController extends Controller
    * @param  Project_detail  $Project_detail
    * @return JsonResponse
    */
-  public function getTotalCost(Request $request)
+  public function getTotalCostByType(Request $request)
   {
 
     // Lấy id và type từ request
@@ -116,15 +116,85 @@ class ProjectDetailController extends Controller
       ->where('type', $type)
       ->sum('internal_cost');
 
-    $totalRealCost = Project_detail::where('project_id', $id)
+    $totalRealClientCost = Project_detail::where('project_id', $id)
       ->where('type', $type)
-      ->sum('real_cost');
+      ->sum('real_client_cost');
+
+    $totalRealInternalCost = Project_detail::where('project_id', $id)
+    ->where('type', $type)
+    ->sum('real_internal_cost');
 
     // Trả về kết quả
     return response()->json([
       'total_client_cost' => $totalClientCost,
       'total_internal_cost' => $totalInternalCost,
-      'total_real_cost' => $totalRealCost,
+      'total_real_client_cost' => $totalRealClientCost,
+      'total_real_internal_cost' => $totalRealInternalCost,
     ]);
+  }
+   /**
+   * Lấy tổng các chi phí theo id và type.
+   *
+   * @param  Request  $request
+   * @param  Project_detail  $Project_detail
+   * @return JsonResponse
+   */
+  public function getTotalCostById(Request $request)
+  {
+
+    // Lấy id và type từ request
+    $project_id = $request->input('project_id');
+
+    // Lấy tổng các trường client_cost, internal_cost, và real_client_cost, real_internal_cost
+    $totalClientCost = Project_detail::where('project_id', $project_id)
+      ->sum('client_cost');
+
+    $totalInternalCost = Project_detail::where('project_id', $project_id)
+      ->sum('internal_cost');
+
+    $totalRealClientCost = Project_detail::where('project_id', $project_id)
+      ->sum('real_client_cost');
+
+    $totalRealInternalCost = Project_detail::where('project_id', $project_id)
+    ->sum('real_internal_cost');
+
+    // Trả về kết quả
+    return response()->json([
+      'total_client_cost' => $totalClientCost,
+      'total_internal_cost' => $totalInternalCost,
+      'total_real_client_cost' => $totalRealClientCost,
+      'total_real_internal_cost' => $totalRealInternalCost,
+    ]);
+  }
+ /**
+   * Lấy tổng các chi phí theo id và type.
+   *
+   * @param  Request  $request
+   * @param  Project_detail  $Project_detail
+   * @return JsonResponse
+   */
+  public function getTotalInternalCost(Request $request)
+  {
+    $project_id = $request->input('project_id');
+
+    if (!$project_id) {
+      return response()->json(['error' => 'Project ID parameter is missing'], 400);
+    }
+
+    $totalInternalCost = Project_detail::where('project_id', $project_id)->sum('real_internal_cost');
+
+    return response()->json(['totalInternalCost' => $totalInternalCost], 200);
+  }
+  public function getTotalClientCost(Request $request)
+  {
+    $project_id = $request->input('project_id');
+
+    if (!$project_id) {
+      return response()->json(['error' => 'Project ID parameter is missing'], 400);
+    }
+
+    $totalClientCost = Project_detail::where('project_id', $project_id)->sum('real_client_cost');
+
+    return response()->json(['totalClientCost' => $totalClientCost], 200);
   }
 }

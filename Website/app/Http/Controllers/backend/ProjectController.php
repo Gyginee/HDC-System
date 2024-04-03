@@ -81,18 +81,4 @@ class ProjectController extends Controller
 
         return response()->json(['count' => $count], 200);
     }
-
-    public function projectTotal(Request $request)
-    {
-        $client_id = $request->input('client_id');
-
-        if (!$client_id) {
-            return response()->json(['error' => 'Client ID parameter is missing'], 400);
-        }
-
-        $totalCost = Project::where('client_id', $client_id)->sum('cost');
-
-        return response()->json(['total_cost' => $totalCost], 200);
-    }
-
 }

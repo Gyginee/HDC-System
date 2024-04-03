@@ -10,16 +10,30 @@ export function makeAjaxRequest(url, method, requestData, successCallback) {
     }
   });
 }
-
+export function loadNumeral() {
+  // Define a custom format for Vietnamese đồng (VNĐ)
+  numeral.register('format', 'vn', {
+    regexps: {
+      format: /(\d)(?=(\d{3})+(?!\d))/g,
+      unformat: /(\d+)/g
+    },
+    format: function (value) {
+      return value.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,') + 'VNĐ';
+    },
+    unformat: function (string) {
+      return parseFloat(string.replace(/[^\d]+/g, ''));
+    }
+  });
+}
 // Function to get current date or format a given date
 export function formatDate(inputDate) {
   let date;
   if (!inputDate) {
-      // If no inputDate provided, use current date
-      date = new Date();
+    // If no inputDate provided, use current date
+    date = new Date();
   } else {
-      // If inputDate provided, parse it
-      date = new Date(inputDate);
+    // If inputDate provided, parse it
+    date = new Date(inputDate);
   }
 
   // Extract day, month, and year components
@@ -101,7 +115,7 @@ export function getCssClassForStatusId(statusId) {
     1: 'bg-label-warning',
     2: 'bg-label-success',
     3: 'bg-label-primary',
-    4: 'bg-label-secondary',
+    4: 'bg-label-secondary'
     // Add more mappings as needed
   };
 

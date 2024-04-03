@@ -19,7 +19,8 @@ class Project_detail extends Model
     'type',
     'client_cost',
     'internal_cost',
-    'real_cost',
+    'real_client_cost',
+    'real_internal_cost',
     'status',
   ];
 

@@ -22,7 +22,8 @@ return new class extends Migration
       $table->integer('type');
       $table->bigInteger('client_cost');
       $table->bigInteger('internal_cost');
-      $table->bigInteger('real_cost');
+      $table->bigInteger('real_client_cost');
+      $table->bigInteger('real_internal_cost');
       $table->integer('status');
       $table->timestamps();
     });

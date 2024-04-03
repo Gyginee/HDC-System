@@ -9,14 +9,17 @@ import {
   customizePrintView,
   makeAjaxRequestPromise,
   fetchAndPopulateSelect,
-  getCssClassForStatusId
+  getCssClassForStatusId,
+  loadNumeral
 } from '../function.js';
 
+loadNumeral();
 // Variable declaration for table
 var dt_cost_table = $('.datatables-cost'),
   dt_cost,
   statusObj,
   typeObj,
+  staffObject,
   vendorObj,
   typeObject,
   seriesData = [],
@@ -29,7 +32,7 @@ var dt_cost_table = $('.datatables-cost'),
   projectDetail = baseUrl + 'api/v1/projects/detail',
   projectData = baseUrl + 'api/v1/projects/project',
   typeData = baseUrl + 'api/v1/types',
-  costRepostData = baseUrl + 'api/v1/projects/total-cost';
+  costRepostData = baseUrl + 'api/v1/projects/total-cost-type';
 
 // Chart Colors
 const chartColors = {
@@ -98,6 +101,25 @@ document.addEventListener('DOMContentLoaded', function () {
     })
     .catch(error => console.error('Error fetching status data:', error));
 
+  //Fetch Staff, add into staffObj
+  fetch(staffData)
+    .then(response => response.json())
+    .then(data => {
+      // Check if the fetched data contains the "data" property
+      if (data && Array.isArray(data.data)) {
+        staffObject = data.data.reduce((obj, staff) => {
+          obj[staff.staff_id] = {
+            title: staff.fullname
+          };
+          return obj;
+        }, {});
+        // Extract all the names from the data
+      } else {
+        console.error('Fetched data is not in the expected format:', data);
+      }
+    })
+    .catch(error => console.error('Error fetching status data:', error));
+
   //Fetch Status, add into statusObj
   fetch(statusData)
     .then(response => response.json())
@@ -118,10 +140,10 @@ document.addEventListener('DOMContentLoaded', function () {
     .catch(error => console.error('Error fetching status data:', error));
 
   //Fetch Select
-  fetchAndPopulateSelect(typeData, 'cost-type','id','name');
-  fetchAndPopulateSelect(vendorData, 'cost-vendor','id','name');
-  fetchAndPopulateSelect(statusData, 'cost-status','id','name');
-  fetchAndPopulateSelect(staffData, 'cost-handle','staff_id','fullname');
+  fetchAndPopulateSelect(typeData, 'cost-type', 'id', 'name');
+  fetchAndPopulateSelect(vendorData, 'cost-vendor', 'id', 'name');
+  fetchAndPopulateSelect(statusData, 'cost-status', 'id', 'name');
+  fetchAndPopulateSelect(staffData, 'cost-handle', 'staff_id', 'fullname');
 
   // Initialize Form Validation
   let addNewCostForm = document.getElementById('CostAddForm'),
@@ -210,18 +232,19 @@ document.addEventListener('DOMContentLoaded', function () {
 
   // Function to handle form submission
   function handleFormSubmission() {
-    const costName = document.getElementById('cost-name').value;
-    const costVendor = document.getElementById('cost-vendor').value;
-    const costQuantity = parseInt(document.getElementById('cost-quantity').value);
-    const costUnit = document.getElementById('cost-unit').value;
-    const costType = document.getElementById('cost-type').value;
-    const costClient = parseInt(document.getElementById('cost-client').value);
-    const costInternal = parseInt(document.getElementById('cost-internal').value);
-    const costRealInput = document.getElementById('cost-real').value;
-    const costReal = isNaN(parseInt(costRealInput.value)) ? 0 : parseInt(costRealInput.value);
-
-    const costStatus = document.getElementById('cost-status').value;
-    const costHandle = document.getElementById('cost-handle').value;
+    const costName = document.getElementById('cost-name').value,
+     costVendor = document.getElementById('cost-vendor').value,
+     costQuantity = parseInt(document.getElementById('cost-quantity').value),
+     costUnit = document.getElementById('cost-unit').value,
+     costType = document.getElementById('cost-type').value,
+     costClient = parseInt(document.getElementById('cost-client').value),
+     costInternal = parseInt(document.getElementById('cost-internal').value),
+     costClientRealInput = document.getElementById('cost-client-real').value,
+     costInternalRealInput = document.getElementById('cost-internal-real').value,
+     costClientReal = costClientRealInput == '' ? 0 : parseInt(costClientRealInput),
+     costInternalReal = costInternalRealInput == '' ? 0 : parseInt(costInternalRealInput),
+     costStatus = document.getElementById('cost-status').value,
+     costHandle = document.getElementById('cost-handle').value;
 
     const data = {
       project_id: projectId,
@@ -232,12 +255,13 @@ document.addEventListener('DOMContentLoaded', function () {
       type: costType,
       client_cost: costClient,
       internal_cost: costInternal,
-      real_cost: costReal,
+      real_client_cost: costClientReal,
+      real_internal_cost: costInternalReal,
       status: costStatus,
-      staff_id: costHandle,
+      staff_id: costHandle
     };
 
-    console.log(data)
+    console.log(data);
 
     fetch(projectDetail, {
       method: 'POST',
@@ -260,7 +284,8 @@ document.addEventListener('DOMContentLoaded', function () {
               type: e.data.type,
               client_cost: e.data.client_cost,
               internal_cost: e.data.internal_cost,
-              real_cost: e.data.real_cost,
+              real_client_cost: e.data.real_client_cost,
+              real_internal_cost: e.data.real_internal_cost,
               status: e.data.status,
               staff_id: e.data.staff_id
             }
@@ -370,26 +395,32 @@ $(function () {
           targets: [6],
           title: 'Giá khách',
           render: function (data, type, full, meta) {
-            return '<span class="fw-medium">' + numeral(full['client_cost']).format('0,0$') + '</span>';
+            return '<span class="fw-medium">' + numeral(full['client_cost']).format('0,0.00[.]vn') + '</span>';
           }
         },
         {
           targets: [7],
           title: 'Giá nội bộ',
           render: function (data, type, full, meta) {
-            return '<span class="fw-light">' + numeral(full['internal_cost']).format('0,0$') + '</span>';
+            return '<span class="fw-light">' + numeral(full['internal_cost']).format('0,0.00[.]vn') + '</span>';
           }
         },
         {
           targets: [8],
-          title: 'Giá thực tế',
+          title: 'Giá khách thực tế',
           render: function (data, type, full, meta) {
-            return '<span class="fw-medium">' + numeral(full['real_cost']).format('0,0$') + '</span>';
+            return '<span class="fw-medium">' + numeral(full['real_client_cost']).format('0,0.00[.]vn') + '</span>';
           }
         },
-
         {
           targets: [9],
+          title: 'Giá nội bộ thực tế',
+          render: function (data, type, full, meta) {
+            return '<span class="fw-medium">' + numeral(full['real_internal_cost']).format('0,0.00[.]vn') + '</span>';
+          }
+        },
+        {
+          targets: [10],
           title: 'Trạng thái',
           render: function (data, type, full, meta) {
             const statusName = full['status'];
@@ -403,10 +434,10 @@ $(function () {
           }
         },
         {
-          targets: [10],
+          targets: [11],
           title: 'Phụ trách',
           render: function (data, type, full, meta) {
-            return '<span class="fw-medium">' + full['staff_id'] + '</span>';
+            return '<span class="fw-medium">' + staffObject[full['staff_id']].title + '</span>';
           }
         },
         {
@@ -541,7 +572,8 @@ $(function () {
               type: cost.type,
               client_cost: cost.client_cost,
               internal_cost: cost.internal_cost,
-              real_cost: cost.real_cost,
+              real_client_cost: cost.real_client_cost,
+              real_internal_cost: cost.real_internal_cost,
               status: cost.status,
               staff_id: cost.staff_id
             }
@@ -629,17 +661,19 @@ $(function () {
                 // Assuming responseData contains x, y, and z
                 const x = responseData.total_client_cost,
                   y = responseData.total_internal_cost,
-                  z = responseData.total_real_cost;
+                  z = responseData.total_real_client_cost,
+                  h = responseData.total_real_internal_cost;
 
                 // Store the fetched data in typeObj
-                typeObj[id].data = [x, y, z];
+                typeObj[id].data = [x, y, z, h];
               })
               .catch(error => console.error('Error fetching data for type', typeObj[id].title, ':', error));
           })
         ).then(() => {
           const clientArray = Object.keys(typeObj).map(id => parseInt(typeObj[id].data[0]));
           const internalArray = Object.keys(typeObj).map(id => parseInt(typeObj[id].data[1]));
-          const realArray = Object.keys(typeObj).map(id => parseInt(typeObj[id].data[2]));
+          const realClientArray = Object.keys(typeObj).map(id => parseInt(typeObj[id].data[2]));
+          const realInternalArray = Object.keys(typeObj).map(id => parseInt(typeObj[id].data[3]));
 
           seriesData.push(
             {
@@ -653,9 +687,14 @@ $(function () {
               data: internalArray
             },
             {
-              name: 'Giá thực tế',
+              name: 'Giá khách thực tế',
               type: 'column',
-              data: realArray
+              data: realClientArray
+            },
+            {
+              name: 'Giá nội bộ thực tế',
+              type: 'column',
+              data: realInternalArray
             }
           );
           //Type Categorie

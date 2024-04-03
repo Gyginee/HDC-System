@@ -14,8 +14,7 @@ return new class extends Migration
     Schema::create('projects', function (Blueprint $table) {
       $table->id();
       $table->string('name');
-      $table->bigInteger('cost');
-      $table->bigInteger('real_cost')->nullable();
+      $table->string('location');
       $table->string('status');
       $table->unsignedBigInteger('client_id');
 
