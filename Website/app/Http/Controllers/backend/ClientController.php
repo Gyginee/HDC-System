@@ -5,7 +5,7 @@ namespace App\Http\Controllers\backend;
 use App\Http\Controllers\Controller;
 
 use App\Models\Client;
-use App\Models\Project_detail;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 
@@ -100,7 +100,7 @@ class ClientController extends Controller
     return response()->json(null, 204);
   }
 
- /**
+  /**
      * Calculate the sum of real costs for projects of a specific client.
      *
      * @param  Request  $request
@@ -124,8 +124,10 @@ class ClientController extends Controller
             return response()->json(['error' => 'Client not found'], 404);
         }
 
-        // Get all projects of the client
-        $projects = $client->projects;
+        // Fetch projects associated with the client using direct query
+        $projects = DB::table('projects')
+            ->where('client_id', $client_id)
+            ->get();
 
         // Initialize variables to store total costs
         $totalRealClientCost = 0;
@@ -133,8 +135,10 @@ class ClientController extends Controller
 
         // Loop through each project
         foreach ($projects as $project) {
-            // Get project details for the current project
-            $projectDetails = Project_detail::where('project_id', $project->id)->get();
+            // Fetch project details for the current project using direct query
+            $projectDetails = DB::table('project_detail')
+                ->where('project_id', $project->id)
+                ->get();
 
             // Calculate the sum of real client cost and real internal cost for each project
             foreach ($projectDetails as $detail) {
@@ -149,5 +153,4 @@ class ClientController extends Controller
             'total_real_internal_cost' => $totalRealInternalCost,
         ], 200);
     }
-
 }

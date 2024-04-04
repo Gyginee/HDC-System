@@ -88,7 +88,7 @@ Route::prefix('v1')->group(function () {
 
 
   Route::prefix('clients')->group(function () {
-    Route::apiResource('clients', ClientController::class);
+    Route::apiResource('client', ClientController::class);
     Route::post('get-real-cost', [ClientController::class, 'getRealCost']);
   });
   Route::apiResource('permissions', PermissionController::class);

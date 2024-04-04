@@ -15,8 +15,7 @@ import {
   loadNumeral
 } from '../function.js';
 
-
-loadNumeral()
+loadNumeral();
 
 // Variable declaration for table
 var dt_project_table = $('.datatables-projects'),
@@ -40,16 +39,16 @@ function reloadDataAndRedrawTable() {
         // Create promises for both client and status requests
         var clientPromise = makeAjaxRequestPromise(clientData + '/' + project.client_id, 'GET', {}),
           projectPromise = makeAjaxRequestPromise(costRepostData, 'POST', {
-            project_id: project.project_id
+            project_id: project.id
           });
-
-        console.log(projectPromise);
 
         // Wait for both promises to resolve
         Promise.all([clientPromise, projectPromise])
           .then(function (results) {
             var clientData = results[0].data;
 
+            project.total_real_internal_cost = results[1].total_real_internal_cost;
+            project.total_real_client_cost = results[1].total_real_client_cost;
             // Update project properties
             project.client_id = clientData.name;
 
@@ -60,6 +59,7 @@ function reloadDataAndRedrawTable() {
               location: project.location,
               real_client_cost: project.total_real_client_cost,
               real_internal_cost: project.total_real_internal_cost,
+              revenue: project.total_real_client_cost - project.total_real_internal_cost,
               status: project.status,
               client_id: project.client_id,
               created_at: project.created_at
@@ -289,6 +289,14 @@ $(function () {
         },
         {
           targets: [4],
+          title: 'Doanh thu',
+          render: function (data, type, full, meta) {
+            return '<span class="fw-light">' + numeral(full['revenue']).format('0,0.00[.]vn');
+            +'</span>';
+          }
+        },
+        {
+          targets: [5],
           title: 'Trạng thái',
           render: function (data, type, full, meta) {
             const statusName = full['status'];
@@ -302,21 +310,21 @@ $(function () {
           }
         },
         {
-          targets: [5],
+          targets: [6],
           title: 'Khách hàng',
           render: function (data, type, full, meta) {
             return '<span class="fw-medium">' + full['client_id'] + '</span>';
           }
         },
         {
-          targets: [6],
+          targets: [7],
           title: 'Địa điểm',
           render: function (data, type, full, meta) {
             return '<span class="fw-medium">' + full['location'] + '</span>';
           }
         },
         {
-          targets: [7],
+          targets: [8],
           title: 'Ngày tạo',
           render: function (data, type, full, meta) {
             return '<span class="fw-light">' + formatDate(full['created_at']) + '</span>';

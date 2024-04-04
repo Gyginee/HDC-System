@@ -38,6 +38,7 @@
                         <th>Tên dự án</th>
                         <th class="text-nowrap">Kinh phí</th>
                         <th class="text-nowrap">Chi phí thực tế</th>
+                        <th class="text-nowrap">Doanh thu</th>
                         <th>Khách hàng</th>
                         <th>Địa điểm</th>
                         <th>Trạng thái</th>

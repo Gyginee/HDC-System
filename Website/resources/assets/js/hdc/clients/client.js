@@ -13,20 +13,17 @@ import {
   getCssClassForStatusId
 } from '../function.js';
 
-// Set Vietnamese as the default language
-numeral.locale('vi');
-
 // Variable declaration for table
 var dt_client_table = $('.datatables-clients'),
   detailUrl = baseUrl + 'client/detail',
   dt_client,
   categoryObj;
 
-const clientData = baseUrl + 'api/v1/client',
+const clientData = baseUrl + 'api/v1/clients/client',
   ProjectCountData = baseUrl + 'api/v1/projects/count',
   infoCompanyData = 'https://api.vietqr.io/v2/business',
   categoryData = baseUrl + 'api/v1/category',
-  getRealCost = bareUrl + 'api/v1/clients/get-real-cost';
+  getRealCost = baseUrl + 'api/v1/clients/get-real-cost';
 
 // Function to reload data and edraw the DataTable
 function reloadDataAndRedrawTable() {
@@ -41,13 +38,14 @@ function reloadDataAndRedrawTable() {
         // Create promises for both count and total_cost requests
         var countPromise = makeAjaxRequestPromise(ProjectCountData, 'POST', { client_id: client.id });
         var RealCostPromise = makeAjaxRequestPromise(getRealCost, 'POST', { client_id: client.id });
-
+        console.log(RealCostPromise);
         // Wait for both promises to resolve
         Promise.all([countPromise, RealCostPromise])
           .then(function (results) {
             client.count = results[0].count;
-            client.totalClient = results[0].total_real_client_cost;
-            client.totalInternal = results[0].total_real_internal_cost;
+            console.log(results[1]);
+            client.totalClient = results[1].total_real_client_cost;
+            client.totalInternal = results[1].total_real_internal_cost;
 
             // Now that client is fully populated, add it to the DataTable
             var Data = [

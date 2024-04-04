@@ -35,8 +35,8 @@
                         <th>Mã số thuế</th>
                         <th>Dự án</th>
                         <th>Tổng chi</th>
+                        <th>Doanh thu</th>
                         <th>Thời gian hạch toán</th>
-
                     </tr>
                 </thead>
             </table>
