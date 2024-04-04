@@ -124,26 +124,26 @@
 
                         <div class="mb-3">
                             <label class="form-label" for="cost-client">Giá báo khách</label>
-                            <input type="text" id="cost-client" class="form-control" placeholder="1,000,000"
+                            <input type="text" id="cost-client" class="form-control cost" placeholder="1,000,000"
                                 aria-label="1,000,000" name="costClient" />
                         </div>
 
                         <div class="mb-3">
                             <label class="form-label" for="cost-internal">Giá nội bộ</label>
-                            <input type="text" id="cost-internal" class="form-control" placeholder="800,000"
+                            <input type="text" id="cost-internal" class="form-control cost" placeholder="800,000"
                                 aria-label="800,000" name="costInternal" />
                         </div>
 
                         <div class="mb-3">
                             <label class="form-label" for="cost-client-real">Giá khách thực tế</label>
                             <small class="text-muted">Có thể bổ sung sau.</small>
-                            <input type="text" id="cost-client-real" class="form-control" placeholder="900,000"
+                            <input type="text" id="cost-client-real" class="form-control cost" placeholder="900,000"
                                 aria-label="900,000" name="costClientReal" />
                         </div>
                         <div class="mb-3">
                             <label class="form-label" for="cost-internal-real">Giá nội bộ thực tế</label>
                             <small class="text-muted">Có thể bổ sung sau.</small>
-                            <input type="text" id="cost-internal-real" class="form-control" placeholder="900,000"
+                            <input type="text" id="cost-internal-real" class="form-control cost" placeholder="900,000"
                                 aria-label="900,000" name="costInternalReal" />
                         </div>
                         <div class="mb-3">

@@ -10,8 +10,11 @@ import {
   customizePrintView,
   makeAjaxRequestPromise,
   fetchAndPopulateSelect,
-  getCssClassForStatusId
+  getCssClassForStatusId,
+  loadNumeral
 } from '../function.js';
+
+loadNumeral(); // Gọi hàm để đăng ký định dạng số
 
 // Variable declaration for table
 var dt_client_table = $('.datatables-clients'),
@@ -383,14 +386,16 @@ $(function () {
           targets: [4],
           title: 'Tổng chi phí',
           render: function (data, type, full, meta) {
-            return '<span class="fw-light">' + numeral(full['totalClient']).format('0,0$') + '</span>';
+            return '<span class="fw-light">' + numeral(full['totalClient']).format('0,0vn') + ' ₫';
+            +'</span>';
           }
         },
         {
           targets: [5],
           title: 'Doanh thu',
           render: function (data, type, full, meta) {
-            return '<span class="fw-light">' + numeral(full['totalRevenue']).format('0,0$') + '</span>';
+            return '<span class="fw-light">' + numeral(full['totalRevenue']).format('0,0vn') + ' ₫';
+            +'</span>';
           }
         },
         {

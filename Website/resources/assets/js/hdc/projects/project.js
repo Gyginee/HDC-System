@@ -15,7 +15,7 @@ import {
   loadNumeral
 } from '../function.js';
 
-loadNumeral();
+loadNumeral(); // Gọi hàm để đăng ký định dạng số
 
 // Variable declaration for table
 var dt_project_table = $('.datatables-projects'),
@@ -275,7 +275,7 @@ $(function () {
           targets: [2],
           title: 'Kinh phí',
           render: function (data, type, full, meta) {
-            return '<span class="fw-light">' + numeral(full['real_client_cost']).format('0,0.00[.]vn');
+            return '<span class="fw-light">' + numeral(full['real_client_cost']).format('0,0vn') + ' ₫';
             +'</span>';
           }
         },
@@ -283,7 +283,7 @@ $(function () {
           targets: [3],
           title: 'Chi phí thực tế',
           render: function (data, type, full, meta) {
-            return '<span class="fw-light">' + numeral(full['real_internal_cost']).format('0,0.00[.]vn');
+            return '<span class="fw-light">' + numeral(full['real_internal_cost']).format('0,0vn') + ' ₫';
             +'</span>';
           }
         },
@@ -291,7 +291,7 @@ $(function () {
           targets: [4],
           title: 'Doanh thu',
           render: function (data, type, full, meta) {
-            return '<span class="fw-light">' + numeral(full['revenue']).format('0,0.00[.]vn');
+            return '<span class="fw-light">' + numeral(full['revenue']).format('0,0vn') + ' ₫';
             +'</span>';
           }
         },

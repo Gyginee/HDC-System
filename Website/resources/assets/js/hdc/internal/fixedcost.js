@@ -11,8 +11,11 @@ import {
   fetchAndPopulateSelect,
   formatDate,
   makeAjaxRequestPromise,
-  initializeDatepicker
+  initializeDatepicker,
+  loadNumeral
 } from '../function.js';
+
+loadNumeral(); // Gọi hàm để đăng ký định dạng số
 
 // Variable declaration for table
 var dt_fixedcost_table = $('.datatables-fixedcost'),
@@ -33,7 +36,7 @@ document.addEventListener('DOMContentLoaded', function () {
   // Khởi tạo datepicker cho Ngày kết thúc
   initializeDatepicker('.flatpickr-end-date', 'DD/MM/YYYY');
   //Fetch Select
-  fetchAndPopulateSelect(costTypeData, 'fixedcost-type','id','name');
+  fetchAndPopulateSelect(costTypeData, 'fixedcost-type', 'id', 'name');
 
   // Initialize Form Validation
   let addNewCostForm = document.getElementById('addNewFixedCostForm'),
@@ -212,7 +215,7 @@ $(function () {
           targets: [2],
           title: 'Tên chi phí',
           render: function (data, type, full, meta) {
-            return '<span class="fw-light">' + numeral(full['name']).format('0,0$');
+            return '<span class="fw-light">' + numeral(full['name']).format('0,0vn') + ' ₫';
             +'</span>';
           }
         },
@@ -220,7 +223,7 @@ $(function () {
           targets: [3],
           title: 'Chi phí',
           render: function (data, type, full, meta) {
-            return '<span class="fw-light">' + numeral(full['amount']).format('0,0$');
+            return '<span class="fw-light">' + numeral(full['amount']).format('0,0vn') + ' ₫';
             +'</span>';
           }
         },

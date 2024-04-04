@@ -19,6 +19,7 @@
 
 @section('vendor-script')
 @vite([
+  'resources/assets/vendor/libs/numeral/numeral.js',
   'resources/assets/vendor/libs/apex-charts/apexcharts.js',
   'resources/assets/vendor/libs/swiper/swiper.js',
   'resources/assets/vendor/libs/datatables-bs5/datatables-bootstrap5.js',

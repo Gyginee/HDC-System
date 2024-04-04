@@ -10,21 +10,23 @@ export function makeAjaxRequest(url, method, requestData, successCallback) {
     }
   });
 }
+
 export function loadNumeral() {
-  // Define a custom format for Vietnamese đồng (VNĐ)
+  // Đăng ký định dạng số tùy chỉnh cho tiền tệ Việt Nam (VNĐ)
   numeral.register('format', 'vn', {
     regexps: {
       format: /(\d)(?=(\d{3})+(?!\d))/g,
       unformat: /(\d+)/g
     },
     format: function (value) {
-      return value.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,') + 'VNĐ';
+      return value.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.') + ' ₫';
     },
     unformat: function (string) {
       return parseFloat(string.replace(/[^\d]+/g, ''));
     }
   });
 }
+
 // Function to get current date or format a given date
 export function formatDate(inputDate) {
   let date;

@@ -13,7 +13,8 @@ import {
   loadNumeral
 } from '../function.js';
 
-loadNumeral();
+loadNumeral(); // Gọi hàm để đăng ký định dạng số
+
 // Variable declaration for table
 var dt_cost_table = $('.datatables-cost'),
   dt_cost,
@@ -39,11 +40,28 @@ const chartColors = {
   bar: {
     series1: config.colors.primary,
     series2: '#7367F0CC',
-    series3: '#7367f099'
+    series3: '#7367f099',
+    series4: '#7367f066'
   }
 };
 
 document.addEventListener('DOMContentLoaded', function () {
+  // Lắng nghe sự kiện khi trường input thay đổi
+  document.querySelectorAll('cost-client').forEach(function (input) {
+    input.addEventListener('input', function () {
+      // Lấy giá trị hiện tại của trường input
+      var value = this.value;
+
+      // Loại bỏ tất cả các ký tự không phải số
+      var cleanValue = value.replace(/[^\d.]/g, '');
+
+      // Định dạng lại số tiền và lưu vào biến formattedValue
+      var formattedValue = numeral(cleanValue).format('0,0');
+
+      // Hiển thị giá trị được định dạng trong trường input
+      this.value = formattedValue;
+    });
+  });
   // Lấy ID của dự án từ URL
   projectId = window.location.pathname.split('/').pop();
 
@@ -233,18 +251,18 @@ document.addEventListener('DOMContentLoaded', function () {
   // Function to handle form submission
   function handleFormSubmission() {
     const costName = document.getElementById('cost-name').value,
-     costVendor = document.getElementById('cost-vendor').value,
-     costQuantity = parseInt(document.getElementById('cost-quantity').value),
-     costUnit = document.getElementById('cost-unit').value,
-     costType = document.getElementById('cost-type').value,
-     costClient = parseInt(document.getElementById('cost-client').value),
-     costInternal = parseInt(document.getElementById('cost-internal').value),
-     costClientRealInput = document.getElementById('cost-client-real').value,
-     costInternalRealInput = document.getElementById('cost-internal-real').value,
-     costClientReal = costClientRealInput == '' ? 0 : parseInt(costClientRealInput),
-     costInternalReal = costInternalRealInput == '' ? 0 : parseInt(costInternalRealInput),
-     costStatus = document.getElementById('cost-status').value,
-     costHandle = document.getElementById('cost-handle').value;
+      costVendor = document.getElementById('cost-vendor').value,
+      costQuantity = parseInt(document.getElementById('cost-quantity').value),
+      costUnit = document.getElementById('cost-unit').value,
+      costType = document.getElementById('cost-type').value,
+      costClient = parseInt(document.getElementById('cost-client').value),
+      costInternal = parseInt(document.getElementById('cost-internal').value),
+      costClientRealInput = document.getElementById('cost-client-real').value,
+      costInternalRealInput = document.getElementById('cost-internal-real').value,
+      costClientReal = costClientRealInput == '' ? 0 : parseInt(costClientRealInput),
+      costInternalReal = costInternalRealInput == '' ? 0 : parseInt(costInternalRealInput),
+      costStatus = document.getElementById('cost-status').value,
+      costHandle = document.getElementById('cost-handle').value;
 
     const data = {
       project_id: projectId,
@@ -395,28 +413,28 @@ $(function () {
           targets: [6],
           title: 'Giá khách',
           render: function (data, type, full, meta) {
-            return '<span class="fw-medium">' + numeral(full['client_cost']).format('0,0.00[.]vn') + '</span>';
+            return '<span class="fw-medium">' + numeral(full['client_cost']).format('0,0vn') + ' ₫' + '</span>';
           }
         },
         {
           targets: [7],
           title: 'Giá nội bộ',
           render: function (data, type, full, meta) {
-            return '<span class="fw-light">' + numeral(full['internal_cost']).format('0,0.00[.]vn') + '</span>';
+            return '<span class="fw-light">' + numeral(full['internal_cost']).format('0,0vn') + ' ₫' + '</span>';
           }
         },
         {
           targets: [8],
           title: 'Giá khách thực tế',
           render: function (data, type, full, meta) {
-            return '<span class="fw-medium">' + numeral(full['real_client_cost']).format('0,0.00[.]vn') + '</span>';
+            return '<span class="fw-medium">' + numeral(full['real_client_cost']).format('0,0vn') + ' ₫' + '</span>';
           }
         },
         {
           targets: [9],
           title: 'Giá nội bộ thực tế',
           render: function (data, type, full, meta) {
-            return '<span class="fw-medium">' + numeral(full['real_internal_cost']).format('0,0.00[.]vn') + '</span>';
+            return '<span class="fw-medium">' + numeral(full['real_internal_cost']).format('0,0vn') + ' ₫' + '</span>';
           }
         },
         {
@@ -746,9 +764,9 @@ $(function () {
               }
             },
             yaxis: {
-              tickAmount: 5,
-              min: 0,
-              max: 5000000,
+              tickAmount: 10,
+              min: 1000000,
+              max: 100000000,
               labels: {
                 style: {
                   colors: labelColor,
@@ -757,7 +775,7 @@ $(function () {
                   fontWeight: 400
                 },
                 formatter: function (val) {
-                  return val;
+                  return numeral(val).format(0, 0) + ' ₫';
                 }
               }
             },
@@ -791,7 +809,12 @@ $(function () {
                 bottom: 5
               }
             },
-            colors: [chartColors.bar.series1, chartColors.bar.series2, chartColors.bar.series3],
+            colors: [
+              chartColors.bar.series1,
+              chartColors.bar.series2,
+              chartColors.bar.series3,
+              chartColors.bar.series4
+            ],
             fill: {
               opacity: 1
             },
@@ -826,8 +849,8 @@ $(function () {
             ]
           };
 
-          console.log(seriesData);
-          console.log(costReportChartConfig);
+          //console.log(seriesData);
+          //console.log(costReportChartConfig);
 
           if (typeof costReport !== undefined && costReport !== null) {
             const costReportChart = new ApexCharts(costReport, costReportChartConfig);

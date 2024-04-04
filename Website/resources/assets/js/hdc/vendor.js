@@ -8,11 +8,11 @@ import {
   extractTextFromHTML,
   customizePrintView,
   makeAjaxRequestPromise,
-  fetchAndPopulateSelect
+  fetchAndPopulateSelect,
+  loadNumeral
 } from './function.js';
 
-// Set Vietnamese as the default language
-numeral.locale('vi');
+loadNumeral();
 
 // Variable declaration for table
 var dt_vendor_table = $('.datatables-vendors'),
@@ -77,7 +77,7 @@ document.addEventListener('DOMContentLoaded', function () {
       console.error('Lỗi đồng bộ data:', error);
     });
 
-  fetchAndPopulateSelect(typeData, 'vendor-type','id','name');
+  fetchAndPopulateSelect(typeData, 'vendor-type', 'id', 'name');
 
   const addNewVendorForm = document.getElementById('addNewVendorForm');
   const submitButton = document.getElementById('submitFormButton');
@@ -164,7 +164,7 @@ document.addEventListener('DOMContentLoaded', function () {
       phone: phoneNumber,
       type_id: typeSelect,
       contract_duration: contract_duration,
-      tax_code: tax_code,
+      tax_code: tax_code
     };
 
     fetch(vendorData, {
@@ -283,7 +283,7 @@ $(function () {
             return '<span class="fw-medium">' + full['tax_code'] + '</span>';
           }
         },
-     /*    {
+        /*    {
           targets: [3],
           title: 'Địa chỉ',
           render: function (data, type, full, meta) {
@@ -316,7 +316,8 @@ $(function () {
           targets: [6],
           title: 'Tổng chi',
           render: function (data, type, full, meta) {
-            return '<span class="fw-light">' + numeral(full['total_cost']).format('0,0$') + '</span>';
+            return '<span class="fw-light">' + numeral(full['total_cost']).format('0,0vn') + ' ₫';
+            +'</span>';
           }
         },
         {
@@ -531,7 +532,7 @@ function reloadDataAndRedrawTable() {
                 count: vendor.count,
                 total_cost: vendor.total_cost,
                 contract_duration: vendor.contract_duration,
-                tax_code: vendor.tax_code,
+                tax_code: vendor.tax_code
               }
             ];
             dt_vendor.rows.add(Data).draw(); // Add data and draw table
