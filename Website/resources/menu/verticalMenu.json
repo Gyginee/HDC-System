@@ -21,12 +21,12 @@
       "slug": "internal",
       "badge": [
         "primary",
-        "5"
+        "4"
       ],
       "submenu": [
         {
           "url": "/staffs",
-          "name": "Nhân viên",
+          "name": "Nhân sự",
           "icon": "menu-icon tf-icons ti ti-user",
           "slug": "staffs"
         },

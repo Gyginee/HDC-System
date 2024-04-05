@@ -31,6 +31,7 @@ var dt_cost_table = $('.datatables-cost'),
   statusData = baseUrl + 'api/v1/status',
   staffData = baseUrl + 'api/v1/staffs/staff',
   projectDetail = baseUrl + 'api/v1/projects/detail',
+  projectDetailbyID = baseUrl + 'api/v1/projects/get-all-projectid',
   projectData = baseUrl + 'api/v1/projects/project',
   typeData = baseUrl + 'api/v1/types',
   costRepostData = baseUrl + 'api/v1/projects/total-cost-type';
@@ -575,31 +576,38 @@ $(function () {
     });
 
     // GET Request to retrieve vendor data
-    makeAjaxRequest(projectDetail, 'GET', {}, function (response) {
-      var cdata = response.data;
-      if (Array.isArray(cdata) && cdata.length > 0) {
-        cdata.forEach(function (cost) {
-          // Now that vendor is fully populated, add it to the DataTable
-          var Data = [
-            {
-              id: cost.id,
-              name: cost.name,
-              vendor_id: cost.vendor_id,
-              quantity: cost.quantity,
-              unit: cost.unit,
-              type: cost.type,
-              client_cost: cost.client_cost,
-              internal_cost: cost.internal_cost,
-              real_client_cost: cost.real_client_cost,
-              real_internal_cost: cost.real_internal_cost,
-              status: cost.status,
-              staff_id: cost.staff_id
-            }
-          ];
-          dt_cost.rows.add(Data).draw();
-        });
+    makeAjaxRequest(
+      projectDetailbyID,
+      'POST',
+      {
+        project_id: projectId
+      },
+      function (response) {
+        var cdata = response.data;
+        if (Array.isArray(cdata) && cdata.length > 0) {
+          cdata.forEach(function (cost) {
+            // Now that vendor is fully populated, add it to the DataTable
+            var Data = [
+              {
+                id: cost.id,
+                name: cost.name,
+                vendor_id: cost.vendor_id,
+                quantity: cost.quantity,
+                unit: cost.unit,
+                type: cost.type,
+                client_cost: cost.client_cost,
+                internal_cost: cost.internal_cost,
+                real_client_cost: cost.real_client_cost,
+                real_internal_cost: cost.real_internal_cost,
+                status: cost.status,
+                staff_id: cost.staff_id
+              }
+            ];
+            dt_cost.rows.add(Data).draw();
+          });
+        }
       }
-    });
+    );
 
     // Handle Delete Record
     $('.datatables-cost tbody').on('click', '.delete-record', function () {
@@ -608,7 +616,7 @@ $(function () {
       var id = data.id;
 
       Swal.fire({
-        title: 'Xác nhận xoá vendor?',
+        title: 'Xác nhận xoá chi phí?',
         text: 'Không thể hoàn tác nếu như xác nhận!',
         icon: 'warning',
         showCancelButton: true,
@@ -626,7 +634,7 @@ $(function () {
             method: 'DELETE',
             success: function (response) {
               // Remove the row from the DataTable
-              dt_vendor.row(row).remove().draw();
+              dt_cost.row(row).remove().draw();
             },
             error: function (error) {
               console.error(error);
@@ -635,7 +643,7 @@ $(function () {
           Swal.fire({
             icon: 'success',
             title: 'Deleted!',
-            text: 'Đã xoá vendor.',
+            text: 'Đã xoá chi phí.',
             customClass: {
               confirmButton: 'btn btn-success'
             }

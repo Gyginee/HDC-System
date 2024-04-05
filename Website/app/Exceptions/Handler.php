@@ -7,27 +7,27 @@ use Throwable;
 
 class Handler extends ExceptionHandler
 {
-    /**
-     * The list of the inputs that are never flashed to the session on validation exceptions.
-     *
-     * @var array<int, string>
-     */
-    protected $dontFlash = [
-        'current_password',
-        'password',
-        'password_confirmation',
-    ];
+  /**
+   * The list of the inputs that are never flashed to the session on validation exceptions.
+   *
+   * @var array<int, string>
+   */
+  protected $dontFlash = [
+    'current_password',
+    'password',
+    'password_confirmation',
+  ];
 
-    /**
-     * Register the exception handling callbacks for the application.
-     */
-    public function register(): void
-    {
-        $this->reportable(function (Throwable $e) {
-            //
-        });
-    }
-    
+  /**
+   * Register the exception handling callbacks for the application.
+   */
+  public function register(): void
+  {
+    $this->reportable(function (Throwable $e) {
+      //
+    });
+  }
+
   public function render($request, Throwable $exception)
   {
     if ($exception instanceof \Symfony\Component\HttpKernel\Exception\HttpException) {
@@ -42,6 +42,10 @@ class Handler extends ExceptionHandler
         case 403:
           return response()->view('errors.403', [], $statusCode);
         case 404:
+          // Check if the request is for a specific route
+          if ($request->route() == null) {
+            return response()->view('errors.404', [], $statusCode);
+          }
           return response()->view('errors.404', [], $statusCode);
         case 405:
           return response()->view('errors.405', [], $statusCode);
@@ -58,6 +62,4 @@ class Handler extends ExceptionHandler
 
     return parent::render($request, $exception);
   }
-
-
 }

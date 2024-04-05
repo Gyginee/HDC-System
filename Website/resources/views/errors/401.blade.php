@@ -24,7 +24,7 @@
 
             <a href="{{ url('/') }}" class="btn btn-primary mb-4">Trở vể</a>
             <div class="mt-4">
-                <img src="{{ asset('assets/img/illustrations/page-misc-error.png') }}" alt="page-misc-error" width="225"
+                <img src="{{ asset('assets/img/illustrations/page-misc-you-are-not-authorized.png') }}" alt="page-misc-error" width="225"
                     class="img-fluid">
             </div>
         </div>

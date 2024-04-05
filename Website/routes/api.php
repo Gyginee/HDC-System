@@ -64,6 +64,7 @@ Route::prefix('v1')->group(function () {
     //function with req body
     Route::post('detailcount', [ProjectDetailController::class, 'project_detailCount']);
     Route::post('detailtotal', [ProjectDetailController::class, 'project_detailTotal']);
+    Route::post('get-all-projectid', [ProjectDetailController::class, 'getAllCostByProjectId']);
 
   });
 

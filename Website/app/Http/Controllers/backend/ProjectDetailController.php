@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\backend;
 
 use App\Http\Controllers\Controller;
-
+use Illuminate\Http\Response;
 use App\Models\Project_detail;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
@@ -65,9 +65,26 @@ class ProjectDetailController extends Controller
    */
   public function destroy(Project_detail $projectDetail)
   {
-    $projectDetail->delete();
-    return response()->json(null, 204);
+      try {
+          $projectDetail->delete();
+          return response()->json([
+              'success' => true,
+              'message' => 'Project detail deleted successfully'
+          ], Response::HTTP_NO_CONTENT);
+      } catch (\Exception $e) {
+          return response()->json([
+              'success' => false,
+              'message' => 'Failed to delete project detail',
+              'error' => $e->getMessage()
+          ], Response::HTTP_INTERNAL_SERVER_ERROR);
+      }
   }
+ /**
+   * Remove the specified project detail from storage.
+   *
+   * @param  Project_detail  $projectDetail
+   * @return JsonResponse
+   */
   public function project_detailCount(Request $request)
   {
     $vendor_id = $request->input('vendor_id');
@@ -197,4 +214,22 @@ class ProjectDetailController extends Controller
 
     return response()->json(['totalClientCost' => $totalClientCost], 200);
   }
+  /**
+   * Lấy tổng các chi phí theo id và type.
+   *
+   * @param  Request  $request
+   * @param  Project_detail  $Project_detail
+   * @return JsonResponse
+   */
+  public function getAllCostByProjectId(Request $request)
+{
+    $project_id = $request->input('project_id');
+
+    if (!$project_id) {
+        return response()->json(['error' => 'Project ID parameter is missing'], 400);
+    }
+    $projectDetails = Project_detail::where('project_id', $project_id)->get();
+    return response()->json(['data' => $projectDetails], 200);
+}
+
 }
