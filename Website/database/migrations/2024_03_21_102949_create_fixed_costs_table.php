@@ -18,8 +18,8 @@ class CreateFixedCostsTable extends Migration
             $table->string('type');
             $table->string('name');
             $table->decimal('amount', 10, 2);
-            $table->date('start_date');
-            $table->date('end_date')->nullable();
+            $table->string('start_date');
+            $table->string('end_date')->nullable();
             $table->text('additional_details')->nullable();
             $table->timestamps();
         });

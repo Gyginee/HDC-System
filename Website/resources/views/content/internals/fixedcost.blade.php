@@ -76,7 +76,7 @@
                         <!-- Datepicker for Ngày bắt đầu -->
                         <label class="form-label">Ngày bắt đầu:</label>
                         <div class="mb-0">
-                            <input type="text" class="form-control dt-date start_date flatpickr-start-date dt-input"
+                            <input id="start-date" type="text" class="form-control dt-date start_date flatpickr-start-date dt-input"
                                 data-column="5" placeholder="Ngày bắt đầu" data-column-index="4" name="dt_date_start" />
                             <input type="hidden" class="form-control dt-date start_date dt-input" data-column="5"
                                 data-column-index="4" name="value_from_start_date" />
@@ -87,7 +87,7 @@
                     <div class="mb-3">
                         <label class="form-label">Ngày kết thúc:</label>
                         <div class="mb-0">
-                            <input type="text" class="form-control dt-date end_date flatpickr-end-date dt-input"
+                            <input id="end-date" type="text" class="form-control dt-date end_date flatpickr-end-date dt-input"
                                 data-column="5" placeholder="Ngày kết thúc" data-column-index="4" name="dt_date_end" />
                             <input type="hidden" class="form-control dt-date end_date dt-input" data-column="5"
                                 data-column-index="4" name="value_from_end_date" />

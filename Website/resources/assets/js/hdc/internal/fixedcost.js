@@ -24,10 +24,46 @@ var dt_fixedcost_table = $('.datatables-fixedcost'),
   statusObj,
   startDateEle = $('.start_date'),
   endDateEle = $('.end_date'),
-  costTypeData = baseUrl + 'api/v1/internals/costtype',
+  costTypeData = baseUrl + 'api/v1/costtype',
   fixedcostData = baseUrl + 'api/v1/internals/fixedcost',
   statusData = baseUrl + 'api/v1/status',
   detailData = baseUrl + 'project/detail';
+
+function reloadDataAndRedrawTable() {
+  // Clear existing data from the table
+  dt_fixedcost.clear().draw();
+  // GET Request to retrieve project data
+  makeAjaxRequest(fixedcostData, 'GET', {}, function (response) {
+    var cdata = response.data;
+    if (Array.isArray(cdata) && cdata.length > 0) {
+      cdata.forEach(function (fixedcost) {
+        // Create promises for both client and status requests
+        var costPromise = makeAjaxRequestPromise(costTypeData + '/' + fixedcost.type, 'GET', {});
+        // Wait for both promises to resolve
+        Promise.all([costPromise])
+          .then(function (results) {
+            var CostType = results[0].data;
+
+            // Add project data to the DataTable
+            var dataToAdd = {
+              id: fixedcost.id,
+              name: fixedcost.name,
+              type: CostType.name,
+              amount: fixedcost.amount,
+              start_date: fixedcost.start_date,
+              end_date: fixedcost.end_date,
+              additional_details: fixedcost.additional_details
+            };
+
+            dt_fixedcost.row.add(dataToAdd).draw();
+          })
+          .catch(function (error) {
+            console.error('Error occurred:', error);
+          });
+      });
+    }
+  });
+}
 
 document.addEventListener('DOMContentLoaded', function () {
   // Khởi tạo datepicker cho Ngày bắt đầu
@@ -107,10 +143,10 @@ document.addEventListener('DOMContentLoaded', function () {
     const fcostType = document.getElementById('fixedcost-type').value;
     const fcostName = document.getElementById('add-fixedcost-name').value;
     const fcostAmount = parseInt(document.getElementById('add-fixedcost-cost').value);
-    const fcostSDate = document.getElementsByClassName('flatpickr-start-date').value;
-    const fcostEDate = document.getElementsByClassName('flatpickr-end-date').value;
+    const fcostSDate = document.getElementById('start-date').value;
+    const fcostEDate = document.getElementById('end-date').value;
     const fcostD = document.getElementById('add-fixedcost-details').value;
-    const fcostDetails = isNaN(fcostD) ? '' : fcostD;
+    const fcostDetails = fcostD == '' ? 'Trống' : fcostD;
 
     const data = {
       name: fcostName,
@@ -120,7 +156,7 @@ document.addEventListener('DOMContentLoaded', function () {
       end_date: fcostEDate,
       additional_details: fcostDetails
     };
-
+    console.log(data);
     fetch(fixedcostData, {
       method: 'POST',
 
@@ -215,8 +251,7 @@ $(function () {
           targets: [2],
           title: 'Tên chi phí',
           render: function (data, type, full, meta) {
-            return '<span class="fw-light">' + numeral(full['name']).format('0,0vn') + ' ₫';
-            +'</span>';
+            return '<span class="fw-light">' + full['name'] + '</span>';
           }
         },
         {
@@ -245,7 +280,7 @@ $(function () {
           targets: [6],
           title: 'Chi tiết bổ sung',
           render: function (data, type, full, meta) {
-            return '<span class="fw-light">' + formatDate(full['additional_details']) + '</span>';
+            return '<span class="fw-light">' + full['additional_details'] + '</span>';
           }
         },
         {
@@ -365,43 +400,7 @@ $(function () {
       ]
     });
 
-    // GET Request to retrieve project data
-    makeAjaxRequest(fixedcostData, 'GET', {}, function (response) {
-      var cdata = response.data;
-      if (Array.isArray(cdata) && cdata.length > 0) {
-        cdata.forEach(function (project) {
-          // Create promises for both client and status requests
-
-          var costtypePromise = makeAjaxRequestPromise(costTypeData, 'GET', {});
-
-          // Wait for both promises to resolve
-          Promise.all([costtypePromise])
-            .then(function (results) {
-              var typeType = results[0].name;
-
-              // Update project properties
-              project.client_id = clientData.name;
-              project.status = statusData.name;
-
-              // Add project data to the DataTable
-              var dataToAdd = {
-                id: project.id,
-                name: project.name,
-                cost: project.cost,
-                real_cost: project.real_cost,
-                status: project.status,
-                client_id: project.client_id,
-                created_at: project.created_at
-              };
-
-              dt_fixedcost.row.add(dataToAdd).draw();
-            })
-            .catch(function (error) {
-              console.error('Error occurred:', error);
-            });
-        });
-      }
-    });
+    reloadDataAndRedrawTable();
 
     // Handle Delete Record
     $('.datatables-fixedcost tbody').on('click', '.delete-record', function () {
@@ -428,7 +427,7 @@ $(function () {
             method: 'DELETE',
             success: function (response) {
               // Remove the row from the DataTable
-              dt_project.row(row).remove().draw();
+              dt_fixedcost.row(row).remove().draw();
             },
             error: function (error) {
               console.error(error);
@@ -442,7 +441,7 @@ $(function () {
               confirmButton: 'btn btn-success'
             }
           });
-          dt_project.row($(this).parents('tr')).remove().draw();
+          dt_fixedcost.row($(this).parents('tr')).remove().draw();
         }
       });
     });

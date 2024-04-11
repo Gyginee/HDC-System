@@ -71,7 +71,7 @@ Route::prefix('v1')->group(function () {
   // Group internal related resources
   Route::prefix('internals')->group(function () {
     Route::apiResource('fixedcost', FixedCostController::class)->names('fixed-cost');
-    Route::apiResource('costtype', CostTypeController::class)->names('cost-type');
+
   });
   // Group staff related resources
   Route::prefix('staffs')->group(function () {
@@ -94,6 +94,7 @@ Route::prefix('v1')->group(function () {
   });
   Route::apiResource('permissions', PermissionController::class);
   Route::apiResource('roles', RoleController::class);
+  Route::apiResource('costtype', CostTypeController::class);
   Route::apiResource('status', StatusController::class);
   Route::apiResource('types', TypeController::class);
   Route::apiResource('category', CategoryController::class);
